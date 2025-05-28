@@ -1,4 +1,4 @@
-#!../../bin/linux-x86_64/TEKMSO4104B-IOC-01
+#!../../bin/linux-x86_64/TEKMSO58LP-IOC-01
 
 ## You may have to change TEKMSO4104B-IOC-01 to something else
 ## everywhere it appears in this file

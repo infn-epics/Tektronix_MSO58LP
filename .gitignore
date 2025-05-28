@@ -12,5 +12,6 @@ dllPath*.bat
 runIOC.bat
 runIOC.sh
 relPaths.sh
+.iocsh_history
 .project
 NULL

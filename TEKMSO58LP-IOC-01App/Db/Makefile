@@ -10,13 +10,13 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 # Create and install (or just install) into <top>/db
 # # databases, templates, substitutions like this
-  DB += devTektronix_MSO58LP.db
-#
+DB += devTektronix_MSO58LP.db
+
 # #----------------------------------------------------
 # # If <anyname>.db template is not named <anyname>*.template add
 # # <anyname>_template = <templatename>
 #
-# include $(TOP)/configure/RULES
+ include $(TOP)/configure/RULES
 # #----------------------------------------
 # #  ADD RULES AFTER THIS LINE
 #

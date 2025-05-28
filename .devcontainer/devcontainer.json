@@ -18,6 +18,11 @@
     "features": {
          
     },
+    "containerEnv": {
+        "LANG": "en_US.UTF-8",
+        "LANGUAGE": "en_US:en",
+        "LC_ALL": "en_US.UTF-8"
+    },
     // IMPORTANT for this devcontainer to work with docker EC_REMOTE_USER must be
     // set to vscode. For podman it should be left blank.
     "remoteUser": "${localEnv:EC_REMOTE_USER}",
@@ -54,4 +59,5 @@
         // this provides eternal bash history in and out of the container
        
     ]
+    
 }
