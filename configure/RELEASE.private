@@ -1,0 +1,15 @@
+SUPPORT=/epics/support
+
+-include $(TOP)/configure/SUPPORT.$(EPICS_HOST_ARCH)
+-include $(TOP)/configure/EPICS_BASE
+-include $(TOP)/configure/EPICS_BASE.$(EPICS_HOST_ARCH)
+
+# Paths to modules built in epics-base container
+EPICS_BASE=/epics/epics-base
+
+ASYN=/epics/support/asyn
+STREAMDEVICE=/epics/support/StreamDevice
+CALC = $(SUPPORT)/calc
+AUTOSAVE = $(SUPPORT)/autosave
+SSCAN = $(SUPPORT)/sscan
+SEC = $(SUPPORT)/sequencer
