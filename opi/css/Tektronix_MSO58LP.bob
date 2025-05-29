@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2025-05-29 16:59:12 by Alex-->
+<display version="2.0.0">
+  <background_color>
+    <color red="240" green="240" blue="240">
+    </color>
+  </background_color>
+  <actions>
+  </actions>
+  <grid_step_x>6</grid_step_x>
+  <grid_step_y>6</grid_step_y>
+  <widget type="xyplot" version="3.0.0">
+    <name>Oscilloscope Display</name>
+    <x>6</x>
+    <y>6</y>
+    <width>787</width>
+    <height>427</height>
+    <background_color>
+      <color red="0" green="0" blue="0">
+      </color>
+    </background_color>
+    <title>Tektronix MSO 4104B Mixed Signal Oscilloscope</title>
+    <title_font>
+      <font family="Arial" style="BOLD" size="11.881188118811881">
+      </font>
+    </title_font>
+    <show_toolbar>true</show_toolbar>
+    <actions>
+    </actions>
+    <x_axis>
+      <title>Time</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>100.0</maximum>
+      <show_grid>true</show_grid>
+      <title_font>
+        <font family="Arial" style="BOLD" size="8.910891089108912">
+        </font>
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+        </font>
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Points</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>0.0</minimum>
+        <maximum>100.0</maximum>
+        <show_grid>true</show_grid>
+        <title_font>
+          <font family="Arial" style="BOLD" size="8.910891089108912">
+          </font>
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+          </font>
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color name="Text" red="0" green="0" blue="0">
+          </color>
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>Channel 1</name>
+        <x_pv>$(P):XDATA</x_pv>
+        <y_pv>$(P):RAWYDATA_CH1</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color name="Yellow" red="255" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>Channel 2</name>
+        <x_pv>$(P):XDATA</x_pv>
+        <y_pv>$(P):RAWYDATA_CH2</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>Channel 3</name>
+        <x_pv>$(P):XDATA</x_pv>
+        <y_pv>$(P):RAWYDATA_CH3</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="0" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>Channel 4</name>
+        <x_pv>$(P):XDATA</x_pv>
+        <y_pv>$(P):RAWYDATA_CH4</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+    </traces>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Channel Selection</name>
+    <x>78</x>
+    <y>468</y>
+    <width>643</width>
+    <height>103</height>
+    <style>2</style>
+    <background_color>
+      <color red="240" green="240" blue="240">
+      </color>
+    </background_color>
+    <actions>
+    </actions>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH1</name>
+      <pv_name>loc://CH1_VISIBLE(1)</pv_name>
+      <bit>-1</bit>
+      <label>Channel 1</label>
+      <x>192</x>
+      <y>36</y>
+      <width>73</width>
+      <height>25</height>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://CH1_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH2</name>
+      <pv_name>loc://CH2_VISIBLE(1)</pv_name>
+      <bit>-1</bit>
+      <label>Channel 2</label>
+      <x>300</x>
+      <y>36</y>
+      <width>73</width>
+      <height>25</height>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://CH2_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH3</name>
+      <pv_name>loc://CH3_VISIBLE(1)</pv_name>
+      <bit>-1</bit>
+      <label>Channel 3</label>
+      <x>414</x>
+      <y>36</y>
+      <width>73</width>
+      <height>25</height>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://CH3_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH4</name>
+      <pv_name>loc://CH4_VISIBLE(1)</pv_name>
+      <bit>-1</bit>
+      <label>Channel 4</label>
+      <x>528</x>
+      <y>36</y>
+      <width>73</width>
+      <height>25</height>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://CH4_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Text</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <text>Channel Selection</text>
+      <x>6</x>
+      <y>12</y>
+      <width>115</width>
+      <height>19</height>
+      <font>
+        <font name="Example Text" family="Tahoma" style="REGULAR" size="9.900990099009901">
+        </font>
+      </font>
+      <vertical_alignment>1</vertical_alignment>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="rectangle" version="2.0.0">
+      <name>CH1_Colour</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <x>213</x>
+      <y>12</y>
+      <width>31</width>
+      <height>19</height>
+      <line_width>0</line_width>
+      <line_color>
+        <color red="0" green="0" blue="0">
+        </color>
+      </line_color>
+      <background_color>
+        <color name="Yellow" red="255" green="255" blue="0">
+        </color>
+      </background_color>
+      <corner_width>16</corner_width>
+      <corner_height>16</corner_height>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    </widget>
+    <widget type="rectangle" version="2.0.0">
+      <name>CH2_Colour</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <x>321</x>
+      <y>12</y>
+      <width>31</width>
+      <height>19</height>
+      <line_width>0</line_width>
+      <line_color>
+        <color red="0" green="0" blue="0">
+        </color>
+      </line_color>
+      <background_color>
+        <color red="0" green="255" blue="255">
+        </color>
+      </background_color>
+      <corner_width>16</corner_width>
+      <corner_height>16</corner_height>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    </widget>
+    <widget type="rectangle" version="2.0.0">
+      <name>CH3_Colour</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <x>435</x>
+      <y>12</y>
+      <width>31</width>
+      <height>19</height>
+      <line_width>0</line_width>
+      <line_color>
+        <color red="0" green="0" blue="0">
+        </color>
+      </line_color>
+      <background_color>
+        <color red="255" green="0" blue="255">
+        </color>
+      </background_color>
+      <corner_width>16</corner_width>
+      <corner_height>16</corner_height>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    </widget>
+    <widget type="rectangle" version="2.0.0">
+      <name>CH4_Colour</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <x>549</x>
+      <y>12</y>
+      <width>31</width>
+      <height>19</height>
+      <line_width>0</line_width>
+      <line_color>
+        <color red="0" green="0" blue="0">
+        </color>
+      </line_color>
+      <background_color>
+        <color red="0" green="255" blue="0">
+        </color>
+      </background_color>
+      <corner_width>16</corner_width>
+      <corner_height>16</corner_height>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Y_Scale_CH1</name>
+      <pv_name>$(P):YMULT_CH1</pv_name>
+      <x>204</x>
+      <y>60</y>
+      <width>49</width>
+      <height>19</height>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>1</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+      <vertical_alignment>1</vertical_alignment>
+      <wrap_words>false</wrap_words>
+      <actions>
+      </actions>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Y_Scale_CH2</name>
+      <pv_name>$(P):YMULT_CH2</pv_name>
+      <x>312</x>
+      <y>60</y>
+      <width>49</width>
+      <height>19</height>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>1</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+      <vertical_alignment>1</vertical_alignment>
+      <wrap_words>false</wrap_words>
+      <actions>
+      </actions>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Y_Scale_CH3</name>
+      <pv_name>$(P):YMULT_CH3</pv_name>
+      <x>426</x>
+      <y>60</y>
+      <width>49</width>
+      <height>19</height>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>1</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+      <vertical_alignment>1</vertical_alignment>
+      <wrap_words>false</wrap_words>
+      <actions>
+      </actions>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Y_Scale_CH4</name>
+      <pv_name>$(P):YMULT_CH4</pv_name>
+      <x>540</x>
+      <y>60</y>
+      <width>49</width>
+      <height>19</height>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <precision>3</precision>
+      <show_units>false</show_units>
+      <vertical_alignment>1</vertical_alignment>
+      <wrap_words>false</wrap_words>
+      <actions>
+      </actions>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Text</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <text>Y Scaling Factor</text>
+      <x>102</x>
+      <y>62</y>
+      <width>79</width>
+      <height>16</height>
+      <vertical_alignment>1</vertical_alignment>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+  </widget>
+</display>
