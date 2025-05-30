@@ -19,7 +19,8 @@ TEKMSO58LP_IOC_01_registerRecordDeviceDriver pdbbase
 
 ##ISIS## Run IOC initialisation 
 #ALE# < $(IOCSTARTUP)/init.cmd
-epicsEnvSet "IP" "192.168.197.139"
+
+#ALE##  Se si vuole dialogare vxi11 decommentare la prossima riga e commentare quella seguente.
 #vxi11Configure("IP", "192.168.197.139", 0, 0.0,"inst0", 0, 0)
 drvAsynIPPortConfigure("inst0", "192.168.197.139:4000")
 ## Load record instances
@@ -28,6 +29,7 @@ drvAsynIPPortConfigure("inst0", "192.168.197.139:4000")
 #ALE#< $(IOCSTARTUP)/dbload.cmd
 
 ## Load our record instances
+#ALE## Se si usa vxi11 sostituire inst0 con IP
 dbLoadRecords("db/devTektronix_MSO58LP.db","P=SPARC:TEST:$(IOC), PORT=inst0")
 
 ##ISIS## Stuff that needs to be done after all records are loaded but before iocInit is called 
