@@ -31,6 +31,8 @@ $(APPNAME)_DBD += drvAsynSerialPort.dbd
 $(APPNAME)_DBD += drvAsynIPPort.dbd
 $(APPNAME)_DBD += stream.dbd
 $(APPNAME)_DBD += drvVxi11.dbd
+
+$(APPNAME)_DBD += ../../Db/incrementor.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
 # Add all the support libraries needed by this IOC
@@ -49,7 +51,7 @@ $(APPNAME)_LIBS += asyn
 $(APPNAME)_LIBS += calc sscan
 $(APPNAME)_LIBS += seq pv
 $(APPNAME)_LIBS_WIN32 += oncrpc
-
+$(APPNAME)_SRCS += incrementor.c
 # TEKMSO4104B-IOC-01_registerRecordDeviceDriver.cpp derives from TEKMSO4104B-IOC-01.dbd
 $(APPNAME)_SRCS += $(APPNAME)_registerRecordDeviceDriver.cpp
 
