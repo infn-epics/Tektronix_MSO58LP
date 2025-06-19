@@ -1,5 +1,4 @@
 #!../../bin/linux-x86_64/TEKMSO58LP-IOC-01
-
 ## You may have to change TEKMSO4104B-IOC-01 to something else
 ## everywhere it appears in this file
 
@@ -30,7 +29,7 @@ drvAsynIPPortConfigure("inst0", "192.168.197.139:4000")
 
 ## Load our record instances
 #ALE## Se si usa vxi11 sostituire inst0 con IP
-dbLoadRecords("db/devTektronix_MSO58LP.db","P=SPARC:TEST:$(IOC), PORT=inst0")
+dbLoadRecords("db/devTektronix_MSO58LP.db","P=SPARC:TEST:$(IOC),SCANTIME=1 second, PORT=inst0")
 
 ##ISIS## Stuff that needs to be done after all records are loaded but before iocInit is called 
 #ALE#< $(IOCSTARTUP)/preiocinit.cmd
