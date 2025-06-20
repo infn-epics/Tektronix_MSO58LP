@@ -108,6 +108,46 @@ record(stringin,"$(P):YUNIT_CH1")
     field(SDIS, "$(P):DISABLE")
 }
 
+record(aSub, "$(P):INT_ASUB_CH1") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH1")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH1")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH1")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH1")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH1") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH1")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH1")
+}
+
+record(ai, "$(P):NORM_CH1") {
+    field(DESC, "normalization factor for  CH1 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH1") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH1") {
+    field(DESC, "X min for CH1 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH1") {
+    field(DESC, "X max for CH1 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
 #record(acalcout,"$(P):ACALC_YDATA_CH1")
 #{
 #	field(NELM, "10000")
@@ -188,6 +228,46 @@ record(stringin,"$(P):YUNIT_CH2")
     field(SDIS, "$(P):DISABLE")
 }
 
+record(aSub, "$(P):INT_ASUB_CH2") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH2")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH2")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH2")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH2")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH2") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH2")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH2")
+}
+
+record(ai, "$(P):NORM_CH2") {
+    field(DESC, "normalization factor for  CH2 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH2") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH2") {
+    field(DESC, "X min for CH2 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH2") {
+    field(DESC, "X max for CH2 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
 #record(acalcout,"$(P):ACALC_YDATA_CH2")
 #{
 #	field(NELM, "10000")
@@ -263,6 +343,47 @@ record(stringin, "$(P):YUNIT_CH3")
     field(SIOL, "$(P):SIM:YUNIT_CH3")
     field(SDIS, "$(P):DISABLE")
 }
+
+record(aSub, "$(P):INT_ASUB_CH3") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH3")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH3")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH3")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH3")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH3") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH3")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH3")
+}
+
+record(ai, "$(P):NORM_CH3") {
+    field(DESC, "normalization factor for  CH3 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH3") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH3") {
+    field(DESC, "X min for CH3 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH3") {
+    field(DESC, "X max for CH3 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
 
 #record(acalcout,"$(P):ACALC_YDATA_CH3")
 #{
@@ -340,6 +461,48 @@ record(stringin, "$(P):YUNIT_CH4")
     field(SDIS, "$(P):DISABLE")
 }
 
+record(aSub, "$(P):INT_ASUB_CH4") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH4")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH4")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH4")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH4")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH4") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH4")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH4")
+}
+
+record(ai, "$(P):NORM_CH4") {
+    field(DESC, "normalization factor for  CH4 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH4") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH4") {
+    field(DESC, "X min for CH4 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH4") {
+    field(DESC, "X max for CH4 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
+
+
 #record(acalcout,"$(P):ACALC_YDATA_CH4")
 #{
 #	field(NELM, "10000")
@@ -406,6 +569,49 @@ record(stringin, "$(P):YUNIT_CH5")
     field(INP,  "@devTektronix_MSO58LP.proto getYUNIT(5) $(PORT)")
     field(SDIS, "$(P):DISABLE")
 }
+
+record(aSub, "$(P):INT_ASUB_CH5") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH5")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH5")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH5")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH5")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH5") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH5")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH5")
+}
+
+record(ai, "$(P):NORM_CH5") {
+    field(DESC, "normalization factor for  CH5 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH5") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH5") {
+    field(DESC, "X min for CH5 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH5") {
+    field(DESC, "X max for CH5 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
+
+#channel 6
 
 record(waveform, "$(P):RAWYDATA_CH6")
 {
@@ -504,6 +710,46 @@ record(stringin, "$(P):YUNIT_CH7")
     field(SDIS, "$(P):DISABLE")
 }
 
+record(aSub, "$(P):INT_ASUB_CH7") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH7")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH7")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH7")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH7")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH7") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH7")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH7")
+}
+
+record(ai, "$(P):NORM_CH7") {
+    field(DESC, "normalization factor for  CH7 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH7") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH7") {
+    field(DESC, "X min for CH7 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH7") {
+    field(DESC, "X max for CH7 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
+
 #channel 8
 
 
@@ -554,7 +800,45 @@ record(stringin, "$(P):YUNIT_CH8")
     field(SDIS, "$(P):DISABLE")
 }
 
+record(aSub, "$(P):INT_ASUB_CH8") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH8")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH8")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH8")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH8")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH8") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH8")
+    field(NEVA, "10000")
+    field(FLNK, "$(P):INTEGRAL_CH8")
+}
 
+record(ai, "$(P):NORM_CH8") {
+    field(DESC, "normalization factor for  CH8 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH8") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH8") {
+    field(DESC, "X min for CH8 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH8") {
+    field(DESC, "X max for CH8 integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}
 
 
 # The following two records generate values for the x-axis

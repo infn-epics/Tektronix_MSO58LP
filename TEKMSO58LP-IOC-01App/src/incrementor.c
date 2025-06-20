@@ -24,5 +24,25 @@ static long incrementor(aSubRecord *prec) {
     
     return 0;
 }
-epicsRegisterFunction(incrementor);
 
+static long integrator(aSubRecord *prec) {
+    double *y = (double *)prec->a;
+    double xinc = *((double *)prec->b);
+    double xmin = *((double *)prec->c);
+    double xmax = *((double *)prec->d);
+    double norm = *((double *)prec->e);
+    int n = prec->nea;
+
+    double sum = 0.0;
+    for (int i = 0; i < n; ++i) {
+        double x = i * xinc;
+        if (x >= xmin && x <= xmax)
+            sum += y[i];
+    }
+
+    *((double *)prec->vala) = (sum * xinc) / norm;
+    return 0;
+}
+
+epicsRegisterFunction(incrementor);
+epicsRegisterFunction(integrator);
