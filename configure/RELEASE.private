@@ -12,4 +12,4 @@ STREAMDEVICE=/epics/support/StreamDevice
 CALC = $(SUPPORT)/calc
 AUTOSAVE = $(SUPPORT)/autosave
 SSCAN = $(SUPPORT)/sscan
-SEC = $(SUPPORT)/sequencer
+SNCSEQ = $(SUPPORT)/sequencer
