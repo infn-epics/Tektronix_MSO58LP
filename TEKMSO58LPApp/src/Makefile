@@ -51,7 +51,7 @@ $(APPNAME)_DBD += drvAsynIPPort.dbd
 $(APPNAME)_DBD += stream.dbd
 $(APPNAME)_DBD += drvVxi11.dbd
 
-$(APPNAME)_DBD += ../../Db/incrementor.dbd
+$(APPNAME)_DBD += incrementor.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
 # Add all the support libraries needed by this IOC

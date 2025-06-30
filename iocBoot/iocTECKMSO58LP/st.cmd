@@ -1,4 +1,4 @@
-#!../../bin/linux-x86_64/TEKMSO58LP-IOC-01
+#!../../bin/linux-x86_64/TEKMSO58LP
 ## You may have to change TEKMSO4104B-IOC-01 to something else
 ## everywhere it appears in this file
 
@@ -13,8 +13,8 @@ epicsEnvSet "EPICS_CA_MAX_ARRAY_BYTES" "100000"
 cd ${TOP}
 
 ## Register all support components
-dbLoadDatabase "dbd/TEKMSO58LP-IOC-01.dbd"
-TEKMSO58LP_IOC_01_registerRecordDeviceDriver pdbbase
+dbLoadDatabase "dbd/TEKMSO58LP.dbd"
+TEKMSO58LP_registerRecordDeviceDriver pdbbase
 
 ##ISIS## Run IOC initialisation 
 #ALE# < $(IOCSTARTUP)/init.cmd
