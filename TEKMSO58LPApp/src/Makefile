@@ -29,6 +29,8 @@ include $(TOP)/configure/CONFIG
 # We actually use $(APPNAME) below so this file can be included by multiple IOCs
 
 PROD_IOC = $(APPNAME)
+
+LIBRARY_IOC += $(APPNAME)iocSupport
 # TEKMSO4104B-IOC-01.dbd will be created and installed
 DBD += $(APPNAME).dbd
 
@@ -84,6 +86,11 @@ $(APPNAME)_SRCS_vxWorks += -nil-
 ifeq ($(AREA_DETECTOR),)
 #include $(CONFIG)/CONFIG_PVA_ISIS
 endif
+
+# Link in the code from our support library
+$(APPNAME)_LIBS += $(APPNAME)iocSupport
+$(APPNAME)iocSupport_SRCS += incrementor.c
+
 
 $(APPNAME)_LIBS += $(EPICS_BASE_IOC_LIBS)
 $(APPNAME)_SYS_LIBS_Linux += tirpc
