@@ -1,0 +1,97 @@
+record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
+{
+    field(SCAN, "$(SCANTIME)")
+    field(DESC, "Get y data points")
+    field(DTYP, "stream")
+    field(NELM, $(NELM))
+    field(FTVL, "LONG")
+    field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL)) $(PORT)")
+    field(FLNK, "$(P):XINC_CH$(CHANNEL)")
+    # field(SIML, "$(P):SIM")
+    # field(SIOL, "$(P):SIM:RAWYDATA_CH$(CHANNEL)")
+    # field(SDIS, "$(P):DISABLE")
+}
+
+record(ai, "$(P):XINC_CH$(CHANNEL)")
+{
+    field(DESC, "get x increment of plot")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getXINC($(CHANNEL)) $(PORT)")
+    field(PREC, "3")
+    field(FLNK, "$(P):YMULT_CH$(CHANNEL)")
+    # field(SIML, "$(P):SIM")
+    # field(SIOL, "$(P):SIM:XINC_CH$(CHANNEL)")
+    # field(SDIS, "$(P):DISABLE")
+}
+
+record(ai, "$(P):YMULT_CH$(CHANNEL)")
+{
+    field(DESC, "get y multiplier of plot")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getYMULT($(CHANNEL)) $(PORT)")
+    field(FLNK, "$(P):XUNIT_CH$(CHANNEL)")
+    # field(SIML, "$(P):SIM")
+    # field(SIOL, "$(P):SIM:YMULT_CH$(CHANNEL)")
+    # field(SDIS, "$(P):DISABLE")
+}
+
+record(stringin, "$(P):XUNIT_CH$(CHANNEL)")
+{
+    field(DESC, "get x unit of plot")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getXUNIT($(CHANNEL)) $(PORT)")
+    field(FLNK, "$(P):YUNIT_CH$(CHANNEL)")
+    # field(SIML, "$(P):SIM")
+    # field(SIOL, "$(P):SIM:XUNIT_CH$(CHANNEL)")
+    # field(SDIS, "$(P):DISABLE")
+}
+
+record(stringin, "$(P):YUNIT_CH$(CHANNEL)")
+{
+    field(DESC, "get y unit of plot")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getYUNIT($(CHANNEL)) $(PORT)")
+    # field(SIML, "$(P):SIM")
+    # field(SIOL, "$(P):SIM:YUNIT_CH$(CHANNEL)")
+    # field(SDIS, "$(P):DISABLE")
+}
+
+record(aSub, "$(P):INT_ASUB_CH$(CHANNEL)") {
+    field(SCAN, "$(SCANTIME)")
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH$(CHANNEL)")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH$(CHANNEL)")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH$(CHANNEL)")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH$(CHANNEL)") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH$(CHANNEL)")
+    field(NEVA,  $(NELM))
+    field(FLNK, "$(P):INTEGRAL_CH$(CHANNEL)")
+}
+
+record(ai, "$(P):NORM_CH$(CHANNEL)") {
+    field(DESC, "normalization factor for  CH$(CHANNEL) integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1.0")
+}
+
+record(ai, "$(P):INTEGRAL_CH$(CHANNEL)") {
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):XMIN_CH$(CHANNEL)") {
+    field(DESC, "X min for CH$(CHANNEL) integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+}
+
+record(ai, "$(P):XMAX_CH$(CHANNEL)") {
+    field(DESC, "X max for CH$(CHANNEL) integral")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+}

@@ -11,6 +11,9 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # # databases, templates, substitutions like this
 DB += devTektronix_MSO58LP.db
+DB += mso58lp.db
+DB += channel.template
+DB += dev_msoxx.template
 
 # #----------------------------------------------------
 # # If <anyname>.db template is not named <anyname>*.template add
