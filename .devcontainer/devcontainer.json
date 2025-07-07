@@ -1,10 +1,11 @@
 // For format details, see https://containers.dev/implementors/json_reference/
 {
     "name": "My IOC development container",
-    "image": "ghcr.io/infn-epics/infn-epics-ioc-developer:latest",
+    "image": "ghcr.io/infn-epics/infn-epics-ioc-base",
+    
     "runArgs": [
         // Allow the container to access the host X11 display and EPICS CA
-        //"--net=host",
+        "--net=host",
         // Make sure SELinux does not disable with access to host filesystems like tmp
         "--security-opt=label=disable",
         "--platform=linux/amd64"
@@ -17,11 +18,6 @@
     },
     "features": {
          
-    },
-    "containerEnv": {
-        "LANG": "en_US.UTF-8",
-        "LANGUAGE": "en_US:en",
-        "LC_ALL": "en_US.UTF-8"
     },
     // IMPORTANT for this devcontainer to work with docker EC_REMOTE_USER must be
     // set to vscode. For podman it should be left blank.
@@ -47,7 +43,7 @@
     // to run in the container at creation in here
     //"postCreateCommand": "bash .devcontainer/postCreateCommand ${devcontainerId}",
     // forward ports to clients
-     "appPort": [5064,"5064:5064/udp","5065:5065/udp"],
+    "forwardPorts": [5064,"5064:5064/udp","5065:5065/udp"],
  
     
     "workspaceMount": "source=${localWorkspaceFolder},target=/app/${localWorkspaceFolderBasename},type=bind",
@@ -59,5 +55,4 @@
         // this provides eternal bash history in and out of the container
        
     ]
-    
 }
