@@ -8,6 +8,14 @@ getIDN {
     ExtraInput = Ignore;
 }
 
+readIDNParts {
+    out "*IDN?";
+    in "%(\$1)[_a-zA-Z0-9],%(\$2)[_a-zA-Z0-9],%(\$3)[_a-zA-Z0-9],CF:%(\$4)[a-zA-Z0-9\.] FV:%(\$5)[_a-zA-Z0-9\.]";
+	ExtraInput = Ignore;
+
+}
+
+
 getXINC {
 	#get x increment for plot
 	out ":DATa:SOUrce CH\$1";
@@ -47,19 +55,19 @@ getYUNIT {
 getYDATA {
 	#ask scope for y data points
 	out ":VERBOSE 0";
-	wait 5;
+	wait 1;
 	out "HEADER 0";
-	wait 5;
+	wait 1;
 	out ":DATa:SOUrce CH\$1";
-	wait 5;
+	wait 1;
 	out ":DATa:STARt 1";
-	wait 5;
-	out ":DATa:STOP 10000";
-	wait 5;
+	wait 1;
+	out ":DATa:STOP \$2";
+	wait 1;
 	out ":DATa:ENCdg ASCIi";
-	wait 5;
+	wait 1;
 	out ":DATa:WIDth 1";
-	wait 5;
+	wait 1;
 	out ":CURVe?";
 	separator=",";
 	in "%d";

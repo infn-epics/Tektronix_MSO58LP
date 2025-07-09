@@ -25,9 +25,9 @@ drvAsynIPPortConfigure("inst0", "192.168.197.139:4000")
 
 ## Load our record instances
 #ALE## Se si usa vxi11 sostituire inst0 con IP
-dbLoadRecords("db/dev_msoxx.template","P=SPARC:DIAG:TEK, PORT=inst0,NELM=1000")
+dbLoadRecords("db/devmso58lp.db","P=SPARC:DIAG:TEK, PORT=inst0")
 dbLoadRecords("db/channel.template","P=SPARC:DIAG:TEK,SCANTIME=1 second,CHANNEL=7,PORT=inst0,NELM=1000")
-dbLoadRecords("db/channel.template","P=SPARC:DIAG:TEK,SCANTIME=1 second,CHANNEL=8,PORT=inst0,NELM=1000")
+dbLoadRecords("db/channel.template","P=SPARC:DIAG:TEK,SCANTIME=1 second,CHANNEL=8,PORT=inst0,NELM=10000")
 
 
 ##ISIS## Stuff that needs to be done after all records are loaded but before iocInit is called 

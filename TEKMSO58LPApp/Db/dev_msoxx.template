@@ -1,13 +1,25 @@
 # msoxx.template
 # Template for non-channel records from devTektronix_MSO58LP.db
-
-record(bo, "$(P):SIM")
+record(bo, "$(P):Refresh")
 {
+    field(DESC, "Manual refresh of all channels")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Refresh")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):refreshEvent_")
+    field(DOL, "1")     # force 1 on processing
+    field(OMSL, "supervisory")
+    field(OUT, "$(P):Refresh.PROC")  # write to self for momentary behavior
+}
+record(event, "$(P):refreshEvent_")
+{
+    field(DESC, "Refresh event")
     field(SCAN, "Passive")
-    field(DTYP, "Soft Channel")
-    field(ZNAM, "NO")
-    field(ONAM, "YES")
-    field(FLNK, "$(P):IDN")
+    field(VAL,"$(P):refreshEvent_")
+    field(PINI,"YES")
+    
 }
 
 record(bo, "$(P):DISABLE") 
@@ -20,52 +32,38 @@ record(bo, "$(P):DISABLE")
     field(ONAM, "COMMS DISABLED")
 }
 
+# record(stringin,"$(P):IDN")
+# {
+#     field(DESC, "SCPI identification string")
+#     field(DTYP, "stream")
+#     field(INP,  "@devTektronix_MSO58LP.proto getIDN(39) $(PORT)")
+#     field(PINI, "YES")
+#     field(SIML, "$(P):SIM")
+#     field(SIOL, "$(P):SIM:IDN")
+#     field(SDIS, "$(P):DISABLE")
+# }
 record(stringin,"$(P):IDN")
 {
     field(DESC, "SCPI identification string")
     field(DTYP, "stream")
-    field(INP,  "@devTektronix_MSO58LP.proto getIDN(39) $(PORT)")
+    field(INP,  "@devTektronix_MSO58LP.proto readIDNParts($(P):Vendor,$(P):Model,$(P):Serial,$(P):CF,$(P):Firmware) $(PORT)")
     field(PINI, "YES")
-    field(SIML, "$(P):SIM")
-    field(SIOL, "$(P):SIM:IDN")
-    field(SDIS, "$(P):DISABLE")
+    field(SCAN, "Event")
+    field(EVNT, "$(P):refreshEvent_")
+    
 }
 
-# The following two records generate values for the x-axis
-
-record(aSub,"$(P):ASUB") 
-{
-    field(SCAN, "5 second")
-    field(SNAM, "incrementor")
-    field(FTA,  "DOUBLE")
-    field(INPA, "$(P):XINC_CH1")
-    field(OUTA, "$(P):OUT")
-    field(FTVA, "DOUBLE")
-    field(NOVA, $(NELM))
-    field(NEVA, $(NELM))
-    field(FLNK, "$(P):XDATA")
+record(stringin, "$(P):Vendor") {
+}
+record(stringin, "$(P):Model") {
+}
+record(stringin, "$(P):Serial") {
+    
+}
+record(stringin, "$(P):CF") {
+    
+}
+record(stringin, "$(P):Firmware") {
 }
 
-record(waveform, "$(P):XDATA")
-{
-    field(INP, "$(P):ASUB.VALA")
-    field(DTYP, "Soft Channel")
-    field(NELM, $(NELM))
-    field(FTVL, "DOUBLE")
-}
-
-### SIMULATION RECORDS ###
-
-record(stringin, "$(P):SIM:IDN")
-{
-    field(SCAN, "Passive")
-    field(DTYP, "Soft Channel")
-    field(VAL, "Tektronix Simulated IDN String")
-}
-
-record(waveform,"$(P):SIM:XDATA")
-{
-    field(NELM, $(NELM))
-    field(FTVL, "LONG")
-
-}
+# The following two records generate values for the x-

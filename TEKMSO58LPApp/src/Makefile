@@ -35,7 +35,10 @@ LIBRARY_IOC += $(APPNAME)iocSupport
 DBD += $(APPNAME).dbd
 
 # TEKMSO4104B-IOC-01.dbd will be made up from these files:
+$(APPNAME)_DBD += customScan.dbd
+
 $(APPNAME)_DBD += base.dbd
+
 ## ISIS standard dbd ##
 #$(APPNAME)_DBD += icpconfig.dbd
 #$(APPNAME)_DBD += pvdump.dbd

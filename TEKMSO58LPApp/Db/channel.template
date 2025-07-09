@@ -1,15 +1,45 @@
+record(bi, "$(P):ReadbackPoll_$(CHANNEL)")
+{
+    field(DESC, "Head of readback chain")
+    field(FLNK, "$(P):RAWYDATA_CH$(CHANNEL)")
+    field(PINI, "YES")
+    field(INP,  "0")
+    field(SCAN, "$(SCANTIME)")
+}
+
 record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
 {
-    field(SCAN, "$(SCANTIME)")
     field(DESC, "Get y data points")
     field(DTYP, "stream")
     field(NELM, $(NELM))
     field(FTVL, "LONG")
-    field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL)) $(PORT)")
-    field(FLNK, "$(P):XINC_CH$(CHANNEL)")
+    field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL),$(NELM)) $(PORT)")
+    field(FLNK, "$(P):INT_ASUB_CH$(CHANNEL)_")
     # field(SIML, "$(P):SIM")
     # field(SIOL, "$(P):SIM:RAWYDATA_CH$(CHANNEL)")
     # field(SDIS, "$(P):DISABLE")
+}
+
+record(aSub, "$(P):INT_ASUB_CH$(CHANNEL)_") {
+    field(SNAM, "integrator")
+    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH$(CHANNEL)")
+    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH$(CHANNEL)")
+    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH$(CHANNEL)")
+    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH$(CHANNEL)") 
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(OUTA, "$(P):INTEGRAL_CH$(CHANNEL)")
+    field(NEVA,  $(NELM))
+    field(FLNK, "$(P):INTEGRAL_CH$(CHANNEL)")
+}
+
+
+
+record(ai, "$(P):SAMPLES_$(CHANNEL)"){
+    field(PINI, "YES")
+    field(VAL, "$(NELM)")
+
+
 }
 
 record(ai, "$(P):XINC_CH$(CHANNEL)")
@@ -19,6 +49,11 @@ record(ai, "$(P):XINC_CH$(CHANNEL)")
     field(INP,  "@devTektronix_MSO58LP.proto getXINC($(CHANNEL)) $(PORT)")
     field(PREC, "3")
     field(FLNK, "$(P):YMULT_CH$(CHANNEL)")
+    field(SCAN, "Event")
+    field(PINI, "YES")
+    field(EVNT, "$(P):refreshEvent_")
+    field(FLNK, "$(P):YMULT_CH$(CHANNEL)")
+
     # field(SIML, "$(P):SIM")
     # field(SIOL, "$(P):SIM:XINC_CH$(CHANNEL)")
     # field(SDIS, "$(P):DISABLE")
@@ -51,24 +86,10 @@ record(stringin, "$(P):YUNIT_CH$(CHANNEL)")
     field(DESC, "get y unit of plot")
     field(DTYP, "stream")
     field(INP,  "@devTektronix_MSO58LP.proto getYUNIT($(CHANNEL)) $(PORT)")
-    # field(SIML, "$(P):SIM")
-    # field(SIOL, "$(P):SIM:YUNIT_CH$(CHANNEL)")
-    # field(SDIS, "$(P):DISABLE")
+    field(FLNK, "$(P):ASUB$(CHANNEL)_")
+
 }
 
-record(aSub, "$(P):INT_ASUB_CH$(CHANNEL)") {
-    field(SCAN, "$(SCANTIME)")
-    field(SNAM, "integrator")
-    field(FTA, "DOUBLE") field(INPA, "$(P):RAWYDATA_CH$(CHANNEL)")
-    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH$(CHANNEL)")
-    field(FTC, "DOUBLE") field(INPC, "$(P):XMIN_CH$(CHANNEL)")
-    field(FTD, "DOUBLE") field(INPD, "$(P):XMAX_CH$(CHANNEL)")
-    field(FTE, "DOUBLE")  field(INPE, "$(P):NORM_CH$(CHANNEL)") 
-    field(FTVA, "DOUBLE") field(NOVA, "1")
-    field(OUTA, "$(P):INTEGRAL_CH$(CHANNEL)")
-    field(NEVA,  $(NELM))
-    field(FLNK, "$(P):INTEGRAL_CH$(CHANNEL)")
-}
 
 record(ai, "$(P):NORM_CH$(CHANNEL)") {
     field(DESC, "normalization factor for  CH$(CHANNEL) integral")
@@ -94,4 +115,25 @@ record(ai, "$(P):XMAX_CH$(CHANNEL)") {
     field(DTYP, "Soft Channel")
     field(PREC, "9")
     field(VAL, "1e-6")
+}
+record(aSub,"$(P):ASUB$(CHANNEL)_") 
+{
+    field(SCAN, "Event")
+    field(EVNT, "$(P):refreshEvent_")
+    field(SNAM, "incrementor")
+    field(FTA,  "DOUBLE")
+    field(INPA, "$(P):XINC_CH$(CHANNEL)")
+    field(OUTA, "$(P):XDATA_CH$(CHANNEL)")
+    field(FTVA, "DOUBLE")
+    field(NOVA, $(NELM))
+    field(NEVA, $(NELM))
+    field(FLNK, "$(P):XDATA_CH$(CHANNEL)")
+}
+
+record(waveform, "$(P):XDATA_CH$(CHANNEL)")
+{
+    field(INP, "$(P):ASUB.VALA")
+    field(DTYP, "Soft Channel")
+    field(NELM, $(NELM))
+    field(FTVL, "DOUBLE")
 }

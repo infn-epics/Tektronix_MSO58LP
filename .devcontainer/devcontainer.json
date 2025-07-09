@@ -31,7 +31,7 @@
                 "tamasfe.even-better-toml",
                 "redhat.vscode-yaml",
                 "ryanluker.vscode-coverage-gutters",
-                "epicsdeb.vscode-epics",
+                "nsd.vscode-epics",
                 "ms-python.black-formatter"
             ]
         }

@@ -14,6 +14,7 @@ DB += devTektronix_MSO58LP.db
 DB += mso58lp.db
 DB += channel.template
 DB += dev_msoxx.template
+DB += devmso58lp.db
 
 # #----------------------------------------------------
 # # If <anyname>.db template is not named <anyname>*.template add

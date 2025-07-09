@@ -4,10 +4,9 @@ file dev_msoxx.template
     {$(P),$(PORT),10000}
 }
 
-file "channel.template"
+file "channel_base.template"
 {
     pattern {P,     PORT,     CHANNEL,SCANTIME, NELM }
-            {$(P),  $(PORT), 0,     "1 second",    10000}
             {$(P),  $(PORT), 1,     "1 second",    10000}
             {$(P),  $(PORT), 2,     "1 second",    10000}
             {$(P),  $(PORT), 3,     "1 second",    10000}
@@ -15,4 +14,17 @@ file "channel.template"
             {$(P),  $(PORT), 5,     "1 second",    10000}
             {$(P),  $(PORT), 6,     "1 second",    10000}
             {$(P),  $(PORT), 7,     "1 second",    10000}
+            {$(P),  $(PORT), 8,     "1 second",    10000}
+}
+file "channel.template"
+{
+    pattern {P,     PORT,     CHANNEL,SCANTIME, NELM }
+            {$(P),  $(PORT), 1,     "1 second",    10000}
+            {$(P),  $(PORT), 2,     "1 second",    10000}
+            {$(P),  $(PORT), 3,     "1 second",    10000}
+            {$(P),  $(PORT), 4,     "1 second",    10000}
+            {$(P),  $(PORT), 5,     "1 second",    10000}
+            {$(P),  $(PORT), 6,     "1 second",    10000}
+            {$(P),  $(PORT), 7,     "1 second",    10000}
+            {$(P),  $(PORT), 8,     "1 second",    10000}
 }
