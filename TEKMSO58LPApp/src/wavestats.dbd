@@ -1,2 +1,2 @@
 function("incrementor")
-function("integrator")
+function("wavestats")

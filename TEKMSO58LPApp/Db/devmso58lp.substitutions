@@ -4,16 +4,3 @@ file dev_msoxx.template
     {$(P),$(PORT)}
 }
 
-# file "channel_base.template"
-# {
-#     pattern {P,     PORT,     CHANNEL, }
-#             {$(P),  $(PORT), 1}
-#             {$(P),  $(PORT), 2}
-#             {$(P),  $(PORT), 3}
-#             {$(P),  $(PORT), 4}
-#             {$(P),  $(PORT), 5}
-#             {$(P),  $(PORT), 6}
-#             {$(P),  $(PORT), 7}
-#             {$(P),  $(PORT), 8}
-# }
-

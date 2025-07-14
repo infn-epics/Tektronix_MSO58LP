@@ -54,7 +54,7 @@ $(APPNAME)_DBD += drvAsynIPPort.dbd
 $(APPNAME)_DBD += stream.dbd
 $(APPNAME)_DBD += drvVxi11.dbd
 
-$(APPNAME)_DBD += incrementor.dbd
+$(APPNAME)_DBD += wavestats.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
 # Add all the support libraries needed by this IOC
@@ -73,7 +73,7 @@ $(APPNAME)_LIBS += asyn
 $(APPNAME)_LIBS += calc sscan
 $(APPNAME)_LIBS += seq pv
 $(APPNAME)_LIBS_WIN32 += oncrpc
-$(APPNAME)_SRCS += incrementor.c
+#$(APPNAME)_SRCS += wavestats.c
 # TEKMSO4104B-IOC-01_registerRecordDeviceDriver.cpp derives from TEKMSO4104B-IOC-01.dbd
 $(APPNAME)_SRCS += $(APPNAME)_registerRecordDeviceDriver.cpp
 
@@ -92,7 +92,7 @@ endif
 
 # Link in the code from our support library
 $(APPNAME)_LIBS += $(APPNAME)iocSupport
-$(APPNAME)iocSupport_SRCS += incrementor.c
+$(APPNAME)iocSupport_SRCS += wavestats.c
 
 
 $(APPNAME)_LIBS += $(EPICS_BASE_IOC_LIBS)

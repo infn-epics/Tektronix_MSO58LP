@@ -3,23 +3,24 @@ from org.csstudio.opibuilder.scriptUtil import PVUtil,ScriptUtil
 graph = ScriptUtil.findWidgetByName(widget,"Oscilloscope Display").setPropertyValue
 #graph = display.getWidget("Oscilloscope Display").setPropertyValue
 
+P = widget.getEffectiveMacros().getValue("P")
 
-pvChosen=PVUtil.createPV("loc://CH1_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH1_VISIBLE",1000)
 check1 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH2_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH2_VISIBLE",1000)
 check2 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH3_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH3_VISIBLE",1000)
 check3 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH4_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH4_VISIBLE",1000)
 check4 =PVUtil.getInt(pvChosen)
 
-pvChosen=PVUtil.createPV("loc://CH5_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH5_VISIBLE",1000)
 check5 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH6_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH6_VISIBLE",1000)
 check6 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH7_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH7_VISIBLE",1000)
 check7 =PVUtil.getInt(pvChosen)
-pvChosen=PVUtil.createPV("loc://CH8_VISIBLE",1000)
+pvChosen=PVUtil.createPV("loc://"+P+":CH8_VISIBLE",1000)
 check8 =PVUtil.getInt(pvChosen)
 #check1 = display.getWidget("Check_Box_CH1").getValue()
 #check2 = display.getWidget("Check_Box_CH2").getValue()

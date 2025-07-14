@@ -1,0 +1,1216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2025-07-14 13:57:55 by andreamichelotti-->
+<display version="2.0.0">
+  <width>1353</width>
+  <height>749</height>
+  <background_color>
+    <color red="240" green="240" blue="240">
+    </color>
+  </background_color>
+  <actions>
+  </actions>
+  <grid_step_x>6</grid_step_x>
+  <grid_step_y>6</grid_step_y>
+  <widget type="xyplot" version="3.0.0">
+    <name>Oscilloscope Display</name>
+    <y>42</y>
+    <width>793</width>
+    <height>487</height>
+    <background_color>
+      <color red="0" green="0" blue="0">
+      </color>
+    </background_color>
+    <title>Tektronix MSO 4104B Mixed Signal Oscilloscope</title>
+    <title_font>
+      <font family="Arial" style="BOLD" size="11.881188118811881">
+      </font>
+    </title_font>
+    <show_toolbar>true</show_toolbar>
+    <actions>
+    </actions>
+    <rules>
+      <rule name="name7" prop_id="traces[6].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH7</pv_name>
+      </rule>
+      <rule name="name8" prop_id="traces[7].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH8</pv_name>
+      </rule>
+      <rule name="name6" prop_id="traces[5].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH6</pv_name>
+      </rule>
+      <rule name="name5" prop_id="traces[4].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH5</pv_name>
+      </rule>
+      <rule name="name4" prop_id="traces[3].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH4</pv_name>
+      </rule>
+      <rule name="name3" prop_id="traces[2].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH3</pv_name>
+      </rule>
+      <rule name="name2" prop_id="traces[1].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH2</pv_name>
+      </rule>
+      <rule name="name1" prop_id="traces[0].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH1</pv_name>
+      </rule>
+    </rules>
+    <tooltip></tooltip>
+    <x_axis>
+      <title>Time</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>100.0</maximum>
+      <show_grid>true</show_grid>
+      <title_font>
+        <font family="Arial" style="BOLD" size="8.910891089108912">
+        </font>
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+        </font>
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Points</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>0.0</minimum>
+        <maximum>100.0</maximum>
+        <show_grid>true</show_grid>
+        <title_font>
+          <font family="Arial" style="BOLD" size="8.910891089108912">
+          </font>
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+          </font>
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color name="Text" red="0" green="0" blue="0">
+          </color>
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>Channel 1</name>
+        <x_pv>$(P):XDATA_CH1</x_pv>
+        <y_pv>$(P):RAWYDATA_CH1</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color name="Yellow" red="255" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 2</name>
+        <x_pv>$(P):XDATA_CH2</x_pv>
+        <y_pv>$(P):RAWYDATA_CH2</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 3</name>
+        <x_pv>$(P):XDATA_CH3</x_pv>
+        <y_pv>$(P):RAWYDATA_CH3</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="0" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 4</name>
+        <x_pv>$(P):XDATA_CH4</x_pv>
+        <y_pv>$(P):RAWYDATA_CH4</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 5</name>
+        <x_pv>$(P):XDATA_CH5</x_pv>
+        <y_pv>$(P):RAWYDATA_CH5</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color name="STOP" red="255" green="0" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 6</name>
+        <x_pv>$(P):XDATA_CH6</x_pv>
+        <y_pv>$(P):RAWYDATA_CH6</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="0" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 7</name>
+        <x_pv>$(P):XDATA_CH7</x_pv>
+        <y_pv>$(P):SCALEDYDATA_CH7.AVAL</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="127" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 8</name>
+        <x_pv>$(P):XDATA_CH8</x_pv>
+        <y_pv>$(P):SCALEDYDATA_CH8.AVAL</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="153" green="128" blue="230">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+    </traces>
+    <marker>
+      <marker>
+        <color>
+          <color red="0" green="0" blue="255">
+          </color>
+        </color>
+        <pv_name>$(P):MARKER_START</pv_name>
+        <interactive>true</interactive>
+      </marker>
+      <marker>
+        <color>
+          <color name="MAJOR" red="255" green="0" blue="0">
+          </color>
+        </color>
+        <pv_name>$(P):MARKER_END</pv_name>
+        <interactive>true</interactive>
+      </marker>
+    </marker>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Channel Selection</name>
+    <y>529</y>
+    <width>649</width>
+    <height>77</height>
+    <style>2</style>
+    <background_color>
+      <color red="240" green="240" blue="240">
+      </color>
+    </background_color>
+    <actions>
+    </actions>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH1</name>
+      <pv_name>loc://$(P):CH1_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 1</label>
+      <x>57</x>
+      <y>31</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH1_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH2</name>
+      <pv_name>loc://$(P):CH2_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 2</label>
+      <x>131</x>
+      <y>31</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH2_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH3</name>
+      <pv_name>loc://$(P):CH3_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 3</label>
+      <x>203</x>
+      <y>32</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH3_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH4</name>
+      <pv_name>loc://$(P):CH4_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 4</label>
+      <x>278</x>
+      <y>32</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH4_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Text</name>
+      <macros>
+        <pv_name></pv_name>
+      </macros>
+      <text>Channel Selection</text>
+      <x>6</x>
+      <y>12</y>
+      <width>41</width>
+      <height>44</height>
+      <font>
+        <font name="Example Text" family="Tahoma" style="REGULAR" size="9.900990099009901">
+        </font>
+      </font>
+      <vertical_alignment>1</vertical_alignment>
+      <actions>
+      </actions>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+      <border_color>
+        <color red="0" green="128" blue="255">
+        </color>
+      </border_color>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH1_Colour</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>1</CHAN>
+          </macros>
+          <target>tab</target>
+        </action>
+      </actions>
+      <x>58</x>
+      <y>12</y>
+      <width>30</width>
+      <height>19</height>
+      <background_color>
+        <color name="Yellow" red="255" green="255" blue="0">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH2_Colour</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>2</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>133</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color red="0" green="255" blue="255">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH3_Colour</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>3</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>204</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color red="255" green="0" blue="255">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH4_Colour</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>4</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>280</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color red="0" green="255" blue="0">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH1_Colour_1</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>5</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>352</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color name="STOP" red="255" green="0" blue="0">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH5</name>
+      <pv_name>loc://$(P):CH5_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 5</label>
+      <x>351</x>
+      <y>32</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH5_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH2_Colour_1</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>6</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>430</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color red="0" green="0" blue="255">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH6</name>
+      <pv_name>loc://$(P):CH6_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 6</label>
+      <x>429</x>
+      <y>32</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH6_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH3_Colour_1</name>
+      <actions>
+        <action type="open_display">
+          <description>ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>7</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>503</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color name="Attention" red="255" green="160" blue="0">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+    <widget type="checkbox" version="2.0.0">
+      <name>Check_Box_CH7</name>
+      <pv_name>loc://$(P):CH7_VISIBLE&lt;VLong&gt;(0)</pv_name>
+      <bit>-1</bit>
+      <label>Chan 7</label>
+      <x>504</x>
+      <y>32</y>
+      <width>73</width>
+      <height>18</height>
+      <auto_size>true</auto_size>
+      <actions>
+        <action type="open_display">
+          <description>Open Display</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>7</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <scripts>
+        <script file="Select_traces.py">
+          <pv_name>loc://$(P):CH7_VISIBLE</pv_name>
+        </script>
+      </scripts>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>CH4_Colour_1</name>
+      <actions>
+        <action type="open_display">
+          <description>Ctrl</description>
+          <file>channel_ctrl.bob</file>
+          <macros>
+            <CHAN>8</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <x>577</x>
+      <y>12</y>
+      <width>30</width>
+      <height>20</height>
+      <background_color>
+        <color red="153" green="128" blue="230">
+        </color>
+      </background_color>
+      <tooltip>$(pv_value)</tooltip>
+    </widget>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Vendor</name>
+    <text>Oscilloscope ${P}</text>
+    <width>408</width>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="22.0">
+      </font>
+    </font>
+    <background_color>
+      <color name="Read_Background" red="240" green="240" blue="240">
+      </color>
+    </background_color>
+    <transparent>false</transparent>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Identification</name>
+    <x>649</x>
+    <y>536</y>
+    <width>191</width>
+    <height>164</height>
+    <widget type="label" version="2.0.0">
+      <name>Label</name>
+      <text>Model</text>
+      <x>6</x>
+      <y>32</y>
+      <width>54</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Vendor_1</name>
+      <pv_name>$(P):Model</pv_name>
+      <x>60</x>
+      <y>32</y>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_1</name>
+      <text>Serial</text>
+      <x>6</x>
+      <y>52</y>
+      <width>54</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Vendor_2</name>
+      <pv_name>$(P):Serial</pv_name>
+      <x>60</x>
+      <y>52</y>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_2</name>
+      <text>Code</text>
+      <x>6</x>
+      <y>72</y>
+      <width>54</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Vendor_3</name>
+      <pv_name>$(P):CF</pv_name>
+      <x>60</x>
+      <y>72</y>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_3</name>
+      <text>FW</text>
+      <x>6</x>
+      <y>92</y>
+      <width>54</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Vendor_4</name>
+      <pv_name>$(P):Firmware</pv_name>
+      <x>60</x>
+      <y>92</y>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_4</name>
+      <text>Vendor</text>
+      <x>6</x>
+      <y>11</y>
+      <width>54</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Vendor_5</name>
+      <pv_name>$(P):Vendor</pv_name>
+      <x>60</x>
+      <y>11</y>
+    </widget>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Action Button</name>
+    <actions>
+      <action type="write_pv">
+        <description>Refresh</description>
+        <pv_name>$(pv_name)</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):Refresh</pv_name>
+    <x>558</x>
+    <y>606</y>
+    <width>83</width>
+    <tooltip>$(actions)</tooltip>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Text Update</name>
+    <pv_name>$(P):MARKER_START</pv_name>
+    <x>581</x>
+    <y>38</y>
+    <format>3</format>
+    <precision>3</precision>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>Text Update_1</name>
+    <pv_name>$(P):MARKER_START</pv_name>
+    <x>581</x>
+    <y>58</y>
+    <format>3</format>
+    <precision>3</precision>
+    <vertical_alignment>0</vertical_alignment>
+    <wrap_words>true</wrap_words>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>Text Update_4</name>
+    <pv_name>$(P):MARKER_END</pv_name>
+    <x>687</x>
+    <y>38</y>
+    <background_color>
+      <color name="Read_Background" red="240" green="240" blue="240">
+      </color>
+    </background_color>
+    <format>3</format>
+    <precision>3</precision>
+    <vertical_alignment>0</vertical_alignment>
+    <wrap_words>true</wrap_words>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>Text Update_5</name>
+    <pv_name>$(P):MARKER_END</pv_name>
+    <x>687</x>
+    <y>58</y>
+    <format>3</format>
+    <precision>3</precision>
+    <vertical_alignment>0</vertical_alignment>
+    <wrap_words>true</wrap_words>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_6</name>
+    <text>Marker:</text>
+    <x>488</x>
+    <y>42</y>
+  </widget>
+  <widget type="xyplot" version="3.0.0">
+    <name>Oscilloscope Display_1</name>
+    <x>1363</x>
+    <y>42</y>
+    <width>349</width>
+    <height>243</height>
+    <visible>false</visible>
+    <background_color>
+      <color red="0" green="0" blue="0">
+      </color>
+    </background_color>
+    <title>Tektronix MSO 4104B Mixed Signal Oscilloscope</title>
+    <title_font>
+      <font family="Arial" style="BOLD" size="11.881188118811881">
+      </font>
+    </title_font>
+    <show_toolbar>true</show_toolbar>
+    <actions>
+    </actions>
+    <rules>
+      <rule name="name7" prop_id="traces[6].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH7</pv_name>
+      </rule>
+      <rule name="name8" prop_id="traces[7].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH8</pv_name>
+      </rule>
+      <rule name="name6" prop_id="traces[5].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH6</pv_name>
+      </rule>
+      <rule name="name5" prop_id="traces[4].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH5</pv_name>
+      </rule>
+      <rule name="name4" prop_id="traces[3].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH4</pv_name>
+      </rule>
+      <rule name="name3" prop_id="traces[2].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH3</pv_name>
+      </rule>
+      <rule name="name2" prop_id="traces[1].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH2</pv_name>
+      </rule>
+      <rule name="name1" prop_id="traces[0].name" out_exp="true">
+        <exp bool_exp="True">
+          <expression>pvStr0</expression>
+        </exp>
+        <pv_name>$(P):LABEL_CH1</pv_name>
+      </rule>
+    </rules>
+    <tooltip></tooltip>
+    <x_axis>
+      <title>Time</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>100.0</maximum>
+      <show_grid>true</show_grid>
+      <title_font>
+        <font family="Arial" style="BOLD" size="8.910891089108912">
+        </font>
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+        </font>
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Points</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>0.0</minimum>
+        <maximum>100.0</maximum>
+        <show_grid>true</show_grid>
+        <title_font>
+          <font family="Arial" style="BOLD" size="8.910891089108912">
+          </font>
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+          </font>
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color name="Text" red="0" green="0" blue="0">
+          </color>
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>Channel 1</name>
+        <x_pv>$(P):XDATA_CH1</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH1</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color name="Yellow" red="255" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 2</name>
+        <x_pv>$(P):XDATA_CH2</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH2</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 3</name>
+        <x_pv>$(P):XDATA_CH3</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH3</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="0" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 4</name>
+        <x_pv>$(P):XDATA_CH4</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH4</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 5</name>
+        <x_pv>$(P):XDATA_CH5</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH5</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color name="STOP" red="255" green="0" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 6</name>
+        <x_pv>$(P):XDATA_CH6</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH6</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="0" blue="255">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>false</visible>
+      </trace>
+      <trace>
+        <name>Channel 7</name>
+        <x_pv>$(P):XDATA_CH7</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH7</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="127" blue="0">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>Channel 8</name>
+        <x_pv>$(P):XDATA_CH8</x_pv>
+        <y_pv>$(P):MATH_ARRAY_CH8</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="153" green="128" blue="230">
+          </color>
+        </color>
+        <line_width>1</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>4</point_size>
+        <visible>true</visible>
+      </trace>
+    </traces>
+    <marker>
+      <marker>
+        <color>
+          <color red="0" green="0" blue="255">
+          </color>
+        </color>
+        <pv_name>$(P):MARKER_START</pv_name>
+        <interactive>true</interactive>
+      </marker>
+      <marker>
+        <color>
+          <color name="MAJOR" red="255" green="0" blue="0">
+          </color>
+        </color>
+        <pv_name>$(P):MARKER_END</pv_name>
+        <interactive>true</interactive>
+      </marker>
+    </marker>
+  </widget>
+  <widget type="checkbox" version="2.0.0">
+    <name>Check_Box_CH8</name>
+    <pv_name>loc://$(P):CH8_VISIBLE&lt;VLong&gt;(0)</pv_name>
+    <bit>-1</bit>
+    <label>Chan 8</label>
+    <x>578</x>
+    <y>562</y>
+    <width>73</width>
+    <height>18</height>
+    <auto_size>true</auto_size>
+    <actions>
+      <action type="open_display">
+        <description>Open Display</description>
+        <file>channel_ctrl.bob</file>
+        <macros>
+          <CHAN>8</CHAN>
+        </macros>
+        <target>window</target>
+      </action>
+    </actions>
+    <scripts>
+      <script file="Select_traces.py">
+        <pv_name>loc://$(P):CH8_VISIBLE</pv_name>
+      </script>
+    </scripts>
+  </widget>
+  <widget type="template" version="2.0.0">
+    <name>Template/Instance</name>
+    <file>math_row.bob</file>
+    <instances>
+      <instance>
+        <macros>
+          <CHAN>1</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>2</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>3</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>4</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>5</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>6</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>7</CHAN>
+        </macros>
+      </instance>
+      <instance>
+        <macros>
+          <CHAN>8</CHAN>
+        </macros>
+      </instance>
+    </instances>
+    <x>802</x>
+    <y>108</y>
+    <width>620</width>
+    <height>230</height>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_5</name>
+    <text>Chan</text>
+    <x>795</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_7</name>
+    <text>Label</text>
+    <x>855</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_8</name>
+    <text>Integral</text>
+    <x>936</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_9</name>
+    <text>RMS</text>
+    <x>1020</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_10</name>
+    <text>AVG</text>
+    <x>1098</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_11</name>
+    <text>MAX</text>
+    <x>1176</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_12</name>
+    <text>MIN</text>
+    <x>1254</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Label_13</name>
+    <text>FACT</text>
+    <x>1338</x>
+    <y>90</y>
+    <width>60</width>
+    <height>24</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+  </widget>
+</display>

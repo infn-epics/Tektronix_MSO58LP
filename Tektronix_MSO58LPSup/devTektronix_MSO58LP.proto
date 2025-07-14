@@ -34,6 +34,15 @@ getYMULT {
 	ExtraInput = Ignore;
 }
 
+getYOff {
+	#get y multiplier for plot
+	out ":DATa:SOUrce CH\$1";
+	wait 10;
+	out "WFMOutpre:YZEro?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
 getXUNIT {
 	#get x unit for plot
 	out ":DATa:SOUrce CH\$1";
@@ -60,16 +69,21 @@ getYDATA {
 	wait 1;
 	out ":DATa:SOUrce CH\$1";
 	wait 1;
-	out ":DATa:STARt 1";
+	out ":DATa:STARt %(\$2)d";
 	wait 1;
-	out ":DATa:STOP \$2";
+	out ":DATa:STOP %(\$3)d";
 	wait 1;
 	out ":DATa:ENCdg ASCIi";
 	wait 1;
-	out ":DATa:WIDth 1";
+	out ":DATa:WIDth 2";
 	wait 1;
 	out ":CURVe?";
 	separator=",";
 	in "%d";
 	ExtraInput = Ignore;
-}	
+}
+setLabel{
+	out "CH\$1:LABEL:NAME \"%s\"";
+	ExtraInput = Ignore;
+
+}
