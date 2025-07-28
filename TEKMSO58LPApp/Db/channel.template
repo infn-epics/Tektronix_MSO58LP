@@ -142,40 +142,40 @@ record(calcout, "$(P):SAMPLES_CH$(CHANNEL)"){
     field(CALC,"((A-B)>0)?A-B:$(NELM)")
     field(OUT,"$(P):SCALEDYDATA_CH$(CHANNEL).NUSE CP")   
 }
-record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MEAN_"){
-    field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
-    field(CALC,"A")
-    field(DOPT, "Use CALC")
+# record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MEAN_"){
+#     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
+#     field(CALC,"A")
+#     field(DOPT, "Use CALC")
 
-    field(OUT,"$(P):MEAN_CH$(CHANNEL)_.NUSE CP")   
-}
+#     field(OUT,"$(P):MEAN_CH$(CHANNEL)_.NUSE CP")   
+# }
 
-record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MIN_"){
-    field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
-    field(CALC,"A")
-    field(DOPT, "Use CALC")
-    field(OUT,"$(P):MIN_CH$(CHANNEL)_.NUSE CP")   
-}
-record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MAX_"){
-    field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
-    field(CALC,"A")
-    field(DOPT, "Use CALC")
-    field(OUT,"$(P):MAX_CH$(CHANNEL)_.NUSE CP")   
-}
+# record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MIN_"){
+#     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
+#     field(CALC,"A")
+#     field(DOPT, "Use CALC")
+#     field(OUT,"$(P):MIN_CH$(CHANNEL)_.NUSE CP")   
+# }
+# record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MAX_"){
+#     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
+#     field(CALC,"A")
+#     field(DOPT, "Use CALC")
+#     field(OUT,"$(P):MAX_CH$(CHANNEL)_.NUSE CP")   
+# }
 
-record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2INTEGRAL_"){
-    field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
-    field(CALC,"A")
-    field(DOPT, "Use CALC")
-    field(OUT,"$(P):INTEGRAL_CH$(CHANNEL)_.NUSE CP")   
-}
+# record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2INTEGRAL_"){
+#     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
+#     field(CALC,"A")
+#     field(DOPT, "Use CALC")
+#     field(OUT,"$(P):INTEGRAL_CH$(CHANNEL)_.NUSE CP")   
+# }
 
-record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2RMS_"){
-    field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
-    field(CALC,"A")
-    field(DOPT, "Use CALC")
-    field(OUT,"$(P):RMS_CH$(CHANNEL)_.NUSE CP")   
-}
+# record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2RMS_"){
+#     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
+#     field(CALC,"A")
+#     field(DOPT, "Use CALC")
+#     field(OUT,"$(P):RMS_CH$(CHANNEL)_.NUSE CP")   
+# }
 
 
 record(fanout,"$(P):calc_window_$(CHANNEL)_"){
@@ -298,6 +298,7 @@ record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
 }
 
 record(acalcout, "$(P):SCALEDYDATA_CH$(CHANNEL)") {
+    field(DESC, "scaled waveform")
     field(NELM, "$(NELM)")
     field(NUSE, "$(NELM)")
     field(SIZE,"NUSE")
@@ -307,14 +308,24 @@ record(acalcout, "$(P):SCALEDYDATA_CH$(CHANNEL)") {
     field(CALC, "AA*A+B")
     #field(OUT, "$(P):SCALEDYDATA_CH$(CHANNEL)")
     #field(FLNK, "$(P):wavestats_$(CHANNEL)_")
-    field(FLNK, "$(P):MAX_CH$(CHANNEL)_")
+    field(FLNK, "$(P):MATH_ARRAY_CH$(CHANNEL)")
 
+}
+
+record(subArray, "$(P):MATH_ARRAY_CH$(CHANNEL)") {
+    field(DESC, "math waveform")
+    field(INP, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")  # Link to full waveform
+    field(FTVL, "DOUBLE")                    # Must match waveform type
+    field(MALM, "$(NELM)")                   # Max number of elements
+    field(INDX, "0")  # Start index                 
+    field(NELM, "$(NELM)")                     #
+    field(FLNK, "$(P):MAX_CH$(CHANNEL)_")
 }
 
 record(acalcout, "$(P):MAX_CH$(CHANNEL)_") {
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
-    field(NELM, "$(NELM)")
-    field(NUSE, "$(NELM)")
+    # field(NELM, "$(NELM)")
+    # field(NUSE, "$(NELM)")
     field(CALC, "AMAX(AA)")
     field(OUT,"$(P):MAX_CH$(CHANNEL) CP")
     #field(FLNK, "$(P):wavestats_$(CHANNEL)_")
@@ -324,16 +335,16 @@ record(acalcout, "$(P):MAX_CH$(CHANNEL)_") {
 }
 
 record(acalcout, "$(P):MIN_CH$(CHANNEL)_") {
-    field(NELM, "$(NELM)")
-    field(NUSE, "$(NELM)")
+    # field(NELM, "$(NELM)")
+    # field(NUSE, "$(NELM)")
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(CALC, "AMIN(AA)")
     field(OUT,"$(P):MIN_CH$(CHANNEL) CP")
     field(FLNK, "$(P):MEAN_CH$(CHANNEL)_")
 }
 record(acalcout, "$(P):MEAN_CH$(CHANNEL)_") {
-    field(NELM, "$(NELM)")
-    field(NUSE, "$(NELM)")
+    # field(NELM, "$(NELM)")
+    # field(NUSE, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(CALC, "AVG(AA)")
@@ -344,8 +355,8 @@ record(acalcout, "$(P):MEAN_CH$(CHANNEL)_") {
 
 }
 record(acalcout, "$(P):INTEGRAL_CH$(CHANNEL)_") {
-    field(NELM, "$(NELM)")
-    field(NUSE, "$(NELM)")
+    # field(NELM, "$(NELM)")
+    # field(NUSE, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(INPA, "$(P):XINC_CH$(CHANNEL)")
@@ -357,16 +368,17 @@ record(acalcout, "$(P):INTEGRAL_CH$(CHANNEL)_") {
 }
 
 record(acalcout, "$(P):RMS_CH$(CHANNEL)_") {
-    field(NELM, "$(NELM)")
-    field(NUSE, "$(NELM)")
+    # field(NELM, "$(NELM)")
+    # field(NUSE, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(INPA, "$(P):SAMPLES_CH$(CHANNEL)")
 
     field(CALC, "SQRT((SUM(AA^2))/A)")
     field(OUT,"$(P):RMS_CH$(CHANNEL) CP")
-    field(FLNK, "$(P):RMS_CH$(CHANNEL)")
+    field(FLNK, "$(P):MATH_MAX_CH$(CHANNEL)_")
 }
+
 # record(waveform, "$(P):SCALEDYDATA_CH$(CHANNEL)")
 # {
 #     field(DESC, "Get y data points")
@@ -375,15 +387,71 @@ record(acalcout, "$(P):RMS_CH$(CHANNEL)_") {
 #     field(FLNK, "$(P):wavestats_$(CHANNEL)_")
 
 # }
-# record(subArray, "$(P):MATH_ARRAY_CH$(CHANNEL)") {
-#     field(DESC, "Subset of waveform")
-#     field(INP, "$(P):RAWYDATA_CH$(CHANNEL) NPP NMS")  # Link to full waveform
-#     field(FTVL, "SHORT")                    # Must match waveform type
-#     field(MALM, "$(NELM)")                   # Max number of elements
-#     field(INDX, "0")                     
-#     field(NELM, "$(NELM)")                     #
-#     field(FLNK, "$(P):wavestats_$(CHANNEL)_")
-# }
+
+record(calcout, "$(P):samples_for_math_$(CHANNEL)"){
+    field(INPA,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL) CP")
+    field(INPB,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL) CP")
+    field(CALC,"((A-B)>0)?A-B:$(NELM)")
+    field(OUT,"$(P):MATH_ARRAY_CH$(CHANNEL).NELM PP")   
+}
+
+record(calcout, "$(P):pickvalue_start$(CHANNEL)_math")
+{
+    field(DESC, "pick samples")
+    field(INPA,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL) CP")
+    
+    field(CALC,"A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):MATH_ARRAY_CH$(CHANNEL).INDX")
+}
+
+
+### SUBARRAYS MATH
+
+record(acalcout, "$(P):MATH_MAX_CH$(CHANNEL)_") {
+    field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
+    field(CALC, "AMAX(AA)")
+    field(OUT,"$(P):MATH_MAX_CH$(CHANNEL) CP")
+    field(FLNK, "$(P):MATH_MIN_CH$(CHANNEL)_")
+}
+
+record(acalcout, "$(P):MATH_MIN_CH$(CHANNEL)_") {
+    field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
+    field(CALC, "AMIN(AA)")
+    field(OUT,"$(P):MATH_MIN_CH$(CHANNEL) CP")
+    field(FLNK, "$(P):MATH_MEAN_CH$(CHANNEL)_")
+}
+
+record(acalcout, "$(P):MATH_MEAN_CH$(CHANNEL)_") {
+    field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
+    field(CALC, "AVG(AA)")
+    field(OUT,"$(P):MATH_MEAN_CH$(CHANNEL) CP")
+    field(FLNK, "$(P):MATH_INTEGRAL_CH$(CHANNEL)_")
+
+    #field(FLNK, "$(P):wavestats_$(CHANNEL)_")
+
+}
+record(acalcout, "$(P):MATH_INTEGRAL_CH$(CHANNEL)_") {
+
+    field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
+    field(INPA, "$(P):XINC_CH$(CHANNEL)")
+    field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
+
+    field(CALC, "SUM(AA)*B*A")
+    field(OUT,"$(P):MATH_INTEGRAL_CH$(CHANNEL) CP")
+    field(FLNK, "$(P):MATH_RMS_CH$(CHANNEL)_")
+}
+
+record(acalcout, "$(P):MATH_RMS_CH$(CHANNEL)_") {
+
+    field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
+    field(INPA, "$(P):samples_for_math_$(CHANNEL)")
+
+    field(CALC, "SQRT((SUM(AA^2))/A)")
+    field(OUT,"$(P):MATH_RMS_CH$(CHANNEL) CP")
+}
+
+######
 
 record(calcout, "$(P):pickvalue_start$(CHANNEL)")
 {
@@ -396,6 +464,7 @@ record(calcout, "$(P):pickvalue_start$(CHANNEL)")
     field(FLNK,"$(P):MARKER_START_VALUE_$(CHANNEL)")
 
 }
+
 
 record(calcout, "$(P):pickvalue_end$(CHANNEL)")
 {
@@ -483,6 +552,37 @@ record(ai, "$(P):RMS_CH$(CHANNEL)") {
 
 record(ai, "$(P):INTEGRAL_CH$(CHANNEL)") {
     field(DESC, "INTEGRAL value of waveform")
+
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_MEAN_CH$(CHANNEL)") {
+    field(DESC, "Mean value of math wave")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_MIN_CH$(CHANNEL)") {
+    field(DESC, "Minimum value of math wave")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_MAX_CH$(CHANNEL)") {
+    field(DESC, "Maximum value of math wave")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_RMS_CH$(CHANNEL)") {
+    field(DESC, "RMS value of math wave")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_INTEGRAL_CH$(CHANNEL)") {
+    field(DESC, "INTEGRAL value of math wave")
 
     field(DTYP, "Soft Channel")
     field(PREC, "9")
