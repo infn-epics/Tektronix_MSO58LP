@@ -1,6 +1,6 @@
 file dev_msoxx.template
 {
-    pattern {P,     PORT, }
+    pattern {P,     PORT }
     {$(P),$(PORT)}
 }
 

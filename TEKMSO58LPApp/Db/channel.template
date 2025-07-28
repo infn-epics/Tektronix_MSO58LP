@@ -349,7 +349,7 @@ record(acalcout, "$(P):INTEGRAL_CH$(CHANNEL)_") {
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(INPA, "$(P):XINC_CH$(CHANNEL)")
-    field(INPB, "$(P):NORM_CH$(CHANNEL)")
+    field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
 
     field(CALC, "SUM(AA)*B*A")
     field(OUT,"$(P):INTEGRAL_CH$(CHANNEL) CP")
@@ -433,7 +433,7 @@ record(subArray, "$(P):MARKER_END_VALUE_$(CHANNEL)") {
 # record(aSub, "$(P):wavestats_$(CHANNEL)_") {
 #     field(SNAM, "wavestats")
 #     field(FTA, "DOUBLE") field(INPA, "$(P):XINC_CH$(CHANNEL)")
-#     field(FTB, "DOUBLE") field(INPB, "$(P):NORM_CH$(CHANNEL)")
+#     field(FTB, "DOUBLE") field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
 #     field(FTC, "DOUBLE") field(NEVC,"$(NELM)") field(INPC, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL PP") 
 #     field(FTD, "LONG") field(INPD, "$(P):RAWYDATA_CH$(CHANNEL).NORD")
 #     field(FTE, "LONG") field(INPE, "$(P):START_MATH_CH$(CHANNEL)") ## start sample
@@ -560,11 +560,11 @@ record(calcout, "$(P):subarray_start$(CHANNEL)")
 
 
 
-record(ai, "$(P):NORM_CH$(CHANNEL)") {
-    field(DESC, "normalization factor for  CH$(CHANNEL) integral")
+record(ai, "$(P):SENSIBILITY_CH$(CHANNEL)") {
+    field(DESC, "sensibility factor for CH$(CHANNEL)")
     field(DTYP, "Soft Channel")
     field(PREC, "9")
-    field(VAL, "1.0")
+    field(VAL, "$(SENSIBILITY=1.0)")
 }
 
 record(ai, "$(P):XMIN_CH$(CHANNEL)") {
