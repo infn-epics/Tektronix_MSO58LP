@@ -1,5 +1,5 @@
 OutTerminator = '\n';
-ReplyTimeout = 1500;
+ReplyTimeout = 800;
 
 getIDN {
     out "*IDN?";
@@ -60,9 +60,7 @@ getYUNIT {
 	in '%/([a-zA-Z]+)/';
 	ExtraInput = Ignore;
 }
-
-getYDATA {
-	#ask scope for y data points
+setTransfer {
 	out ":VERBOSE 0";
 	wait 1;
 	out "HEADER 0";
@@ -76,6 +74,35 @@ getYDATA {
 	out ":DATa:ENCdg ASCIi";
 	wait 1;
 	out ":DATa:WIDth 2";
+	wait 1;
+	ExtraInput = Ignore;
+}
+getYDATA {
+	#ask scope for y data points
+#	out ":VERBOSE 0";
+#	wait 1;
+#	out "HEADER 0";
+#	wait 1;
+	out ":DATa:SOUrce CH\$1";
+#	wait 1;
+	out ":DATa:STARt %(\$2)d";
+#	wait 1;
+	out ":DATa:STOP %(\$3)d";
+#	wait 1;
+	out ":DATa:ENCdg ASCIi";
+	#out "DATa:ENCdg RIBinary";        # Signed binary encoding
+
+#	wait 1;
+	out ":DATa:WIDth 2";
+#	wait 1;
+	out ":CURVe?";
+	separator=",";
+	in "%d";
+	# in  "%#02r";                        # Read binary block as 16-bit words
+	ExtraInput = Ignore;
+}
+getYDATAs {
+	out ":DATa:SOUrce CH\$1";
 	wait 1;
 	out ":CURVe?";
 	separator=",";

@@ -140,8 +140,20 @@ record(calcout, "$(P):SAMPLES_CH$(CHANNEL)"){
     field(INPA,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL)")
     field(INPB,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL)")
     field(CALC,"((A-B)>0)?A-B:$(NELM)")
-    field(OUT,"$(P):SCALEDYDATA_CH$(CHANNEL).NUSE CP")   
+    field(OUT,"$(P):SCALEDYDATA_CH$(CHANNEL).NUSE CP")
+#    field(FLNK, "$(P):CHANGE_PARAMS_CH$(CHANNEL)")
 }
+
+
+# record(ao, "$(P):CHANGE_PARAMS_CH$(CHANNEL)")
+# {
+#     field(DESC, "Change parameters")
+#     field(DTYP, "stream")
+#     field(OUT,  "@devTektronix_MSO58LP.proto setTransfer($(CHANNEL),$(P):START_SAMPLE_CH$(CHANNEL).VAL,$(P):END_SAMPLE_CH$(CHANNEL).VAL PP) $(PORT)")
+#     field(PINI,"YES")
+#     field(SCAN,"Passive")
+# }
+
 # record(calcout,"$(P):SAMPLES_CH$(CHANNEL)2MEAN_"){
 #     field(INPA,"$(P):SAMPLES_CH$(CHANNEL) CP")
 #     field(CALC,"A")
@@ -289,12 +301,19 @@ record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
     field(NELM, $(NELM))
     field(FTVL, "SHORT")
     field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL),$(P):START_SAMPLE_CH$(CHANNEL).VAL,$(P):END_SAMPLE_CH$(CHANNEL).VAL PP) $(PORT)")
-    #field(FLNK, "$(P):MATH_ARRAY_CH$(CHANNEL)")
-    # field(SIML, "$(P):SIM")
-    # field(SIOL, "$(P):SIM:RAWYDATA_CH$(CHANNEL)")
-    # field(SDIS, "$(P):DISABLE")
+    #field(INP,  "@devTektronix_MSO58LP.proto getYDATAs($(CHANNEL)) $(PORT)")
+   
     field(FLNK, "$(P):SCALEDYDATA_CH$(CHANNEL)")
 
+}
+record(bi, "$(P):CH$(CHANNEL):COMM_OK")
+{
+    field(DESC, "StreamDevice communication status")
+    field(INP, "$(P):RAWYDATA_CH$(CHANNEL).SEVR CP")
+    field(ZNAM, "OK")
+    field(ONAM, "FAIL")
+    field(PINI, "YES")
+    field(VAL, "1")
 }
 
 record(acalcout, "$(P):SCALEDYDATA_CH$(CHANNEL)") {
@@ -603,6 +622,7 @@ record(ai, "$(P):START_SAMPLE_CH$(CHANNEL)")
     field(VAL, 0)
     field(FLNK,"$(P):SAMPLES_CH$(CHANNEL)")
 }
+
 
 record(ai, "$(P):END_SAMPLE_CH$(CHANNEL)")
 {

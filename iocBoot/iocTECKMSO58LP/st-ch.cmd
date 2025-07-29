@@ -21,7 +21,7 @@ TEKMSO58LP_registerRecordDeviceDriver pdbbase
 
 #ALE##  Se si vuole dialogare vxi11 decommentare la prossima riga e commentare quella seguente.
 #vxi11Configure("IP", "192.168.197.139", 0, 0.0,"inst0", 0, 0)
-drvAsynIPPortConfigure("inst0", "192.168.197.139:4000")
+drvAsynIPPortConfigure("inst0", "192.168.197.139:4004")
 ## Load record instances
 
 
