@@ -303,9 +303,21 @@ record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
     field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL),$(P):START_SAMPLE_CH$(CHANNEL).VAL,$(P):END_SAMPLE_CH$(CHANNEL).VAL PP) $(PORT)")
     #field(INP,  "@devTektronix_MSO58LP.proto getYDATAs($(CHANNEL)) $(PORT)")
    
-    field(FLNK, "$(P):SCALEDYDATA_CH$(CHANNEL)")
+    field(FLNK, "$(P):check_acquisition_$(CHANNEL)_")
 
 }
+
+# Gate scaling: only process if acquisition succeeded (SEVR < MAJOR)
+record(calcout, "$(P):check_acquisition_$(CHANNEL)_")
+{
+    field(DESC, "Gate processing on acquisition success")
+    field(INPA, "$(P):RAWYDATA_CH$(CHANNEL).SEVR NPP NMS")
+    field(CALC, "A<2")  # 0=NO_ALARM, 1=MINOR are OK; 2=MAJOR, 3=INVALID are errors
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")  # Only process downstream if result is 1 (success)
+    field(OUT, "$(P):SCALEDYDATA_CH$(CHANNEL).PROC PP")
+}
+
 record(bi, "$(P):CH$(CHANNEL):COMM_OK")
 {
     field(DESC, "StreamDevice communication status")

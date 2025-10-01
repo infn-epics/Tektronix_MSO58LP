@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2025-07-14 13:57:55 by andreamichelotti-->
 <display version="2.0.0">
   <width>1353</width>
   <height>749</height>
@@ -124,7 +123,7 @@
       <trace>
         <name>Channel 1</name>
         <x_pv>$(P):XDATA_CH1</x_pv>
-        <y_pv>$(P):RAWYDATA_CH1</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH1.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -141,7 +140,7 @@
       <trace>
         <name>Channel 2</name>
         <x_pv>$(P):XDATA_CH2</x_pv>
-        <y_pv>$(P):RAWYDATA_CH2</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH2.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -158,7 +157,7 @@
       <trace>
         <name>Channel 3</name>
         <x_pv>$(P):XDATA_CH3</x_pv>
-        <y_pv>$(P):RAWYDATA_CH3</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH3.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -175,7 +174,7 @@
       <trace>
         <name>Channel 4</name>
         <x_pv>$(P):XDATA_CH4</x_pv>
-        <y_pv>$(P):RAWYDATA_CH4</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH4.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -192,7 +191,7 @@
       <trace>
         <name>Channel 5</name>
         <x_pv>$(P):XDATA_CH5</x_pv>
-        <y_pv>$(P):RAWYDATA_CH5</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH5.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -209,7 +208,7 @@
       <trace>
         <name>Channel 6</name>
         <x_pv>$(P):XDATA_CH6</x_pv>
-        <y_pv>$(P):RAWYDATA_CH6</y_pv>
+        <y_pv>$(P):SCALEDYDATA_CH6.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -221,7 +220,7 @@
         <line_style>0</line_style>
         <point_type>0</point_type>
         <point_size>4</point_size>
-        <visible>false</visible>
+        <visible>true</visible>
       </trace>
       <trace>
         <name>Channel 7</name>
@@ -307,6 +306,29 @@
         </script>
       </scripts>
     </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>View_CH1</name>
+      <actions>
+        <action type="open_display">
+          <description>Open Channel 1</description>
+          <file>channel_display.bob</file>
+          <macros>
+            <CHAN>1</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <text>⊞</text>
+      <x>57</x>
+      <y>49</y>
+      <width>44</width>
+      <height>27</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+      <tooltip>Open Channel 1 in separate window</tooltip>
+    </widget>
     <widget type="checkbox" version="2.0.0">
       <name>Check_Box_CH2</name>
       <pv_name>loc://$(P):CH2_VISIBLE&lt;VLong&gt;(0)</pv_name>
@@ -324,6 +346,29 @@
           <pv_name>loc://$(P):CH2_VISIBLE</pv_name>
         </script>
       </scripts>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>View_CH2</name>
+      <actions>
+        <action type="open_display">
+          <description>Open Channel 2</description>
+          <file>channel_display.bob</file>
+          <macros>
+            <CHAN>2</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <text>⊞</text>
+      <x>131</x>
+      <y>49</y>
+      <width>44</width>
+      <height>27</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+      <tooltip>Open Channel 2 in separate window</tooltip>
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>Check_Box_CH3</name>
@@ -586,14 +631,6 @@ $(pv_value)</tooltip>
       <height>18</height>
       <auto_size>true</auto_size>
       <actions>
-        <action type="open_display">
-          <description>Open Display</description>
-          <file>channel_ctrl.bob</file>
-          <macros>
-            <CHAN>7</CHAN>
-          </macros>
-          <target>window</target>
-        </action>
       </actions>
       <scripts>
         <script file="Select_traces.py">
@@ -623,6 +660,29 @@ $(pv_value)</tooltip>
       </background_color>
       <tooltip>$(pv_value)</tooltip>
     </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>View_CH8</name>
+      <actions>
+        <action type="open_display">
+          <description>Open Channel 8</description>
+          <file>channel_display.bob</file>
+          <macros>
+            <CHAN>8</CHAN>
+          </macros>
+          <target>window</target>
+        </action>
+      </actions>
+      <text>⊞</text>
+      <x>577</x>
+      <y>50</y>
+      <width>44</width>
+      <height>27</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+      <tooltip>Open Channel 8 in separate window</tooltip>
+    </widget>
   </widget>
   <widget type="label" version="2.0.0">
     <name>Vendor</name>
@@ -640,8 +700,8 @@ $(pv_value)</tooltip>
   </widget>
   <widget type="group" version="3.0.0">
     <name>Identification</name>
-    <x>649</x>
-    <y>536</y>
+    <x>804</x>
+    <y>78</y>
     <width>191</width>
     <height>164</height>
     <widget type="label" version="2.0.0">
@@ -1052,14 +1112,6 @@ $(pv_value)</tooltip>
     <height>18</height>
     <auto_size>true</auto_size>
     <actions>
-      <action type="open_display">
-        <description>Open Display</description>
-        <file>channel_ctrl.bob</file>
-        <macros>
-          <CHAN>8</CHAN>
-        </macros>
-        <target>window</target>
-      </action>
     </actions>
     <scripts>
       <script file="Select_traces.py">
@@ -1067,150 +1119,119 @@ $(pv_value)</tooltip>
       </script>
     </scripts>
   </widget>
-  <widget type="template" version="2.0.0">
-    <name>Template/Instance</name>
-    <file>math_row.bob</file>
-    <instances>
-      <instance>
-        <macros>
-          <CHAN>1</CHAN>
-        </macros>
-      </instance>
-      <instance>
-        <macros>
-          <CHAN>2</CHAN>
-        </macros>
-      </instance>
-      <instance>
+  <widget type="action_button" version="3.0.0">
+    <name>View_CH3</name>
+    <actions>
+      <action type="open_display">
+        <description>Open Channel 3</description>
+        <file>channel_display.bob</file>
         <macros>
           <CHAN>3</CHAN>
         </macros>
-      </instance>
-      <instance>
+        <target>window</target>
+      </action>
+    </actions>
+    <text>⊞</text>
+    <x>204</x>
+    <y>580</y>
+    <width>44</width>
+    <height>27</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="10.0">
+      </font>
+    </font>
+    <tooltip>Open Channel 3 in separate window</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>View_CH4</name>
+    <actions>
+      <action type="open_display">
+        <description>Open Channel 4</description>
+        <file>channel_display.bob</file>
         <macros>
           <CHAN>4</CHAN>
         </macros>
-      </instance>
-      <instance>
+        <target>window</target>
+      </action>
+    </actions>
+    <text>⊞</text>
+    <x>279</x>
+    <y>580</y>
+    <width>44</width>
+    <height>27</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="10.0">
+      </font>
+    </font>
+    <tooltip>Open Channel 4 in separate window</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>View_CH5</name>
+    <actions>
+      <action type="open_display">
+        <description>Open Channel 5</description>
+        <file>channel_display.bob</file>
         <macros>
           <CHAN>5</CHAN>
         </macros>
-      </instance>
-      <instance>
+        <target>window</target>
+      </action>
+    </actions>
+    <text>⊞</text>
+    <x>352</x>
+    <y>580</y>
+    <width>44</width>
+    <height>27</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="10.0">
+      </font>
+    </font>
+    <tooltip>Open Channel 5 in separate window</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>View_CH6</name>
+    <actions>
+      <action type="open_display">
+        <description>Open Channel 6</description>
+        <file>channel_display.bob</file>
         <macros>
           <CHAN>6</CHAN>
         </macros>
-      </instance>
-      <instance>
+        <target>window</target>
+      </action>
+    </actions>
+    <text>⊞</text>
+    <x>430</x>
+    <y>580</y>
+    <width>44</width>
+    <height>27</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="10.0">
+      </font>
+    </font>
+    <tooltip>Open Channel 6 in separate window</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>View_CH7</name>
+    <actions>
+      <action type="open_display">
+        <description>Open Channel 7</description>
+        <file>channel_display.bob</file>
         <macros>
           <CHAN>7</CHAN>
         </macros>
-      </instance>
-      <instance>
-        <macros>
-          <CHAN>8</CHAN>
-        </macros>
-      </instance>
-    </instances>
-    <x>802</x>
-    <y>108</y>
-    <width>620</width>
-    <height>230</height>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_5</name>
-    <text>Chan</text>
-    <x>795</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
+        <target>window</target>
+      </action>
+    </actions>
+    <text>⊞</text>
+    <x>503</x>
+    <y>580</y>
+    <width>44</width>
+    <height>27</height>
     <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
+      <font family="Liberation Sans" style="BOLD" size="10.0">
       </font>
     </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_7</name>
-    <text>Label</text>
-    <x>855</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_8</name>
-    <text>Integral</text>
-    <x>936</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_9</name>
-    <text>RMS</text>
-    <x>1020</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_10</name>
-    <text>AVG</text>
-    <x>1098</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_11</name>
-    <text>MAX</text>
-    <x>1176</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_12</name>
-    <text>MIN</text>
-    <x>1254</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
-  </widget>
-  <widget type="label" version="2.0.0">
-    <name>Label_13</name>
-    <text>FACT</text>
-    <x>1338</x>
-    <y>90</y>
-    <width>60</width>
-    <height>24</height>
-    <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
-      </font>
-    </font>
+    <tooltip>Open Channel 7 in separate window</tooltip>
   </widget>
 </display>

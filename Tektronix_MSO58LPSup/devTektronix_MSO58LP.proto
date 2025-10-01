@@ -84,17 +84,17 @@ getYDATA {
 #	out "HEADER 0";
 #	wait 1;
 	out ":DATa:SOUrce CH\$1";
-#	wait 1;
+	wait 1;
 	out ":DATa:STARt %(\$2)d";
-#	wait 1;
+	wait 1;
 	out ":DATa:STOP %(\$3)d";
-#	wait 1;
+	wait 1;
 	out ":DATa:ENCdg ASCIi";
 	#out "DATa:ENCdg RIBinary";        # Signed binary encoding
 
-#	wait 1;
+	wait 1;
 	out ":DATa:WIDth 2";
-#	wait 1;
+	wait 1;
 	out ":CURVe?";
 	separator=",";
 	in "%d";
