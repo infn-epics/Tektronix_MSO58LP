@@ -123,15 +123,34 @@ record(bo, "$(P):AcquireMath_$(CHANNEL)")
     field(OUT, "$(P):AcquireMath_$(CHANNEL).PROC")  # write to self for momentary behavior
 }
 
+# Per-channel marker positions
+record(ao, "$(P):CH$(CHANNEL):MARKER_START") {
+    field(DESC, "Channel $(CHANNEL) start marker position")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+    field(PINI, "YES")
+    field(FLNK, "$(P):MARKER_START_SAMPLE_CH$(CHANNEL)")
+}
+
+record(ao, "$(P):CH$(CHANNEL):MARKER_END") {
+    field(DESC, "Channel $(CHANNEL) end marker position")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+    field(PINI, "YES")
+    field(FLNK, "$(P):MARKER_END_SAMPLE_CH$(CHANNEL)")
+}
+
 record(calc,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL)"){
-    field(INPA,"$(P):MARKER_START CP")
+    field(INPA,"$(P):CH$(CHANNEL):MARKER_START CP")
     field(INPB,"$(P):XINC_CH$(CHANNEL)")
     field(CALC,"(B>0.0)?A/B:0")
 
 }
 
 record(calc,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL)"){
-    field(INPA,"$(P):MARKER_END CP")
+    field(INPA,"$(P):CH$(CHANNEL):MARKER_END CP")
     field(INPB,"$(P):XINC_CH$(CHANNEL)")
     field(CALC,"(B>0.0)?A/B:$(NELM)")
 }
@@ -210,8 +229,27 @@ record(fanout,"$(P):calc_math_$(CHANNEL)_"){
 record(fanout,"$(P):calc_reset_$(CHANNEL)_"){
     field(LNK1, "$(P):calcreset_start_$(CHANNEL)_")
     field(LNK2, "$(P):calcreset_end_$(CHANNEL)_")
-    field(LNK3, "$(P):reset_start_marker_")
-    field(LNK4, "$(P):reset_end_marker_")
+    field(LNK3, "$(P):CH$(CHANNEL):reset_start_marker_")
+    field(LNK4, "$(P):CH$(CHANNEL):reset_end_marker_")
+}
+
+# Reset buttons for per-channel markers
+record(calcout, "$(P):CH$(CHANNEL):reset_start_marker_")
+{
+    field(DESC, "Reset CH$(CHANNEL) start marker")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_START PP")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):reset_end_marker_")
+{
+    field(DESC, "Reset CH$(CHANNEL) end marker")
+    field(INPA, "$(P):MAXSAMPLES_CH$(CHANNEL)")
+    field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(CALC, "A*B")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_END PP")
 }
 
 record(calcout,"$(P):marker_end_refresh_$(CHANNEL)_"){
@@ -220,8 +258,7 @@ record(calcout,"$(P):marker_end_refresh_$(CHANNEL)_"){
     field(INPB,"$(P):XINC_CH$(CHANNEL) NPP NMS")
     field(CALC, "(A-10)*B")  
     field(DOPT, "Use CALC")
-    field(OUT, "$(P):MARKER_END)")
-    field(FLNK, "$(P):MARKER_END")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_END PP")
 }
 record(calcout,"$(P):marker_start_refresh_$(CHANNEL)_"){
     field(DESC, "update start marker ")
@@ -229,8 +266,7 @@ record(calcout,"$(P):marker_start_refresh_$(CHANNEL)_"){
     field(INPB,"$(P):XINC_CH$(CHANNEL) NPP NMS")
     field(CALC, "(A+10)*B")  
     field(DOPT, "Use CALC")
-    field(OUT, "$(P):MARKER_START)")
-    field(FLNK, "$(P):MARKER_START")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_START PP")
 }
 record(calcout,"$(P):calcsample_end_$(CHANNEL)_"){
     field(DESC, "calculate sample end from marker")
