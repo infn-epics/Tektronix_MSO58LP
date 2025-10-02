@@ -99,4 +99,27 @@ record(stringin, "$(P):CF") {
 record(stringin, "$(P):Firmware") {
 }
 
+# Record length control (horizontal scale number of points)
+record(longout, "$(P):SET_RECORDLENGTH")
+{
+    field(DESC, "Set horizontal record length")
+    field(DTYP, "stream")
+    field(OUT,  "@devTektronix_MSO58LP.proto setNR_PT $(PORT)")
+    field(PINI, "YES")
+    field(VAL, $(NELM))
+    field(LOPR, "500")
+    field(HOPR, "250000")
+    field(DRVL, "500")
+    field(DRVH, "250000")
+    field(EGU, "points")
+}
+
+record(longout, "$(P):RECORDLENGTH")
+{
+    field(DESC, "Current record length readback")
+    field(VAL, $(NELM))
+    field(EGU, "points")
+    field(PINI, "YES")
+}
+
 # The following two records generate values for the x-
