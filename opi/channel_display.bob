@@ -406,6 +406,27 @@
       <y>54</y>
       <width>120</width>
     </widget>
+    <widget type="label" version="2.0.0">
+      <name>Label_2</name>
+      <text>Rate:</text>
+      <x>500</x>
+      <y>30</y>
+      <width>44</width>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <name>Y_Scale_CH8_3</name>
+      <pv_name>$(P):ReadbackPoll_$(CHAN).SCAN</pv_name>
+      <x>479</x>
+      <y>54</y>
+      <width>89</width>
+      <height>19</height>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <actions>
+      </actions>
+    </widget>
   </widget>
   <widget type="group" version="3.0.0">
     <name>Channel Statistics</name>
@@ -916,7 +937,6 @@
     <widget type="label" version="2.0.0">
       <name>Mean_Label</name>
       <text>Mean:</text>
-      <x>-7</x>
       <y>11</y>
       <width>40</width>
     </widget>
