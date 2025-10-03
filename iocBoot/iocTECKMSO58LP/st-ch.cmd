@@ -10,7 +10,7 @@ errlogInit2(65536, 256)
 epicsEnvSet "STREAM_PROTOCOL_PATH" "$(TOP)/Tektronix_MSO58LPSup"
 epicsEnvSet "EPICS_CA_MAX_ARRAY_BYTES" "100000"
 
-epicsEnvSet "P" "SPARC:DIAG:TEK-TEST"
+epicsEnvSet "P" "SPARC:DIAG:TEK-BCM"
 
 cd ${TOP}
 
@@ -27,10 +27,10 @@ drvAsynIPPortConfigure("inst0", "192.168.197.139:4004")
 
 ## Load our record instances
 #ALE## Se si usa vxi11 sostituire inst0 con IP
-dbLoadRecords("db/devmso58lp.db","P=$(P), PORT=inst0")
+dbLoadRecords("db/devmso58lp.db","P=$(P), PORT=inst0,NELM=10000")
 
-dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=Trigger,CHANNEL=7,SENSIBILITY=5.0,PORT=inst0,NELM=10000")
-dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=BCM,CHANNEL=8,SENSIBILITY=2.0,PORT=inst0,NELM=10000")
+dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=Trigger,CHANNEL=7,COEFF=1,PORT=inst0,NELM=10000")
+dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=BCM,CHANNEL=8,COEFF=1,PORT=inst0,NELM=10000")
 
 
 ##ISIS## Stuff that needs to be done after all records are loaded but before iocInit is called 
