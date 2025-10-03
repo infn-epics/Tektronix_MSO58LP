@@ -324,6 +324,75 @@
       <tooltip>Reset both channel markers to 0</tooltip>
     </widget>
     <widget type="label" version="2.0.0">
+      <name>Auto_Threshold_Label</name>
+      <text>Auto Threshold:</text>
+      <x>209</x>
+      <y>2</y>
+      <width>110</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="10.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>Auto_Threshold_Entry</name>
+      <pv_name>$(P):CH$(CHAN):AUTO_THRESHOLD</pv_name>
+      <x>300</x>
+      <y>2</y>
+      <width>80</width>
+      <background_color>
+        <color red="255" green="255" blue="200">
+        </color>
+      </background_color>
+      <format>1</format>
+      <precision>3</precision>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Auto_Detect_Button</name>
+      <actions>
+        <action type="write_pv">
+          <description>Auto Detect Signal</description>
+          <pv_name>$(P):CH$(CHAN):AUTO_MARKER</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <text>Auto Detect</text>
+      <x>390</x>
+      <y>2</y>
+      <height>20</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="100" green="255" blue="100">
+        </color>
+      </background_color>
+      <tooltip>Automatically find signal and set markers</tooltip>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>Auto_Found_LED</name>
+      <pv_name>$(P):CH$(CHAN):AUTO_FOUND</pv_name>
+      <x>514</x>
+      <y>2</y>
+      <off_color>
+        <color red="80" green="80" blue="80">
+        </color>
+      </off_color>
+      <square>true</square>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Auto_Found_Label</name>
+      <text>Found</text>
+      <x>539</x>
+      <y>2</y>
+      <width>50</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
       <name>Start_Label_2</name>
       <text>Start: Sample:</text>
       <x>10</x>
@@ -341,7 +410,7 @@
   <widget type="group" version="3.0.0">
     <name>Channel Statistics</name>
     <x>10</x>
-    <y>504</y>
+    <y>505</y>
     <width>700</width>
     <height>80</height>
     <style>2</style>
@@ -349,110 +418,6 @@
       <color red="220" green="220" blue="220">
       </color>
     </background_color>
-    <widget type="label" version="2.0.0">
-      <name>Mean_Label</name>
-      <text>Mean:</text>
-      <x>10</x>
-      <y>39</y>
-      <width>40</width>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>Mean_Value</name>
-      <pv_name>$(P):MEAN_CH$(CHAN)</pv_name>
-      <x>55</x>
-      <y>39</y>
-      <width>80</width>
-      <background_color>
-        <color red="255" green="255" blue="255">
-        </color>
-      </background_color>
-      <format>3</format>
-      <precision>3</precision>
-      <show_units>false</show_units>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>Min_Label</name>
-      <text>Min:</text>
-      <x>145</x>
-      <y>39</y>
-      <width>30</width>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>Min_Value</name>
-      <pv_name>$(P):MIN_CH$(CHAN)</pv_name>
-      <x>180</x>
-      <y>39</y>
-      <width>80</width>
-      <background_color>
-        <color red="255" green="255" blue="255">
-        </color>
-      </background_color>
-      <format>3</format>
-      <precision>3</precision>
-      <show_units>false</show_units>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>Max_Label</name>
-      <text>Max:</text>
-      <x>270</x>
-      <y>39</y>
-      <width>30</width>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>Max_Value</name>
-      <pv_name>$(P):MAX_CH$(CHAN)</pv_name>
-      <x>305</x>
-      <y>39</y>
-      <width>80</width>
-      <background_color>
-        <color red="255" green="255" blue="255">
-        </color>
-      </background_color>
-      <format>3</format>
-      <precision>3</precision>
-      <show_units>false</show_units>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>RMS_Label</name>
-      <text>RMS:</text>
-      <x>395</x>
-      <y>39</y>
-      <width>35</width>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>RMS_Value</name>
-      <pv_name>$(P):RMS_CH$(CHAN)</pv_name>
-      <x>435</x>
-      <y>39</y>
-      <width>80</width>
-      <background_color>
-        <color red="255" green="255" blue="255">
-        </color>
-      </background_color>
-      <format>3</format>
-      <precision>3</precision>
-      <show_units>false</show_units>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <name>Integral_Label</name>
-      <text>Integral:</text>
-      <x>525</x>
-      <y>39</y>
-      <width>50</width>
-    </widget>
-    <widget type="textupdate" version="2.0.0">
-      <name>Integral_Value</name>
-      <pv_name>$(P):INTEGRAL_CH$(CHAN)</pv_name>
-      <x>580</x>
-      <y>39</y>
-      <background_color>
-        <color red="255" green="255" blue="255">
-        </color>
-      </background_color>
-      <format>3</format>
-      <precision>3</precision>
-      <show_units>false</show_units>
-    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Channel_Label_2</name>
       <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
@@ -473,8 +438,8 @@
     <widget type="textentry" version="3.0.0">
       <name>Marker_End_Entry_1</name>
       <pv_name>$(P):COEFF_CH$(CHAN)</pv_name>
-      <x>435</x>
-      <width>80</width>
+      <x>225</x>
+      <width>114</width>
       <height>25</height>
       <format>3</format>
       <precision>6</precision>
@@ -489,15 +454,14 @@
     <widget type="label" version="2.0.0">
       <name>RMS_Label_2</name>
       <text>COEFF:</text>
-      <x>385</x>
+      <x>175</x>
       <y>4</y>
-      <width>64</width>
+      <width>98</width>
     </widget>
     <widget type="label" version="2.0.0">
       <name>RMS_Label_3</name>
       <text>Charge:</text>
-      <x>525</x>
-      <y>4</y>
+      <x>354</x>
       <width>64</width>
       <font>
         <font family="Liberation Sans" style="BOLD" size="14.0">
@@ -507,8 +471,30 @@
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value_2</name>
       <pv_name>$(P):CHARGE_CH$(CHAN)</pv_name>
-      <x>580</x>
-      <y>4</y>
+      <x>414</x>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>RMS_Label_7</name>
+      <text>Day:</text>
+      <x>520</x>
+      <width>64</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="14.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Integral_Value_5</name>
+      <pv_name>$(P):CHARGE_DAY_CH$(CHAN)</pv_name>
+      <x>559</x>
+      <width>121</width>
       <background_color>
         <color red="255" green="255" blue="255">
         </color>
@@ -641,8 +627,8 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Channel Statistics_1</name>
-    <x>9</x>
-    <y>666</y>
+    <x>10</x>
+    <y>584</y>
     <width>700</width>
     <height>80</height>
     <style>2</style>
@@ -689,8 +675,8 @@
   </widget>
   <widget type="stripchart" version="2.1.0">
     <name>Strip Chart</name>
-    <x>740</x>
-    <y>250</y>
+    <x>800</x>
+    <y>61</y>
     <y_axes>
       <y_axis>
         <title>Y</title>
@@ -709,39 +695,11 @@
     <traces>
       <trace>
         <name>$(traces[0].y_pv)</name>
-        <y_pv>$(P):MAX_CH$(CHAN)</y_pv>
+        <y_pv>$(P):CHARGE_CH$(CHAN)</y_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>
           <color red="0" green="0" blue="255">
-          </color>
-        </color>
-        <line_width>2</line_width>
-        <point_type>0</point_type>
-        <point_size>10</point_size>
-        <visible>true</visible>
-      </trace>
-      <trace>
-        <name>$(traces[1].y_pv)</name>
-        <y_pv>$(P):CH$(CHAN):COMM_OK</y_pv>
-        <axis>0</axis>
-        <trace_type>2</trace_type>
-        <color>
-          <color red="255" green="0" blue="0">
-          </color>
-        </color>
-        <line_width>2</line_width>
-        <point_type>0</point_type>
-        <point_size>10</point_size>
-        <visible>true</visible>
-      </trace>
-      <trace>
-        <name>$(traces[2].y_pv)</name>
-        <y_pv>SPA$(P):SCALEDYDATA_CH$(CHAN).PROC</y_pv>
-        <axis>0</axis>
-        <trace_type>2</trace_type>
-        <color>
-          <color red="0" green="255" blue="0">
           </color>
         </color>
         <line_width>2</line_width>
@@ -754,9 +712,10 @@
   <widget type="group" version="3.0.0">
     <name>Channel Statistics_2</name>
     <x>10</x>
-    <y>589</y>
+    <y>680</y>
     <width>700</width>
     <height>73</height>
+    <visible>false</visible>
     <style>2</style>
     <background_color>
       <color red="220" green="220" blue="220">
@@ -939,6 +898,121 @@
         <font family="Liberation Sans" style="BOLD" size="14.0">
         </font>
       </font>
+    </widget>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Math</name>
+    <x>5</x>
+    <y>522</y>
+    <width>700</width>
+    <height>69</height>
+    <background_color>
+      <color name="Transparent" red="255" green="255" blue="255" alpha="0">
+      </color>
+    </background_color>
+    <widget type="label" version="2.0.0">
+      <name>Mean_Label</name>
+      <text>Mean:</text>
+      <x>-7</x>
+      <y>11</y>
+      <width>40</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Mean_Value</name>
+      <pv_name>$(P):MEAN_CH$(CHAN)</pv_name>
+      <x>38</x>
+      <y>11</y>
+      <width>80</width>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Min_Label</name>
+      <text>Min:</text>
+      <x>128</x>
+      <y>11</y>
+      <width>30</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Min_Value</name>
+      <pv_name>$(P):MIN_CH$(CHAN)</pv_name>
+      <x>163</x>
+      <y>11</y>
+      <width>80</width>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Max_Label</name>
+      <text>Max:</text>
+      <x>253</x>
+      <y>11</y>
+      <width>30</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Max_Value</name>
+      <pv_name>$(P):MAX_CH$(CHAN)</pv_name>
+      <x>288</x>
+      <y>11</y>
+      <width>80</width>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>RMS_Label</name>
+      <text>RMS:</text>
+      <x>378</x>
+      <y>11</y>
+      <width>35</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>RMS_Value</name>
+      <pv_name>$(P):RMS_CH$(CHAN)</pv_name>
+      <x>418</x>
+      <y>11</y>
+      <width>80</width>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Integral_Label</name>
+      <text>Integral:</text>
+      <x>508</x>
+      <y>11</y>
+      <width>50</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>Integral_Value</name>
+      <pv_name>$(P):INTEGRAL_CH$(CHAN)</pv_name>
+      <x>563</x>
+      <y>11</y>
+      <background_color>
+        <color red="255" green="255" blue="255">
+        </color>
+      </background_color>
+      <format>3</format>
+      <precision>3</precision>
+      <show_units>false</show_units>
     </widget>
   </widget>
 </display>

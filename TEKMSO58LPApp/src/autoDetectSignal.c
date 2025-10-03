@@ -41,8 +41,8 @@ static long autoDetectSignal(aSubRecord *prec)
     *found = 0;
     
     /* Validate inputs */
-    if (nsamples <= 0 || nsamples > prec->nec) {
-        printf("autoDetectSignal: Invalid sample count %ld (max %ld)\n", nsamples, prec->nec);
+    if (nsamples <= 0 || nsamples > (long)prec->nec) {
+        printf("autoDetectSignal: Invalid sample count %ld (max %ld)\n", nsamples, (long)prec->nec);
         return 0;
     }
     

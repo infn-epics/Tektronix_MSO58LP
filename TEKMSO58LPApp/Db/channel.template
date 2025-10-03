@@ -301,10 +301,10 @@ record(aSub, "$(P):CH$(CHANNEL):auto_detect_signal_") {
     field(DESC, "Find signal edges automatically")
     
     # Inputs
-    field(FTA, "DOUBLE") field(INPA, "$(P):CH$(CHANNEL):AUTO_THRESHOLD")
-    field(FTB, "DOUBLE") field(INPB, "$(P):XINC_CH$(CHANNEL)")
-    field(FTC, "DOUBLE") field(NEVC, "$(NELM)") field(INPC, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL NPP NMS")
-    field(FTD, "LONG") field(INPD, "$(P):SAMPLES_CH$(CHANNEL)")
+    field(FTA, "DOUBLE") field(NOA, "1") field(INPA, "$(P):CH$(CHANNEL):AUTO_THRESHOLD")
+    field(FTB, "DOUBLE") field(NOB, "1") field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(FTC, "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)") field(INPC, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL NPP NMS")
+    field(FTD, "LONG") field(NOD, "1") field(INPD, "$(P):SAMPLES_CH$(CHANNEL)")
     
     # Outputs
     field(FTVA, "DOUBLE") field(NOVA, "1")  # Start time
@@ -568,6 +568,28 @@ record(calcout, "$(P):CHARGE_CH$(CHANNEL)_") {
     field(EGU, "pC")
 
     field(OUT, "$(P):CHARGE_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):accumulate_charge_day_$(CHANNEL)_")
+}
+
+# Accumulate charge for daily total
+record(calcout, "$(P):accumulate_charge_day_$(CHANNEL)_") {
+    field(DESC, "Add current charge to daily total")
+    field(INPA, "$(P):CHARGE_CH$(CHANNEL) NPP NMS")
+    field(INPB, "$(P):CHARGE_DAY_CH$(CHANNEL) NPP NMS")
+    field(INPC, "$(P):PREV_CHARGE_CH$(CHANNEL) NPP NMS")
+    field(CALC, "(A!=C)?(B+ABS(A)):B")  # Only add if charge changed
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):update_prev_charge_$(CHANNEL)_")
+}
+
+# Store previous charge value to detect changes
+record(calcout, "$(P):update_prev_charge_$(CHANNEL)_") {
+    field(DESC, "Store charge for change detection")
+    field(INPA, "$(P):CHARGE_CH$(CHANNEL) NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):PREV_CHARGE_CH$(CHANNEL) PP")
     field(FLNK, "$(P):RMS_CH$(CHANNEL)_")
 }
 
@@ -780,6 +802,99 @@ record(ai, "$(P):CHARGE_CH$(CHANNEL)") {
     field(EGU,  "C")
     field(DTYP, "Soft Channel")
     field(PREC, "12")
+}
+
+record(ai, "$(P):CHARGE_DAY_CH$(CHANNEL)") {
+    field(DESC, "Cumulative daily charge")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+record(ai, "$(P):PREV_CHARGE_CH$(CHANNEL)") {
+    field(DESC, "Previous charge change detection")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+# Daily reset mechanism - check if day changed
+record(stringin, "$(P):current_date_$(CHANNEL)_") {
+    field(DESC, "Current date string")
+    field(DTYP, "Soft Timestamp")
+    field(INP, "@%Y-%m-%d")
+    field(SCAN, "10 second")
+    field(PINI, "YES")
+    field(FLNK, "$(P):check_day_change_$(CHANNEL)_")
+}
+
+record(stringin, "$(P):last_date_$(CHANNEL)_") {
+    field(DESC, "Last recorded date")
+    field(DTYP, "Soft Channel")
+    field(PINI, "YES")
+    field(VAL, "1970-01-01")  # Initialize with old date
+}
+
+# Compare dates and reset if day changed
+record(scalcout, "$(P):check_day_change_$(CHANNEL)_") {
+    field(DESC, "Check if day changed and reset if needed")
+    field(INAA, "$(P):current_date_$(CHANNEL)_ NPP NMS")
+    field(INBB, "$(P):last_date_$(CHANNEL)_ NPP NMS")
+    field(CALC, "AA!=BB")
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(P):reset_daily_charge_$(CHANNEL)_ PP")
+    field(FLNK, "$(P):update_last_date_$(CHANNEL)_")
+}
+
+# Reset daily charge accumulator
+record(calcout, "$(P):reset_daily_charge_$(CHANNEL)_") {
+    field(DESC, "Reset daily charge to zero")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+}
+
+# Update stored date
+record(scalcout, "$(P):update_last_date_$(CHANNEL)_") {
+    field(DESC, "Update last date record")
+    field(INAA, "$(P):current_date_$(CHANNEL)_ NPP NMS")
+    field(CALC, "AA")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):last_date_$(CHANNEL)_ PP")
+}
+
+# Manual reset button for daily charge
+record(bo, "$(P):RESET_CHARGE_DAY_CH$(CHANNEL)") {
+    field(DESC, "Manual reset of daily charge")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):manual_reset_daily_charge_$(CHANNEL)_")
+    field(DOL, "1")
+    field(OMSL, "supervisory")
+    field(OUT, "$(P):RESET_CHARGE_DAY_CH$(CHANNEL).PROC")
+}
+
+record(calcout, "$(P):manual_reset_daily_charge_$(CHANNEL)_") {
+    field(DESC, "Execute manual reset of daily charge")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):reset_prev_charge_$(CHANNEL)_")
+}
+
+record(calcout, "$(P):reset_prev_charge_$(CHANNEL)_") {
+    field(DESC, "Reset previous charge after manual reset")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):PREV_CHARGE_CH$(CHANNEL) PP")
 }
 
 record(ai, "$(P):MATH_MEAN_CH$(CHANNEL)") {
