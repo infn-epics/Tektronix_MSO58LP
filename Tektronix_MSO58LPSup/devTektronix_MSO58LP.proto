@@ -1,5 +1,5 @@
 OutTerminator = '\n';
-ReplyTimeout = 800;
+ReplyTimeout = 500;
 
 getIDN {
     out "*IDN?";
@@ -60,11 +60,41 @@ getYUNIT {
 	in '%/([a-zA-Z]+)/';
 	ExtraInput = Ignore;
 }
+
+getWFID {
+	#get waveform ID string with channel information
+	#Returns: "Ch1, DC coupling, 100.0mV/div, 4.000us/div, 10000 points, Sample mode"
+	out ":DATa:SOUrce CH\$1";
+	wait 10;
+	out "WFMOutpre:WFId?";
+	in '"%[^\"]"';
+	ExtraInput = Ignore;
+}
+
+getNR_PT {
+	#get number of points in waveform
+	#Returns: 10000 (integer indicating number of data points)
+	out ":DATa:SOUrce CH\$1";
+	wait 10;
+	out "WFMOutpre:NR_Pt?";
+	in "%d";
+	ExtraInput = Ignore;
+}
+
+setNR_PT {
+	#set horizontal record length (number of points)
+	#Sets the number of data points in the waveform record
+	#Valid values: 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, etc.
+	out "HORizontal:RECOrdlength %d";
+	wait 100;
+	ExtraInput = Ignore;
+}
+
 setTransfer {
-	out ":VERBOSE 0";
-	wait 1;
-	out "HEADER 0";
-	wait 1;
+#	out ":VERBOSE 0";
+#	wait 1;
+#	out "HEADER 0";
+#	wait 1;
 	out ":DATa:SOUrce CH\$1";
 	wait 1;
 	out ":DATa:STARt %(\$2)d";
@@ -79,31 +109,38 @@ setTransfer {
 }
 getYDATA {
 	#ask scope for y data points
-#	out ":VERBOSE 0";
-#	wait 1;
-#	out "HEADER 0";
-#	wait 1;
+	# out ":VERBOSE 0";
+	# wait 1;
+	# out "HEADER 0";
+	# wait 1;
 	out ":DATa:SOUrce CH\$1";
-#	wait 1;
+	wait 10;
 	out ":DATa:STARt %(\$2)d";
-#	wait 1;
+	wait 10;
 	out ":DATa:STOP %(\$3)d";
-#	wait 1;
+	wait 10;
 	out ":DATa:ENCdg ASCIi";
 	#out "DATa:ENCdg RIBinary";        # Signed binary encoding
 
-#	wait 1;
+	wait 10;
 	out ":DATa:WIDth 2";
-#	wait 1;
+	wait 10;
 	out ":CURVe?";
 	separator=",";
 	in "%d";
-	# in  "%#02r";                        # Read binary block as 16-bit words
+	#in  "%#02r";                        # Read binary block as 16-bit words
 	ExtraInput = Ignore;
 }
 getYDATAs {
+	out ":VERBOSE 0";
+	wait 1;
+	out "HEADER 0";
+	wait 1;
 	out ":DATa:SOUrce CH\$1";
 	wait 1;
+	out ":DATa:ENCdg ASCIi";
+	wait 1;
+
 	out ":CURVe?";
 	separator=",";
 	in "%d";

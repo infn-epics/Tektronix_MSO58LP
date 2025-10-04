@@ -1,0 +1,142 @@
+# Tektronix MSO58LP Measurement Template
+# This template provides access to oscilloscope automatic measurements
+# 
+# Macros:
+#   P         - Prefix for PV names (e.g., SPARC:DIAG:TEK-BCM)
+#   MEAS      - Measurement number (1-8, oscilloscope supports up to 8 measurements)
+#   SOURCE    - Default source channel (1-8)
+#   TYPE      - Default measurement type (e.g., AMPLITUDE, FREQUENCY, PERIOD, MEAN, RMS, etc.)
+#   PORT      - StreamDevice port name
+#   SCANTIME  - Scan period (default: "1 second")
+
+# ===== Measurement Configuration =====
+
+# Measurement source channel
+record(longout, "$(P):MEAS$(MEAS):SOURCE")
+{
+    field(DESC, "Measurement $(MEAS) source channel")
+    field(DTYP, "stream")
+    field(OUT,  "@devTektronix_MSO58LP.proto setMeasSource($(MEAS)) $(PORT)")
+    field(VAL, "$(SOURCE=1)")
+    field(PINI, "YES")
+    field(DRVL, "1")
+    field(DRVH, "8")
+}
+
+# Measurement type selection
+record(stringout, "$(P):MEAS$(MEAS):TYPE")
+{
+    field(DESC, "Measurement $(MEAS) type")
+    field(DTYP, "stream")
+    field(OUT,  "@devTektronix_MSO58LP.proto setMeasType($(MEAS)) $(PORT)")
+    field(VAL, "$(TYPE=AMPLITUDE)")
+    field(PINI, "YES")
+}
+
+# Measurement state (enable/disable)
+record(bo, "$(P):MEAS$(MEAS):STATE")
+{
+    field(DESC, "Enable/Disable Measurement $(MEAS)")
+    field(DTYP, "stream")
+    field(OUT,  "@devTektronix_MSO58LP.proto setMeasState($(MEAS)) $(PORT)")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(VAL, "1")
+    field(PINI, "YES")
+}
+
+# ===== Measurement Readbacks =====
+
+# Main measurement value
+record(ai, "$(P):MEAS$(MEAS):VALUE")
+{
+    field(DESC, "Measurement $(MEAS) value")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasValue($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+    field(PREC, "6")
+    field(EGU, "")
+}
+
+# Measurement mean (statistics)
+record(ai, "$(P):MEAS$(MEAS):MEAN")
+{
+    field(DESC, "Measurement $(MEAS) mean")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasMean($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+    field(PREC, "6")
+}
+
+# Measurement minimum (statistics)
+record(ai, "$(P):MEAS$(MEAS):MIN")
+{
+    field(DESC, "Measurement $(MEAS) minimum")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasMin($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+    field(PREC, "6")
+}
+
+# Measurement maximum (statistics)
+record(ai, "$(P):MEAS$(MEAS):MAX")
+{
+    field(DESC, "Measurement $(MEAS) maximum")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasMax($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+    field(PREC, "6")
+}
+
+# Measurement standard deviation (statistics)
+record(ai, "$(P):MEAS$(MEAS):STDDEV")
+{
+    field(DESC, "Measurement $(MEAS) std dev")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasStddev($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+    field(PREC, "6")
+}
+
+# Measurement state readback
+record(stringin, "$(P):MEAS$(MEAS):STATE_RBV")
+{
+    field(DESC, "Measurement $(MEAS) state")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasState($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+}
+
+# Measurement units
+record(stringin, "$(P):MEAS$(MEAS):UNITS")
+{
+    field(DESC, "Measurement $(MEAS) units")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getMeasUnits($(MEAS)) $(PORT)")
+    field(SCAN, "$(SCANTIME=1 second)")
+}
+
+# ===== Measurement Controls =====
+
+# Reset statistics
+record(bo, "$(P):MEAS$(MEAS):RESET_STATS")
+{
+    field(DESC, "Reset Measurement $(MEAS) statistics")
+    field(DTYP, "stream")
+    field(OUT,  "@devTektronix_MSO58LP.proto resetMeasStats($(MEAS)) $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(VAL, "0")
+    field(HIGH, "1")
+}
+
+# Configure measurement (combines source, type, and enable)
+record(bo, "$(P):MEAS$(MEAS):CONFIGURE")
+{
+    field(DESC, "Configure and enable Meas $(MEAS)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Configure")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):MEAS$(MEAS):SOURCE")
+}

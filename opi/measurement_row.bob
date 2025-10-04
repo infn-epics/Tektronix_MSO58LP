@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display version="2.0.0">
+  <name>Measurement Row $(MEAS)</name>
+  <width>1380</width>
+  <height>80</height>
+  <background_color>
+    <color name="Text" red="0" green="0" blue="0">
+    </color>
+  </background_color>
+  <widget type="label" version="2.0.0">
+    <name>Meas_Number</name>
+    <text>MEAS$(MEAS)</text>
+    <x>10</x>
+    <y>30</y>
+    <width>60</width>
+    <height>25</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="128">
+      </color>
+    </foreground_color>
+    <horizontal_alignment>1</horizontal_alignment>
+  </widget>
+  <widget type="led" version="2.0.0">
+    <name>State_LED</name>
+    <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+    <x>95</x>
+    <y>30</y>
+    <width>30</width>
+    <height>25</height>
+    <off_color>
+      <color red="100" green="100" blue="100">
+      </color>
+    </off_color>
+    <square>true</square>
+  </widget>
+  <widget type="combo" version="2.0.0">
+    <name>Source_Combo</name>
+    <pv_name>$(P):MEAS$(MEAS):SOURCE</pv_name>
+    <x>150</x>
+    <y>30</y>
+    <width>70</width>
+    <height>25</height>
+    <background_color>
+      <color red="255" green="255" blue="200">
+      </color>
+    </background_color>
+    <items>
+      <item>CH1</item>
+      <item>CH2</item>
+      <item>CH3</item>
+      <item>CH4</item>
+      <item>CH5</item>
+      <item>CH6</item>
+      <item>CH7</item>
+      <item>CH8</item>
+    </items>
+    <items_from_pv>false</items_from_pv>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Type_Label</name>
+    <text>Type:</text>
+    <x>230</x>
+    <y>5</y>
+    <width>50</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+  </widget>
+  <widget type="textentry" version="3.0.0">
+    <name>Type_Entry</name>
+    <pv_name>$(P):MEAS$(MEAS):TYPE</pv_name>
+    <x>230</x>
+    <y>25</y>
+    <width>120</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="11.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="255" green="255" blue="200">
+      </color>
+    </background_color>
+    <format>6</format>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Value_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
+    <x>360</x>
+    <y>25</y>
+    <width>150</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="14.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="220" green="255" blue="220">
+      </color>
+    </background_color>
+    <format>3</format>
+    <precision>6</precision>
+    <horizontal_alignment>2</horizontal_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Mean_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):MEAN</pv_name>
+    <x>520</x>
+    <y>25</y>
+    <width>120</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="240" green="240" blue="255">
+      </color>
+    </background_color>
+    <format>3</format>
+    <precision>6</precision>
+    <horizontal_alignment>2</horizontal_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Min_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):MIN</pv_name>
+    <x>650</x>
+    <y>25</y>
+    <width>120</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="255" green="240" blue="240">
+      </color>
+    </background_color>
+    <format>1</format>
+    <precision>6</precision>
+    <horizontal_alignment>2</horizontal_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Max_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):MAX</pv_name>
+    <x>780</x>
+    <y>25</y>
+    <width>120</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="255" green="240" blue="240">
+      </color>
+    </background_color>
+    <format>3</format>
+    <precision>6</precision>
+    <horizontal_alignment>2</horizontal_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Stddev_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):STDDEV</pv_name>
+    <x>910</x>
+    <y>25</y>
+    <width>120</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="12.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="255" green="255" blue="220">
+      </color>
+    </background_color>
+    <format>1</format>
+    <precision>6</precision>
+    <horizontal_alignment>2</horizontal_alignment>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>Units_Display</name>
+    <pv_name>$(P):MEAS$(MEAS):UNITS</pv_name>
+    <x>1040</x>
+    <y>25</y>
+    <width>80</width>
+    <height>30</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="11.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="230" green="230" blue="230">
+      </color>
+    </background_color>
+    <horizontal_alignment>1</horizontal_alignment>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Toggle_State</name>
+    <actions>
+      <action type="write_pv">
+        <description>Toggle State</description>
+        <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+        <value>$(value=!pv_value)</value>
+      </action>
+    </actions>
+    <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+    <text>Toggle</text>
+    <x>1130</x>
+    <y>25</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="200" green="255" blue="200">
+      </color>
+    </background_color>
+    <tooltip>Enable/Disable this measurement</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Reset_Stats_Button</name>
+    <actions>
+      <action type="write_pv">
+        <description>Reset Statistics</description>
+        <pv_name>$(P):MEAS$(MEAS):RESET_STATS</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <text>Reset Stats</text>
+    <x>1210</x>
+    <y>25</y>
+    <width>80</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="255" green="200" blue="200">
+      </color>
+    </background_color>
+    <tooltip>Clear accumulated statistics for this measurement</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Configure_Button</name>
+    <actions>
+      <action type="write_pv">
+        <description>Configure</description>
+        <pv_name>$(P):MEAS$(MEAS):CONFIGURE</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <text>Apply</text>
+    <x>1300</x>
+    <y>25</y>
+    <width>70</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+    <background_color>
+      <color red="200" green="200" blue="255">
+      </color>
+    </background_color>
+    <tooltip>Apply configuration changes</tooltip>
+  </widget>
+  <widget type="textupdate" version="2.0.0">
+    <name>State_Text</name>
+    <pv_name>$(P):MEAS$(MEAS):STATE_RBV</pv_name>
+    <x>80</x>
+    <y>5</y>
+    <width>60</width>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="9.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="80" green="80" blue="80">
+      </color>
+    </foreground_color>
+    <horizontal_alignment>1</horizontal_alignment>
+  </widget>
+</display>

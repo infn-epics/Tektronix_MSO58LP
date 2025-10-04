@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display version="2.0.0">
+  <name>Measurements Display</name>
+  <width>1400</width>
+  <height>900</height>
+  <background_color>
+    <color red="240" green="240" blue="240">
+    </color>
+  </background_color>
+  <actions>
+  </actions>
+  
+  <!-- Title -->
+  <widget type="label" version="2.0.0">
+    <name>Title</name>
+    <text>Tektronix MSO58LP - Automatic Measurements</text>
+    <x>10</x>
+    <y>10</y>
+    <width>1380</width>
+    <height>40</height>
+    <font>
+      <font family="Arial" style="BOLD" size="20.0">
+      </font>
+    </font>
+    <horizontal_alignment>1</horizontal_alignment>
+    <foreground_color>
+      <color red="0" green="0" blue="128">
+      </color>
+    </foreground_color>
+  </widget>
+  
+  <!-- Global Controls -->
+  <widget type="group" version="3.0.0">
+    <name>Global_Controls</name>
+    <x>10</x>
+    <y>60</y>
+    <width>1380</width>
+    <height>60</height>
+    <style>2</style>
+    <transparent>false</transparent>
+    <background_color>
+      <color red="200" green="220" blue="240">
+      </color>
+    </background_color>
+    
+    <widget type="label" version="2.0.0">
+      <name>Global_Label</name>
+      <text>Global Controls:</text>
+      <x>10</x>
+      <y>15</y>
+      <width>150</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="12.0">
+        </font>
+      </font>
+    </widget>
+    
+    <widget type="action_button" version="3.0.0">
+      <name>Reset_All_Stats</name>
+      <actions>
+        <action type="write_pv">
+          <description>Reset MEAS1 Stats</description>
+          <pv_name>$(P):MEAS1:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS2 Stats</description>
+          <pv_name>$(P):MEAS2:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS3 Stats</description>
+          <pv_name>$(P):MEAS3:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS4 Stats</description>
+          <pv_name>$(P):MEAS4:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS5 Stats</description>
+          <pv_name>$(P):MEAS5:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS6 Stats</description>
+          <pv_name>$(P):MEAS6:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS7 Stats</description>
+          <pv_name>$(P):MEAS7:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+        <action type="write_pv">
+          <description>Reset MEAS8 Stats</description>
+          <pv_name>$(P):MEAS8:RESET_STATS</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <text>Reset All Statistics</text>
+      <x>170</x>
+      <y>15</y>
+      <width>180</width>
+      <height>30</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="12.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="255" green="200" blue="200">
+        </color>
+      </background_color>
+      <tooltip>Clear accumulated statistics for all measurements</tooltip>
+    </widget>
+  </widget>
+  
+  <!-- Header for measurement rows -->
+  <widget type="group" version="3.0.0">
+    <name>Header</name>
+    <x>10</x>
+    <y>130</y>
+    <width>1380</width>
+    <height>30</height>
+    <style>2</style>
+    <background_color>
+      <color red="180" green="180" blue="180">
+      </color>
+    </background_color>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Meas</name>
+      <text>Meas#</text>
+      <x>10</x>
+      <y>5</y>
+      <width>60</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_State</name>
+      <text>State</text>
+      <x>80</x>
+      <y>5</y>
+      <width>60</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Source</name>
+      <text>Source</text>
+      <x>150</x>
+      <y>5</y>
+      <width>70</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Type</name>
+      <text>Type</text>
+      <x>230</x>
+      <y>5</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Value</name>
+      <text>Current Value</text>
+      <x>360</x>
+      <y>5</y>
+      <width>150</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Mean</name>
+      <text>Mean</text>
+      <x>520</x>
+      <y>5</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Min</name>
+      <text>Minimum</text>
+      <x>650</x>
+      <y>5</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Max</name>
+      <text>Maximum</text>
+      <x>780</x>
+      <y>5</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Stddev</name>
+      <text>Std Dev</text>
+      <x>910</x>
+      <y>5</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Units</name>
+      <text>Units</text>
+      <x>1040</x>
+      <y>5</y>
+      <width>80</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+    
+    <widget type="label" version="2.0.0">
+      <name>Header_Actions</name>
+      <text>Actions</text>
+      <x>1130</x>
+      <y>5</y>
+      <width>240</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="11.0">
+        </font>
+      </font>
+      <horizontal_alignment>1</horizontal_alignment>
+    </widget>
+  </widget>
+  
+  <!-- Measurement 1 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_1</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>170</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>1</MEAS>
+      <BGCOLOR>255,255,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 2 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_2</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>260</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>2</MEAS>
+      <BGCOLOR>245,245,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 3 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_3</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>350</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>3</MEAS>
+      <BGCOLOR>255,255,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 4 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_4</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>440</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>4</MEAS>
+      <BGCOLOR>245,245,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 5 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_5</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>530</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>5</MEAS>
+      <BGCOLOR>255,255,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 6 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_6</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>620</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>6</MEAS>
+      <BGCOLOR>245,245,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 7 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_7</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>710</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>7</MEAS>
+      <BGCOLOR>255,255,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+  <!-- Measurement 8 -->
+  <widget type="embedded" version="2.0.0">
+    <name>Measurement_8</name>
+    <file>measurement_row.bob</file>
+    <x>10</x>
+    <y>800</y>
+    <width>1380</width>
+    <height>80</height>
+    <macros>
+      <MEAS>8</MEAS>
+      <BGCOLOR>245,245,255</BGCOLOR>
+    </macros>
+  </widget>
+  
+</display>

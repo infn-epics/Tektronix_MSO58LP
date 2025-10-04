@@ -87,8 +87,24 @@ record(stringin, "$(P):YUNIT_CH$(CHANNEL)")
     field(DESC, "get y unit of plot")
     field(DTYP, "stream")
     field(INP,  "@devTektronix_MSO58LP.proto getYUNIT($(CHANNEL)) $(PORT)")
-    field(FLNK, "$(P):calcxtime$(CHANNEL)_")
+    field(FLNK, "$(P):WFID_CH$(CHANNEL)")
 
+}
+
+record(stringin, "$(P):WFID_CH$(CHANNEL)")
+{
+    field(DESC, "Waveform ID info for CH$(CHANNEL)")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getWFID($(CHANNEL)) $(PORT)")
+    field(FLNK, "$(P):NR_PT_CH$(CHANNEL)")
+}
+
+record(longin, "$(P):NR_PT_CH$(CHANNEL)")
+{
+    field(DESC, "Number of points in waveform")
+    field(DTYP, "stream")
+    field(INP,  "@devTektronix_MSO58LP.proto getNR_PT($(CHANNEL)) $(PORT)")
+    field(FLNK, "$(P):calcxtime$(CHANNEL)_")
 }
 
 record(aSub,"$(P):calcxtime$(CHANNEL)_") 
@@ -155,11 +171,32 @@ record(bo, "$(P):AcquireMath_$(CHANNEL)")
     field(OUT, "$(P):AcquireMath_$(CHANNEL).PROC")  # write to self for momentary behavior
 }
 
+# Per-channel marker positions
+record(ai, "$(P):CH$(CHANNEL):MARKER_START") {
+    field(DESC, "Channel $(CHANNEL) start marker (s)")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "0.0")
+    field(EGU,"s")
+    field(PINI, "YES")
+    field(FLNK, "$(P):MARKER_START_SAMPLE_CH$(CHANNEL)")
+}
+
+record(ai, "$(P):CH$(CHANNEL):MARKER_END") {
+    field(DESC, "Channel $(CHANNEL) end marker (s))")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(VAL, "1e-6")
+    field(EGU,"s")
+
+    field(PINI, "YES")
+    field(FLNK, "$(P):MARKER_END_SAMPLE_CH$(CHANNEL)")
+}
+
 record(calc,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL)"){
     field(INPA,"$(P):CH$(CHANNEL):MARKER_START CP")
     field(INPB,"$(P):XINC_CH$(CHANNEL)")
     field(CALC,"(B>0.0)?A/B:0")
-
 }
 
 record(calc,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL)"){
@@ -172,7 +209,7 @@ record(calcout, "$(P):SAMPLES_CH$(CHANNEL)"){
     field(INPA,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL)")
     field(INPB,"$(P):MARKER_START_SAMPLE_CH$(CHANNEL)")
     field(CALC,"((A-B)>0)?A-B:$(NELM)")
-    field(OUT,"$(P):SCALEDYDATA_CH$(CHANNEL).NUSE CP")
+    field(OUT,"$(P):SCALEDYDATA_CH$(CHANNEL).NUSE NPP")
 #    field(FLNK, "$(P):CHANGE_PARAMS_CH$(CHANNEL)")
 }
 
@@ -246,14 +283,127 @@ record(fanout,"$(P):calc_reset_$(CHANNEL)_"){
     field(LNK4, "$(P):CH$(CHANNEL):reset_end_marker_")
 }
 
+# Reset buttons for per-channel markers
+record(calcout, "$(P):CH$(CHANNEL):reset_start_marker_")
+{
+    field(DESC, "Reset CH$(CHANNEL) start marker")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_START PP")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):reset_end_marker_")
+{
+    field(DESC, "Reset CH$(CHANNEL) end marker")
+    field(INPA, "$(P):MAXSAMPLES_CH$(CHANNEL)")
+    field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(CALC, "A*B")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_END PP")
+}
+
+# Auto-marker detection threshold
+record(ao, "$(P):CH$(CHANNEL):AUTO_THRESHOLD") {
+    field(DESC, "Auto marker detection threshold")
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+    field(VAL, "0.1")
+    field(EGU, "V")
+    field(PINI, "YES")
+}
+
+# Trigger auto marker detection
+record(bo, "$(P):CH$(CHANNEL):AUTO_MARKER")
+{
+    field(DESC, "Auto-find signal and set markers")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Find")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):CH$(CHANNEL):auto_detect_signal_")
+    field(DOL, "1")
+    field(OMSL, "supervisory")
+    field(OUT, "$(P):CH$(CHANNEL):AUTO_MARKER.PROC")
+}
+
+# Auto-detection using aSub record (requires custom C function)
+record(aSub, "$(P):CH$(CHANNEL):auto_detect_signal_") {
+    field(SNAM, "autoDetectSignal")
+    field(DESC, "Find signal edges automatically")
+    
+    # Inputs
+    field(FTA, "DOUBLE") field(NOA, "1") field(INPA, "$(P):CH$(CHANNEL):AUTO_THRESHOLD")
+    field(FTB, "DOUBLE") field(NOB, "1") field(INPB, "$(P):XINC_CH$(CHANNEL)")
+    field(FTC, "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)") field(INPC, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL NPP NMS")
+    field(FTD, "LONG") field(NOD, "1") field(INPD, "$(P):SAMPLES_CH$(CHANNEL)")
+    
+    # Outputs
+    field(FTVA, "DOUBLE") field(NOVA, "1")  # Start time
+    field(FTVB, "DOUBLE") field(NOVB, "1")  # End time
+    field(FTVC, "LONG") field(NOVC, "1")    # Found flag
+    
+    field(OUTA, "$(P):CH$(CHANNEL):AUTO_START_TIME PP")
+    field(OUTB, "$(P):CH$(CHANNEL):AUTO_END_TIME PP")
+    field(OUTC, "$(P):CH$(CHANNEL):AUTO_FOUND PP")
+}
+
+# Temporary storage for detected times
+record(ai, "$(P):CH$(CHANNEL):AUTO_START_TIME") {
+    field(DESC, "Auto-detected start time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU, "s")
+    field(FLNK, "$(P):CH$(CHANNEL):apply_auto_markers_")
+}
+
+record(ai, "$(P):CH$(CHANNEL):AUTO_END_TIME") {
+    field(DESC, "Auto-detected end time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU, "s")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AUTO_FOUND") {
+    field(DESC, "Signal found flag (1=found)")
+    field(DTYP, "Soft Channel")
+}
+
+# Apply detected markers if signal was found
+record(calcout, "$(P):CH$(CHANNEL):apply_auto_markers_") {
+    field(DESC, "Apply auto markers if found")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_FOUND NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AUTO_START_TIME NPP NMS")
+    field(CALC, "A>0")  # Only process if signal was found
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(P):CH$(CHANNEL):set_auto_start_ PP")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):set_auto_start_") {
+    field(DESC, "Set start marker from auto-detect")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_START_TIME NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_START PP")
+    field(FLNK, "$(P):CH$(CHANNEL):set_auto_end_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):set_auto_end_") {
+    field(DESC, "Set end marker from auto-detect")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_END_TIME NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_END PP")
+}
+
 record(calcout,"$(P):marker_end_refresh_$(CHANNEL)_"){
     field(DESC, "update end marker ")
     field(INPA,"$(P):MARKER_END_SAMPLE_CH$(CHANNEL) NPP NMS")
     field(INPB,"$(P):XINC_CH$(CHANNEL) NPP NMS")
     field(CALC, "(A-10)*B")  
     field(DOPT, "Use CALC")
-    field(OUT, "$(P):CH$(CHANNEL):MARKER_END")
-    field(FLNK, "$(P):CH$(CHANNEL):MARKER_END")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_END PP")
 }
 record(calcout,"$(P):marker_start_refresh_$(CHANNEL)_"){
     field(DESC, "update start marker ")
@@ -261,8 +411,7 @@ record(calcout,"$(P):marker_start_refresh_$(CHANNEL)_"){
     field(INPB,"$(P):XINC_CH$(CHANNEL) NPP NMS")
     field(CALC, "(A+10)*B")  
     field(DOPT, "Use CALC")
-    field(OUT, "$(P):CH$(CHANNEL):MARKER_START")
-    field(FLNK, "$(P):CH$(CHANNEL):MARKER_START")
+    field(OUT, "$(P):CH$(CHANNEL):MARKER_START PP")
 }
 record(calcout,"$(P):calcsample_end_$(CHANNEL)_"){
     field(DESC, "calculate sample end from marker")
@@ -335,9 +484,40 @@ record(waveform, "$(P):RAWYDATA_CH$(CHANNEL)")
     field(INP,  "@devTektronix_MSO58LP.proto getYDATA($(CHANNEL),$(P):START_SAMPLE_CH$(CHANNEL).VAL,$(P):END_SAMPLE_CH$(CHANNEL).VAL PP) $(PORT)")
     #field(INP,  "@devTektronix_MSO58LP.proto getYDATAs($(CHANNEL)) $(PORT)")
    
-    field(FLNK, "$(P):SCALEDYDATA_CH$(CHANNEL)")
-
+    field(FLNK, "$(P):check_acquisition_$(CHANNEL)_")
 }
+
+# Store previous SEVR state to detect recovery transitions
+record(ai, "$(P):PREV_SEVR_CH$(CHANNEL)")
+{
+    field(DESC, "Previous SEVR state")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+# Gate scaling: only process if acquisition succeeded AND not first buffer after recovery
+record(calcout, "$(P):check_acquisition_$(CHANNEL)_")
+{
+    field(DESC, "Gate processing on acquisition success")
+    field(INPA, "$(P):RAWYDATA_CH$(CHANNEL).SEVR NPP NMS")
+    field(INPB, "$(P):PREV_SEVR_CH$(CHANNEL) NPP NMS")
+    field(CALC, "(A<2)&&(B<2)")  # Process only if current OK AND previous was OK
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")  # Only process downstream if result is 1
+    field(OUT, "$(P):SCALEDYDATA_CH$(CHANNEL).PROC PP")
+    field(FLNK, "$(P):update_prev_sevr_$(CHANNEL)_")
+}
+
+# Update previous SEVR after checking
+record(calcout, "$(P):update_prev_sevr_$(CHANNEL)_")
+{
+    field(DESC, "Store current SEVR for next cycle")
+    field(INPA, "$(P):RAWYDATA_CH$(CHANNEL).SEVR NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):PREV_SEVR_CH$(CHANNEL) PP")
+}
+
 record(bi, "$(P):CH$(CHANNEL):COMM_OK")
 {
     field(DESC, "StreamDevice communication status")
@@ -347,7 +527,7 @@ record(bi, "$(P):CH$(CHANNEL):COMM_OK")
     field(PINI, "YES")
     field(VAL, "1")
 }
-
+#
 record(acalcout, "$(P):SCALEDYDATA_CH$(CHANNEL)") {
     field(DESC, "scaled waveform")
     field(NELM, "$(NELM)")
@@ -375,8 +555,7 @@ record(subArray, "$(P):MATH_ARRAY_CH$(CHANNEL)") {
 
 record(acalcout, "$(P):MAX_CH$(CHANNEL)_") {
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
-    # field(NELM, "$(NELM)")
-    # field(NUSE, "$(NELM)")
+    field(NELM, "$(NELM)")
     field(CALC, "AMAX(AA)")
     field(OUT,"$(P):MAX_CH$(CHANNEL) CP")
     #field(FLNK, "$(P):wavestats_$(CHANNEL)_")
@@ -386,16 +565,14 @@ record(acalcout, "$(P):MAX_CH$(CHANNEL)_") {
 }
 
 record(acalcout, "$(P):MIN_CH$(CHANNEL)_") {
-    # field(NELM, "$(NELM)")
-    # field(NUSE, "$(NELM)")
+    field(NELM, "$(NELM)")
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(CALC, "AMIN(AA)")
     field(OUT,"$(P):MIN_CH$(CHANNEL) CP")
     field(FLNK, "$(P):MEAN_CH$(CHANNEL)_")
 }
 record(acalcout, "$(P):MEAN_CH$(CHANNEL)_") {
-    # field(NELM, "$(NELM)")
-    # field(NUSE, "$(NELM)")
+    field(NELM, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(CALC, "AVG(AA)")
@@ -406,21 +583,50 @@ record(acalcout, "$(P):MEAN_CH$(CHANNEL)_") {
 
 }
 record(acalcout, "$(P):INTEGRAL_CH$(CHANNEL)_") {
-    # field(NELM, "$(NELM)")
-    # field(NUSE, "$(NELM)")
+    field(NELM, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(INPA, "$(P):XINC_CH$(CHANNEL)")
-    field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
+    field(CALC, "SUM(AA)*A")
+    field(OUT,"$(P):INTEGRAL_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):CHARGE_CH$(CHANNEL)_")
+}
 
-    field(CALC, "SUM(AA)*B*A")
-    field(OUT,"$(P):INTEGRAL_CH$(CHANNEL) CP")
+record(calcout, "$(P):CHARGE_CH$(CHANNEL)_") {
+    field(DESC, "Charge pC")
+    field(INPA, "$(P):INTEGRAL_CH$(CHANNEL).VAL NPP NMS")
+    field(INPB, "$(P):COEFF_CH$(CHANNEL)")
+    field(CALC, "A*B")
+    field(EGU, "pC")
+
+    field(OUT, "$(P):CHARGE_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):accumulate_charge_day_$(CHANNEL)_")
+}
+
+# Accumulate charge for daily total
+record(calcout, "$(P):accumulate_charge_day_$(CHANNEL)_") {
+    field(DESC, "Add current charge to daily total")
+    field(INPA, "$(P):CHARGE_CH$(CHANNEL) NPP NMS")
+    field(INPB, "$(P):CHARGE_DAY_CH$(CHANNEL) NPP NMS")
+    field(INPC, "$(P):PREV_CHARGE_CH$(CHANNEL) NPP NMS")
+    field(CALC, "(A!=C)?(B+ABS(A)):B")  # Only add if charge changed
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):update_prev_charge_$(CHANNEL)_")
+}
+
+# Store previous charge value to detect changes
+record(calcout, "$(P):update_prev_charge_$(CHANNEL)_") {
+    field(DESC, "Store charge for change detection")
+    field(INPA, "$(P):CHARGE_CH$(CHANNEL) NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):PREV_CHARGE_CH$(CHANNEL) PP")
     field(FLNK, "$(P):RMS_CH$(CHANNEL)_")
 }
 
 record(acalcout, "$(P):RMS_CH$(CHANNEL)_") {
-    # field(NELM, "$(NELM)")
-    # field(NUSE, "$(NELM)")
+    field(NELM, "$(NELM)")
 
     field(INAA, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL")
     field(INPA, "$(P):SAMPLES_CH$(CHANNEL)")
@@ -486,10 +692,19 @@ record(acalcout, "$(P):MATH_INTEGRAL_CH$(CHANNEL)_") {
 
     field(INAA, "$(P):MATH_ARRAY_CH$(CHANNEL)")
     field(INPA, "$(P):XINC_CH$(CHANNEL)")
-    field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
 
-    field(CALC, "SUM(AA)*B*A")
-    field(OUT,"$(P):MATH_INTEGRAL_CH$(CHANNEL) CP")
+    field(CALC, "SUM(AA)*A")
+    field(OUT,"$(P):MATH_INTEGRAL_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):MATH_CHARGE_CH$(CHANNEL)_")
+}
+
+record(calcout, "$(P):MATH_CHARGE_CH$(CHANNEL)_") {
+    field(DESC, "Math charge from integral")
+    field(INPA, "$(P):MATH_INTEGRAL_CH$(CHANNEL).VAL NPP NMS")
+    field(INPB, "$(P):COEFF_CH$(CHANNEL)")
+    field(CALC, "A*B")
+    field(EGU, "pC")
+    field(OUT, "$(P):MATH_CHARGE_CH$(CHANNEL) PP")
     field(FLNK, "$(P):MATH_RMS_CH$(CHANNEL)_")
 }
 
@@ -553,7 +768,7 @@ record(subArray, "$(P):MARKER_END_VALUE_$(CHANNEL)") {
 # record(aSub, "$(P):wavestats_$(CHANNEL)_") {
 #     field(SNAM, "wavestats")
 #     field(FTA, "DOUBLE") field(INPA, "$(P):XINC_CH$(CHANNEL)")
-#     field(FTB, "DOUBLE") field(INPB, "$(P):SENSIBILITY_CH$(CHANNEL)")
+#     field(FTB, "DOUBLE") field(INPB, "$(P):COEFF_CH$(CHANNEL)")
 #     field(FTC, "DOUBLE") field(NEVC,"$(NELM)") field(INPC, "$(P):SCALEDYDATA_CH$(CHANNEL).AVAL PP") 
 #     field(FTD, "LONG") field(INPD, "$(P):RAWYDATA_CH$(CHANNEL).NORD")
 #     field(FTE, "LONG") field(INPE, "$(P):START_MATH_CH$(CHANNEL)") ## start sample
@@ -580,63 +795,184 @@ record(subArray, "$(P):MARKER_END_VALUE_$(CHANNEL)") {
 record(ai, "$(P):MEAN_CH$(CHANNEL)") {
     field(DESC, "Mean value of waveform")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
     field(PREC, "9")
 }
 
 record(ai, "$(P):MIN_CH$(CHANNEL)") {
     field(DESC, "Minimum value of waveform")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):MAX_CH$(CHANNEL)") {
     field(DESC, "Maximum value of waveform")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
     field(PREC, "9")
 }
 
 record(ai, "$(P):RMS_CH$(CHANNEL)") {
     field(DESC, "RMS value of waveform")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):INTEGRAL_CH$(CHANNEL)") {
     field(DESC, "INTEGRAL value of waveform")
-
+    field(EGU,  "Vs")
     field(DTYP, "Soft Channel")
     field(PREC, "9")
+}
+
+record(ai, "$(P):CHARGE_CH$(CHANNEL)") {
+    field(DESC, "CHARGE from integral * coeff")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
+}
+
+record(ai, "$(P):CHARGE_DAY_CH$(CHANNEL)") {
+    field(DESC, "Cumulative daily charge")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+record(ai, "$(P):PREV_CHARGE_CH$(CHANNEL)") {
+    field(DESC, "Previous charge change detection")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+# Daily reset mechanism - check if day changed
+record(stringin, "$(P):current_date_$(CHANNEL)_") {
+    field(DESC, "Current date string")
+    field(DTYP, "Soft Timestamp")
+    field(INP, "@%Y-%m-%d")
+    field(SCAN, "10 second")
+    field(PINI, "YES")
+    field(FLNK, "$(P):check_day_change_$(CHANNEL)_")
+}
+
+record(stringin, "$(P):last_date_$(CHANNEL)_") {
+    field(DESC, "Last recorded date")
+    field(DTYP, "Soft Channel")
+    field(PINI, "YES")
+    field(VAL, "1970-01-01")  # Initialize with old date
+}
+
+# Compare dates and reset if day changed
+record(scalcout, "$(P):check_day_change_$(CHANNEL)_") {
+    field(DESC, "Check if day changed and reset if needed")
+    field(INAA, "$(P):current_date_$(CHANNEL)_ NPP NMS")
+    field(INBB, "$(P):last_date_$(CHANNEL)_ NPP NMS")
+    field(CALC, "AA!=BB")
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(P):reset_daily_charge_$(CHANNEL)_ PP")
+    field(FLNK, "$(P):update_last_date_$(CHANNEL)_")
+}
+
+# Reset daily charge accumulator
+record(calcout, "$(P):reset_daily_charge_$(CHANNEL)_") {
+    field(DESC, "Reset daily charge to zero")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+}
+
+# Update stored date
+record(scalcout, "$(P):update_last_date_$(CHANNEL)_") {
+    field(DESC, "Update last date record")
+    field(INAA, "$(P):current_date_$(CHANNEL)_ NPP NMS")
+    field(CALC, "AA")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):last_date_$(CHANNEL)_ PP")
+}
+
+# Manual reset button for daily charge
+record(bo, "$(P):RESET_CHARGE_DAY_CH$(CHANNEL)") {
+    field(DESC, "Manual reset of daily charge")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):manual_reset_daily_charge_$(CHANNEL)_")
+    field(DOL, "1")
+    field(OMSL, "supervisory")
+    field(OUT, "$(P):RESET_CHARGE_DAY_CH$(CHANNEL).PROC")
+}
+
+record(calcout, "$(P):manual_reset_daily_charge_$(CHANNEL)_") {
+    field(DESC, "Execute manual reset of daily charge")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
+    field(FLNK, "$(P):reset_prev_charge_$(CHANNEL)_")
+}
+
+record(calcout, "$(P):reset_prev_charge_$(CHANNEL)_") {
+    field(DESC, "Reset previous charge after manual reset")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT, "$(P):PREV_CHARGE_CH$(CHANNEL) PP")
 }
 
 record(ai, "$(P):MATH_MEAN_CH$(CHANNEL)") {
     field(DESC, "Mean value of math wave")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):MATH_MIN_CH$(CHANNEL)") {
     field(DESC, "Minimum value of math wave")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):MATH_MAX_CH$(CHANNEL)") {
     field(DESC, "Maximum value of math wave")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):MATH_RMS_CH$(CHANNEL)") {
     field(DESC, "RMS value of math wave")
     field(DTYP, "Soft Channel")
+    field(EGU,  "V")
+
     field(PREC, "9")
 }
 
 record(ai, "$(P):MATH_INTEGRAL_CH$(CHANNEL)") {
     field(DESC, "INTEGRAL value of math wave")
-
+    field(EGU,  "Vs")
     field(DTYP, "Soft Channel")
     field(PREC, "9")
+}
+
+record(ai, "$(P):MATH_CHARGE_CH$(CHANNEL)") {
+    field(DESC, "CHARGE from math integral * coeff")
+    field(EGU,  "C")
+    field(DTYP, "Soft Channel")
+    field(PREC, "12")
 }
 
 record(ai, "$(P):MAXSAMPLES_CH$(CHANNEL)"){
@@ -712,11 +1048,11 @@ record(calcout, "$(P):subarray_start$(CHANNEL)")
 
 
 
-record(ai, "$(P):SENSIBILITY_CH$(CHANNEL)") {
-    field(DESC, "sensibility factor for CH$(CHANNEL)")
+record(ai, "$(P):COEFF_CH$(CHANNEL)") {
+    field(DESC, "Coefficient for Charge CH$(CHANNEL)")
     field(DTYP, "Soft Channel")
     field(PREC, "9")
-    field(VAL, "$(SENSIBILITY=1.0)")
+    field(VAL, "$(COEFF=1.0)")
 }
 
 record(ai, "$(P):XMIN_CH$(CHANNEL)") {
