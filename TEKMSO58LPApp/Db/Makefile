@@ -15,6 +15,10 @@ DB += mso58lp.db
 DB += channel.template
 DB += dev_msoxx.template
 DB += devmso58lp.db
+DB += measurement.template
+DB += measurevalue.template
+
+DB += measurements.substitutions
 
 # #----------------------------------------------------
 # # If <anyname>.db template is not named <anyname>*.template add
