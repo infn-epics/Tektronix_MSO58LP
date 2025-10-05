@@ -151,3 +151,106 @@ setLabel{
 	ExtraInput = Ignore;
 
 }
+
+# ===== Measurement Commands =====
+
+setMeasSource {
+	# Set measurement source channel
+	# Usage: setMeasSource(MEAS_NUM)
+	# Input: Channel number (1-8)
+	out "MEASUrement:MEAS\$1:SOUrce CH%d";
+	wait 10;
+	ExtraInput = Ignore;
+}
+
+setMeasType {
+	# Set measurement type
+	# Usage: setMeasType(MEAS_NUM)
+	# Input: Measurement type string (e.g., AMPLITUDE, FREQUENCY, PERIOD, MEAN, RMS, etc.)
+	# Valid types: AMPLITUDE, AREA, BURST, CARea, CMEan, CRMs, DELAY, FALL, FREQUENCY,
+	#              HIGH, LOW, MAXIMUM, MEAN, MINIMUM, NOVERSHOOT, NWIDTH, PDUTY, PEAK2PEAK,
+	#              PERIOD, PHASE, POVERSHOOT, PWIDTH, RISE, RMS, SIGMA1, SIGMA2, SIGMA3
+	out "MEASUrement:MEAS\$1:TYPe %s";
+	wait 10;
+	ExtraInput = Ignore;
+}
+
+setMeasState {
+	# Enable or disable measurement
+	# Usage: setMeasState(MEAS_NUM)
+	# Input: 0=OFF, 1=ON
+	out "MEASUrement:MEAS\$1:STATE %{OFF|ON}";
+	wait 10;
+	ExtraInput = Ignore;
+}
+
+getMeasValue {
+	# Get current measurement value
+	# Usage: getMeasValue(MEAS_NUM)
+	# Returns: Measurement value as float
+	out "MEASUrement:MEAS\$1:RESUlts:CURRentacq:MEAN?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
+getMeasMean {
+	# Get measurement mean (all acquisitions)
+	# Usage: getMeasMean(MEAS_NUM)
+	# Returns: Mean value as float
+	out "MEASUrement:MEAS\$1:RESUlts:ALLAcqs:MEAN?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
+getMeasMin {
+	# Get measurement minimum (all acquisitions)
+	# Usage: getMeasMin(MEAS_NUM)
+	# Returns: Minimum value as float
+	out "MEASUrement:MEAS\$1:RESUlts:ALLAcqs:MINimum?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
+getMeasMax {
+	# Get measurement maximum (all acquisitions)
+	# Usage: getMeasMax(MEAS_NUM)
+	# Returns: Maximum value as float
+	out "MEASUrement:MEAS\$1:RESUlts:ALLAcqs:MAXimum?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
+getMeasStddev {
+	# Get measurement standard deviation (all acquisitions)
+	# Usage: getMeasStddev(MEAS_NUM)
+	# Returns: Standard deviation as float
+	out "MEASUrement:MEAS\$1:RESUlts:ALLAcqs:STDDev?";
+	in "%f";
+	ExtraInput = Ignore;
+}
+
+getMeasState {
+	# Get measurement state
+	# Usage: getMeasState(MEAS_NUM)
+	# Returns: ON or OFF
+	out "MEASUrement:MEAS\$1:STATE?";
+	in "%[^\r\n]";
+	ExtraInput = Ignore;
+}
+
+getMeasUnits {
+	# Get measurement units
+	# Usage: getMeasUnits(MEAS_NUM)
+	# Returns: Units string (V, s, Hz, etc.)
+	out "MEASUrement:MEAS\$1:RESUlts:CURRentacq:UNIts?";
+	in '"%[^\"]"';
+	ExtraInput = Ignore;
+}
+
+resetMeasStats {
+	# Reset measurement statistics
+	# Usage: resetMeasStats(MEAS_NUM)
+	out "MEASUrement:MEAS\$1:RESUlts:ALLAcqs:CLEar";
+	wait 10;
+	ExtraInput = Ignore;
+}

@@ -29,8 +29,18 @@ drvAsynIPPortConfigure("inst0", "192.168.197.195:4000")
 #ALE## Se si usa vxi11 sostituire inst0 con IP
 dbLoadRecords("db/devmso58lp.db","P=$(P), PORT=inst0,NELM=10000")
 
-dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=DGL02,CHANNEL=6,COEFF=2,PORT=inst0,NELM=10000")
-dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=AC1BCM01,CHANNEL=1,COEFF=210000000000,PORT=inst0,NELM=10000")
+#dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=DGL02,CHANNEL=6,COEFF=2,PORT=inst0,NELM=10000")
+#dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=AC1BCM01,CHANNEL=1,COEFF=210000000000,PORT=inst0,NELM=10000")
+
+
+# dbLoadRecords("db/measurement.template", "P=SPARC:DIAG:TEK-BCM,MEAS=1,PORT=inst0,SCANTIME=1 second")
+# dbLoadRecords("db/measurement.template", "P=SPARC:DIAG:TEK-BCM,MEAS=6,PORT=inst0,SCANTIME=1 second")
+# dbLoadRecords("db/measurement.template", "P=SPARC:DIAG:TEK-BCM,MEAS=5,PORT=inst0,SCANTIME=1 second")
+
+
+dbLoadRecords("db/measurevalue.template", "P=SPARC:DIAG:TEK-BCM,CHANAME=AC1BCM01,CHANNEL=1,COEFF=210000000000,PORT=inst0,SCANTIME=.1 second")
+dbLoadRecords("db/measurevalue.template", "P=SPARC:DIAG:TEK-BCM,CHANAME=DGL02,CHANNEL=6,COEFF=210000000000,PORT=inst0,SCANTIME=.1 second")
+dbLoadRecords("db/measurevalue.template", "P=SPARC:DIAG:TEK-BCM,CHANNEL=5,COEFF=210000000000,PORT=inst0,SCANTIME=.1 second")
 
 # dbLoadRecords("db/channel.template","P=$(P),SCANTIME=1 second,CHANAME=BCM,CHANNEL=8,SENSIBILITY=2.0,PORT=inst0,NELM=10000")
 
