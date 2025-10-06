@@ -33,7 +33,7 @@ record(calcout, "$(P):CHARGE_CH$(CHANNEL)_") {
     field(INPA, "$(P):MEAS$(CHANNEL):VALUE.VAL NPP NMS")
     field(INPB, "$(P):COEFF_CH$(CHANNEL)")
     field(CALC, "A*B")
-    field(EGU, "pC")
+    field(EGU, "$(EGU=pC)")
 
     field(OUT, "$(P):CHARGE_CH$(CHANNEL) PP")
     field(FLNK, "$(P):accumulate_charge_day_$(CHANNEL)_")
@@ -62,14 +62,14 @@ record(calcout, "$(P):update_prev_charge_$(CHANNEL)_") {
 
 record(ai, "$(P):CHARGE_CH$(CHANNEL)") {
     field(DESC, "CHARGE from integral * coeff")
-    field(EGU,  "C")
+    field(EGU, "$(EGU=pC)")
     field(DTYP, "Soft Channel")
     field(PREC, "12")
 }
 
 record(ai, "$(P):CHARGE_DAY_CH$(CHANNEL)") {
     field(DESC, "Cumulative daily charge")
-    field(EGU,  "C")
+    field(EGU, "$(EGU=pC)")
     field(DTYP, "Soft Channel")
     field(PREC, "12")
     field(PINI, "YES")
@@ -78,7 +78,7 @@ record(ai, "$(P):CHARGE_DAY_CH$(CHANNEL)") {
 
 record(ai, "$(P):PREV_CHARGE_CH$(CHANNEL)") {
     field(DESC, "Previous charge change detection")
-    field(EGU,  "C")
+    field(EGU, "$(EGU=pC)")
     field(DTYP, "Soft Channel")
     field(PREC, "12")
     field(PINI, "YES")

@@ -40,8 +40,8 @@
       <color red="200" green="255" blue="200">
       </color>
     </background_color>
-    <format>1</format>
-    <precision>6</precision>
+    <format>2</format>
+    <precision>1</precision>
     <horizontal_alignment>1</horizontal_alignment>
     <vertical_alignment>1</vertical_alignment>
   </widget>
@@ -74,7 +74,7 @@
       <color red="255" green="255" blue="200">
       </color>
     </background_color>
-    <format>1</format>
+    <format>2</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
@@ -94,7 +94,7 @@
       </color>
     </background_color>
     <format>2</format>
-    <precision>9</precision>
+    <precision>1</precision>
     <horizontal_alignment>1</horizontal_alignment>
     <vertical_alignment>1</vertical_alignment>
   </widget>
@@ -118,7 +118,7 @@
       </color>
     </background_color>
     <format>2</format>
-    <precision>9</precision>
+    <precision>1</precision>
     <horizontal_alignment>1</horizontal_alignment>
     <vertical_alignment>1</vertical_alignment>
   </widget>
