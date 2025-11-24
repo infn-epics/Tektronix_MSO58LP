@@ -47,7 +47,7 @@ record(calcout, "$(P):accumulate_charge_day_$(CHANNEL)_") {
     field(INPC, "$(P):PREV_CHARGE_CH$(CHANNEL) NPP NMS")
     field(CALC, "(A!=C)?(B+ABS(A)):B")  # Only add if charge changed
     field(DOPT, "Use CALC")
-    field(DISA, "$(ENABLEPV=1)")  # Disable if ENABLEPV is defined and zero
+    field(SDIS, "$(ENABLEPV=1)")  # Disable if ENABLEPV is defined and zero
     field(DISV, "0")
     field(OUT, "$(P):CHARGE_DAY_CH$(CHANNEL) PP")
     field(FLNK, "$(P):update_prev_charge_$(CHANNEL)_")
