@@ -1,0 +1,5 @@
+# drvTekMSO58LP.dbd
+# Database definition file for Tektronix MSO58LP ASYN driver
+
+# Register the driver configuration function
+registrar(drvTekMSO58LPRegister)

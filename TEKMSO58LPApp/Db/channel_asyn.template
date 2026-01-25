@@ -1,0 +1,325 @@
+# channel_asyn.template
+# ASYN-based template for Tektronix MSO58LP channel
+# High-speed acquisition using asynPortDriver parameters
+#
+# Macros:
+#   P       - PV prefix
+#   PORT    - ASYN port name (from drvTekMSO58LPConfigure)
+#   CHANNEL - Channel number (1-8)
+#   NELM    - Max waveform elements
+#   CHANAME - Channel name/label (optional, default CH$(CHANNEL))
+
+# ============================================================
+# Channel Enable/Disable
+# ============================================================
+record(bo, "$(P):CH$(CHANNEL):Enable")
+{
+    field(DESC, "Enable channel $(CHANNEL) acquisition")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_ENABLE_$(CHANNEL)")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(PINI, "YES")
+    field(VAL,  "0")
+}
+
+record(bi, "$(P):CH$(CHANNEL):Enable_RBV")
+{
+    field(DESC, "Channel $(CHANNEL) enable readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_ENABLE_$(CHANNEL)")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Channel Label
+# ============================================================
+record(stringout, "$(P):CH$(CHANNEL):Label")
+{
+    field(DESC, "Channel $(CHANNEL) label")
+    field(DTYP, "asynOctetWrite")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_LABEL_$(CHANNEL)")
+    field(VAL,  "$(CHANAME=CH$(CHANNEL))")
+    field(PINI, "YES")
+}
+
+record(stringin, "$(P):CH$(CHANNEL):Label_RBV")
+{
+    field(DESC, "Channel $(CHANNEL) label readback")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_LABEL_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Channel Configuration - X Axis
+# ============================================================
+record(ai, "$(P):CH$(CHANNEL):Xinc")
+{
+    field(DESC, "X increment (time per sample)")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_XINC_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "12")
+    field(EGU,  "s")
+}
+
+record(stringin, "$(P):CH$(CHANNEL):Xunit")
+{
+    field(DESC, "X axis units")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_XUNIT_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Channel Configuration - Y Axis
+# ============================================================
+record(ai, "$(P):CH$(CHANNEL):Ymult")
+{
+    field(DESC, "Y multiplier (scale factor)")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_YMULT_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Yoff")
+{
+    field(DESC, "Y offset")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_YOFF_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+}
+
+record(stringin, "$(P):CH$(CHANNEL):Yunit")
+{
+    field(DESC, "Y axis units")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_YUNIT_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Number of Points
+# ============================================================
+record(longin, "$(P):CH$(CHANNEL):NrPt")
+{
+    field(DESC, "Number of waveform points")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_NR_PT_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(EGU,  "pts")
+}
+
+# ============================================================
+# Waveform Data - Raw (integer ADC counts)
+# ============================================================
+record(waveform, "$(P):CH$(CHANNEL):RawWaveform")
+{
+    field(DESC, "Raw waveform data (ADC counts)")
+    field(DTYP, "asynInt32ArrayIn")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "LONG")
+    field(NELM, "$(NELM)")
+}
+
+# ============================================================
+# Waveform Data - Scaled (physical units)
+# ============================================================
+record(waveform, "$(P):CH$(CHANNEL):Waveform")
+{
+    field(DESC, "Scaled waveform data")
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_SCALED_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NELM)")
+    field(EGU,  "V")
+    field(FLNK, "$(P):CH$(CHANNEL):CalcStats_")
+}
+
+# ============================================================
+# Time Array
+# ============================================================
+record(waveform, "$(P):CH$(CHANNEL):TimeArray")
+{
+    field(DESC, "Time array for waveform")
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_TIME_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NELM)")
+    field(EGU,  "s")
+}
+
+# ============================================================
+# Channel Scale/Offset Control
+# ============================================================
+record(ao, "$(P):CH$(CHANNEL):Scale")
+{
+    field(DESC, "Vertical scale (V/div)")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_SCALE_$(CHANNEL)")
+    field(PREC, "3")
+    field(EGU,  "V/div")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Scale_RBV")
+{
+    field(DESC, "Vertical scale readback")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_SCALE_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "3")
+    field(EGU,  "V/div")
+}
+
+record(ao, "$(P):CH$(CHANNEL):Offset")
+{
+    field(DESC, "Vertical offset")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_OFFSET_$(CHANNEL)")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Offset_RBV")
+{
+    field(DESC, "Vertical offset readback")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_OFFSET_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+# ============================================================
+# Marker Positions (for window calculations)
+# ============================================================
+record(ao, "$(P):CH$(CHANNEL):MarkerStart")
+{
+    field(DESC, "Window start marker time")
+    field(PREC, "9")
+    field(EGU,  "s")
+    field(VAL,  "0.0")
+    field(PINI, "YES")
+}
+
+record(ao, "$(P):CH$(CHANNEL):MarkerEnd")
+{
+    field(DESC, "Window end marker time")
+    field(PREC, "9")
+    field(EGU,  "s")
+    field(VAL,  "1e-6")
+    field(PINI, "YES")
+}
+
+# Calculate marker positions in samples
+record(calc, "$(P):CH$(CHANNEL):MarkerStartSample")
+{
+    field(DESC, "Start marker in samples")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerStart CP")
+    field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
+    field(CALC, "(B>0)?A/B:0")
+}
+
+record(calc, "$(P):CH$(CHANNEL):MarkerEndSample")
+{
+    field(DESC, "End marker in samples")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerEnd CP")
+    field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
+    field(CALC, "(B>0)?A/B:0")
+}
+
+# ============================================================
+# Waveform Statistics (using aSub for efficiency)
+# ============================================================
+record(aSub, "$(P):CH$(CHANNEL):CalcStats_")
+{
+    field(DESC, "Calculate waveform statistics")
+    field(SNAM, "wavestats")
+    field(FTA,  "DOUBLE")
+    field(INPA, "$(P):CH$(CHANNEL):Xinc NPP")
+    field(FTB,  "DOUBLE")
+    field(INPB, "$(COEFF=1.0)")
+    field(FTC,  "DOUBLE")
+    field(INPC, "$(P):CH$(CHANNEL):Waveform NPP")
+    field(NEC,  "$(NELM)")
+    field(FTD,  "LONG")
+    field(INPD, "$(P):CH$(CHANNEL):NrPt NPP")
+    field(FTE,  "LONG")
+    field(INPE, "$(P):CH$(CHANNEL):MarkerStartSample NPP")
+    field(FTF,  "LONG")
+    field(INPF, "$(P):CH$(CHANNEL):MarkerEndSample NPP")
+    field(FTVA, "DOUBLE")
+    field(OUTA, "$(P):CH$(CHANNEL):Integral PP")
+    field(FTVB, "DOUBLE")
+    field(OUTB, "$(P):CH$(CHANNEL):Mean PP")
+    field(FTVC, "DOUBLE")
+    field(OUTC, "$(P):CH$(CHANNEL):Min PP")
+    field(FTVD, "DOUBLE")
+    field(OUTD, "$(P):CH$(CHANNEL):Max PP")
+    field(FTVE, "DOUBLE")
+    field(OUTE, "$(P):CH$(CHANNEL):RMS PP")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Integral")
+{
+    field(DESC, "Waveform integral")
+    field(PREC, "9")
+    field(EGU,  "V*s")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Mean")
+{
+    field(DESC, "Waveform mean")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Min")
+{
+    field(DESC, "Waveform minimum")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Max")
+{
+    field(DESC, "Waveform maximum")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):RMS")
+{
+    field(DESC, "Waveform RMS")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+# ============================================================
+# Charge Calculation (for BCM applications)
+# ============================================================
+record(ao, "$(P):CH$(CHANNEL):ChargeCoeff")
+{
+    field(DESC, "Charge coefficient")
+    field(PREC, "12")
+    field(VAL,  "$(COEFF=1.0)")
+    field(PINI, "YES")
+}
+
+record(calc, "$(P):CH$(CHANNEL):Charge")
+{
+    field(DESC, "Calculated charge")
+    field(INPA, "$(P):CH$(CHANNEL):Integral CP")
+    field(INPB, "$(P):CH$(CHANNEL):ChargeCoeff CP")
+    field(CALC, "A*B")
+    field(PREC, "12")
+    field(EGU,  "$(CHARGE_EGU=pC)")
+}

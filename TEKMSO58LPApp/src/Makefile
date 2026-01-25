@@ -58,6 +58,9 @@ $(APPNAME)_DBD += wavestats.dbd
 $(APPNAME)_DBD += autoDetectSignal.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
+# ASYN driver for high-speed acquisition (>10Hz)
+$(APPNAME)_DBD += drvTekMSO58LP.dbd
+
 # Add all the support libraries needed by this IOC
 ## ISIS standard libraries ##
 #ALE# $(APPNAME)_LIBS += asubFunctions
@@ -96,6 +99,8 @@ $(APPNAME)_LIBS += $(APPNAME)iocSupport
 $(APPNAME)iocSupport_SRCS += wavestats.c
 $(APPNAME)iocSupport_SRCS += autoDetectSignal.c
 
+# ASYN driver for high-speed acquisition
+$(APPNAME)iocSupport_SRCS += drvTekMSO58LP.cpp
 
 $(APPNAME)_LIBS += $(EPICS_BASE_IOC_LIBS)
 $(APPNAME)_SYS_LIBS_Linux += tirpc

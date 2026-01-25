@@ -18,6 +18,11 @@ DB += devmso58lp.db
 DB += measurement.template
 DB += measurevalue.template
 
+# ASYN-based templates for high-speed acquisition
+DB += device_asyn.template
+DB += channel_asyn.template
+DB += measurement_asyn.template
+
 DB += measurements.substitutions
 
 # #----------------------------------------------------

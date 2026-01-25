@@ -1,0 +1,234 @@
+# device_asyn.template
+# ASYN-based template for Tektronix MSO58LP global device parameters
+# 
+# Macros:
+#   P       - PV prefix
+#   PORT    - ASYN port name (from drvTekMSO58LPConfigure)
+#   NELM    - Max waveform elements (for record length)
+
+# ============================================================
+# Device Identification
+# ============================================================
+record(stringin, "$(P):IDN")
+{
+    field(DESC, "Device identification string")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_IDN")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P):Vendor")
+{
+    field(DESC, "Manufacturer name")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_VENDOR")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P):Model")
+{
+    field(DESC, "Model number")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_MODEL")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P):Serial")
+{
+    field(DESC, "Serial number")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_SERIAL")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P):Firmware")
+{
+    field(DESC, "Firmware version")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_FIRMWARE")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Connection Status
+# ============================================================
+record(bi, "$(P):Connected")
+{
+    field(DESC, "Connection status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CONNECTED")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Disconnected")
+    field(ONAM, "Connected")
+    field(ZSV,  "MAJOR")
+    field(OSV,  "NO_ALARM")
+}
+
+# ============================================================
+# Acquisition Control
+# ============================================================
+record(bo, "$(P):Acquire")
+{
+    field(DESC, "Enable/disable polling")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_ACQUIRE")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Running")
+    field(PINI, "YES")
+    field(VAL,  "1")
+}
+
+record(bi, "$(P):Acquire_RBV")
+{
+    field(DESC, "Polling status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_ACQUIRE")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Running")
+}
+
+record(bo, "$(P):RunStop")
+{
+    field(DESC, "Scope run/stop control")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_RUN_STOP")
+    field(ZNAM, "Stop")
+    field(ONAM, "Run")
+    field(PINI, "YES")
+    field(VAL,  "1")
+}
+
+record(bi, "$(P):RunStop_RBV")
+{
+    field(DESC, "Scope run/stop status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_RUN_STOP")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Running")
+}
+
+# ============================================================
+# Polling Configuration
+# ============================================================
+record(ao, "$(P):PollTime")
+{
+    field(DESC, "Polling interval")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_POLL_TIME")
+    field(PREC, "3")
+    field(EGU,  "s")
+    field(DRVL, "0.001")
+    field(DRVH, "10.0")
+    field(LOPR, "0.001")
+    field(HOPR, "10.0")
+    field(PINI, "YES")
+    field(VAL,  "$(POLL_TIME=0.1)")
+}
+
+record(ai, "$(P):PollTime_RBV")
+{
+    field(DESC, "Polling interval readback")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_POLL_TIME")
+    field(SCAN, "I/O Intr")
+    field(PREC, "3")
+    field(EGU,  "s")
+}
+
+record(calc, "$(P):PollRate")
+{
+    field(DESC, "Polling rate (Hz)")
+    field(INPA, "$(P):PollTime_RBV CP")
+    field(CALC, "(A>0)?1/A:0")
+    field(PREC, "1")
+    field(EGU,  "Hz")
+}
+
+# ============================================================
+# Record Length (Horizontal Points)
+# ============================================================
+record(longout, "$(P):RecordLength")
+{
+    field(DESC, "Set record length")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_RECORD_LENGTH")
+    field(PINI, "YES")
+    field(VAL,  "$(NELM=10000)")
+    field(DRVL, "500")
+    field(DRVH, "250000")
+    field(LOPR, "500")
+    field(HOPR, "250000")
+    field(EGU,  "pts")
+}
+
+record(longin, "$(P):RecordLength_RBV")
+{
+    field(DESC, "Record length readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_RECORD_LENGTH")
+    field(SCAN, "I/O Intr")
+    field(EGU,  "pts")
+}
+
+# ============================================================
+# Diagnostics
+# ============================================================
+record(longin, "$(P):PollCount")
+{
+    field(DESC, "Number of poll cycles")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_POLL_COUNT")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):ErrorCount")
+{
+    field(DESC, "Communication error count")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_ERROR_COUNT")
+    field(SCAN, "I/O Intr")
+    field(HIHI, "10")
+    field(HIGH, "1")
+    field(HHSV, "MAJOR")
+    field(HSV,  "MINOR")
+}
+
+record(stringin, "$(P):LastError")
+{
+    field(DESC, "Last error command")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_LAST_ERROR")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P):CommTime")
+{
+    field(DESC, "Communication cycle time")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_COMM_TIME")
+    field(SCAN, "I/O Intr")
+    field(PREC, "4")
+    field(EGU,  "s")
+}
+
+# Refresh button (forces re-read of all config)
+record(bo, "$(P):Refresh")
+{
+    field(DESC, "Force refresh of all channels")
+    field(HIGH, "1")
+    field(ZNAM, "Idle")
+    field(ONAM, "Refresh")
+    info(asyn:READBACK, "1")
+}
+
+# Communication disable (for debugging)
+record(bo, "$(P):CommDisable")
+{
+    field(DESC, "Disable communication")
+    field(ZNAM, "Enabled")
+    field(ONAM, "Disabled")
+    field(PINI, "YES")
+    field(VAL,  "0")
+}

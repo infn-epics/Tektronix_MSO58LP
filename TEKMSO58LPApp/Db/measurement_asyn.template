@@ -1,0 +1,259 @@
+# measurement_asyn.template
+# ASYN-based template for Tektronix MSO58LP measurements
+#
+# Macros:
+#   P       - PV prefix
+#   PORT    - ASYN port name (from drvTekMSO58LPConfigure)
+#   MEAS    - Measurement number (1-10)
+#   CHANNEL - Source channel number (1-8, optional)
+#   TYPE    - Measurement type (optional, e.g., MEAN, AMPLITUDE, etc.)
+#   NAME    - Device name (optional, defaults to MEAS$(MEAS))
+#   ENABLE  - Initial enable state (0 or 1, default 0)
+
+# ============================================================
+# Device Name (for aliasing)
+# ============================================================
+record(stringin, "$(P):MEAS$(MEAS):Name")
+{
+    field(DESC, "Device name")
+    field(VAL,  "$(NAME=MEAS$(MEAS))")
+    field(PINI, "YES")
+}
+
+# ============================================================
+# Measurement Enable
+# ============================================================
+record(bo, "$(P):MEAS$(MEAS):Enable")
+{
+    field(DESC, "Enable measurement $(MEAS)")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_MEAS_ENABLE_$(MEAS)")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+    field(PINI, "YES")
+    field(VAL,  "$(ENABLE=0)")
+}
+
+record(bi, "$(P):MEAS$(MEAS):Enable_RBV")
+{
+    field(DESC, "Measurement $(MEAS) enable status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_ENABLE_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+}
+
+# ============================================================
+# Measurement Source Channel
+# ============================================================
+record(mbbo, "$(P):MEAS$(MEAS):Source")
+{
+    field(DESC, "Measurement source channel")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_MEAS_SOURCE_$(MEAS)")
+    field(ZRST, "CH1")
+    field(ZRVL, "1")
+    field(ONST, "CH2")
+    field(ONVL, "2")
+    field(TWST, "CH3")
+    field(TWVL, "3")
+    field(THST, "CH4")
+    field(THVL, "4")
+    field(FRST, "CH5")
+    field(FRVL, "5")
+    field(FVST, "CH6")
+    field(FVVL, "6")
+    field(SXST, "CH7")
+    field(SXVL, "7")
+    field(SVST, "CH8")
+    field(SVVL, "8")
+    field(PINI, "YES")
+    field(VAL,  "$(CHANNEL=1)")
+}
+
+record(mbbi, "$(P):MEAS$(MEAS):Source_RBV")
+{
+    field(DESC, "Measurement source readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_SOURCE_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(ZRST, "CH1")
+    field(ZRVL, "1")
+    field(ONST, "CH2")
+    field(ONVL, "2")
+    field(TWST, "CH3")
+    field(TWVL, "3")
+    field(THST, "CH4")
+    field(THVL, "4")
+    field(FRST, "CH5")
+    field(FRVL, "5")
+    field(FVST, "CH6")
+    field(FVVL, "6")
+    field(SXST, "CH7")
+    field(SXVL, "7")
+    field(SVST, "CH8")
+    field(SVVL, "8")
+}
+
+# ============================================================
+# Measurement Type
+# ============================================================
+record(stringout, "$(P):MEAS$(MEAS):Type")
+{
+    field(DESC, "Measurement type")
+    field(DTYP, "asynOctetWrite")
+    field(OUT,  "@asyn($(PORT),0)TEK_MEAS_TYPE_$(MEAS)")
+    field(VAL,  "$(TYPE=MEAN)")
+    field(PINI, "YES")
+}
+
+record(stringin, "$(P):MEAS$(MEAS):Type_RBV")
+{
+    field(DESC, "Measurement type readback")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_TYPE_$(MEAS)")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Measurement Values - Updated at poll rate
+# ============================================================
+record(ai, "$(P):MEAS$(MEAS):Value")
+{
+    field(DESC, "Current measurement value")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_VALUE_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):MEAS$(MEAS):Mean")
+{
+    field(DESC, "Measurement mean (all acqs)")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_MEAN_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):MEAS$(MEAS):Min")
+{
+    field(DESC, "Measurement minimum")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_MIN_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):MEAS$(MEAS):Max")
+{
+    field(DESC, "Measurement maximum")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_MAX_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+}
+
+record(ai, "$(P):MEAS$(MEAS):Stddev")
+{
+    field(DESC, "Measurement std deviation")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_STDDEV_$(MEAS)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+}
+
+record(stringin, "$(P):MEAS$(MEAS):Units")
+{
+    field(DESC, "Measurement units")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_MEAS_UNITS_$(MEAS)")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
+# Charge Calculation (for measurements like AREA)
+# ============================================================
+record(ao, "$(P):MEAS$(MEAS):ChargeCoeff")
+{
+    field(DESC, "Charge coefficient")
+    field(PREC, "12")
+    field(VAL,  "$(COEFF=1.0)")
+    field(PINI, "YES")
+}
+
+record(calc, "$(P):MEAS$(MEAS):Charge")
+{
+    field(DESC, "Charge from measurement")
+    field(INPA, "$(P):MEAS$(MEAS):Value CP")
+    field(INPB, "$(P):MEAS$(MEAS):ChargeCoeff")
+    field(CALC, "A*B")
+    field(PREC, "12")
+    field(EGU,  "$(CHARGE_EGU=pC)")
+}
+
+# ============================================================
+# Daily Charge Accumulation (preserved from original)
+# ============================================================
+record(ai, "$(P):MEAS$(MEAS):ChargeDay")
+{
+    field(DESC, "Cumulative daily charge")
+    field(EGU,  "$(CHARGE_EGU=pC)")
+    field(PREC, "12")
+    field(PINI, "YES")
+    field(VAL,  "0")
+}
+
+record(ai, "$(P):MEAS$(MEAS):ChargePrev_")
+{
+    field(DESC, "Previous charge for detection")
+    field(PREC, "12")
+    field(VAL,  "0")
+}
+
+record(calcout, "$(P):MEAS$(MEAS):AccumCharge_")
+{
+    field(DESC, "Accumulate charge")
+    field(INPA, "$(P):MEAS$(MEAS):Charge CP")
+    field(INPB, "$(P):MEAS$(MEAS):ChargeDay")
+    field(INPC, "$(P):MEAS$(MEAS):ChargePrev_")
+    field(CALC, "(A!=C)?(B+ABS(A)):B")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):MEAS$(MEAS):ChargeDay PP")
+    field(FLNK, "$(P):MEAS$(MEAS):UpdatePrev_")
+}
+
+record(calcout, "$(P):MEAS$(MEAS):UpdatePrev_")
+{
+    field(DESC, "Update previous charge")
+    field(INPA, "$(P):MEAS$(MEAS):Charge")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):MEAS$(MEAS):ChargePrev_ PP")
+}
+
+record(bo, "$(P):MEAS$(MEAS):ResetChargeDay")
+{
+    field(DESC, "Reset daily charge")
+    field(HIGH, "1")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(FLNK, "$(P):MEAS$(MEAS):DoReset_")
+}
+
+record(calcout, "$(P):MEAS$(MEAS):DoReset_")
+{
+    field(DESC, "Execute reset")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):MEAS$(MEAS):ChargeDay PP")
+}
+
+# ============================================================
+# Aliases for device-based access (must be after record definitions)
+# ============================================================
+alias("$(P):MEAS$(MEAS):Value",  "$(P):$(NAME=MEAS$(MEAS)):Value")
+alias("$(P):MEAS$(MEAS):Mean",   "$(P):$(NAME=MEAS$(MEAS)):Mean")
+alias("$(P):MEAS$(MEAS):Enable", "$(P):$(NAME=MEAS$(MEAS)):Enable")
+alias("$(P):MEAS$(MEAS):Charge", "$(P):$(NAME=MEAS$(MEAS)):Charge")
