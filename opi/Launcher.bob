@@ -10,8 +10,6 @@
     <color red="240" green="240" blue="240">
     </color>
   </background_color>
-  
-  <!-- Title -->
   <widget type="label" version="2.0.0">
     <name>Title</name>
     <text>Tektronix MSO58LP</text>
@@ -29,14 +27,12 @@
     </foreground_color>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
-  
   <widget type="label" version="2.0.0">
     <name>Subtitle</name>
     <text>ASYN Driver - High Speed Acquisition</text>
     <x>10</x>
     <y>45</y>
     <width>480</width>
-    <height>20</height>
     <font>
       <font family="Liberation Sans" style="ITALIC" size="12.0">
       </font>
@@ -47,8 +43,6 @@
     </foreground_color>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
-
-  <!-- Connection Status -->
   <widget type="group" version="3.0.0">
     <name>Status_Group</name>
     <x>10</x>
@@ -60,19 +54,16 @@
       <color red="220" green="230" blue="240">
       </color>
     </background_color>
-    
     <widget type="label" version="2.0.0">
       <name>Status_Label</name>
       <text>Connection:</text>
       <x>10</x>
       <y>10</y>
-      <width>100</width>
       <font>
         <font family="Liberation Sans" style="BOLD" size="12.0">
         </font>
       </font>
     </widget>
-    
     <widget type="led" version="2.0.0">
       <name>Connected_LED</name>
       <pv_name>$(P):Connected</pv_name>
@@ -89,20 +80,17 @@
         </color>
       </on_color>
     </widget>
-    
     <widget type="textupdate" version="2.0.0">
       <name>Connected_Text</name>
       <pv_name>$(P):Connected</pv_name>
       <x>145</x>
       <y>10</y>
       <width>120</width>
-      <height>20</height>
       <font>
         <font family="Liberation Sans" style="BOLD" size="12.0">
         </font>
       </font>
     </widget>
-    
     <widget type="label" version="2.0.0">
       <name>Poll_Label</name>
       <text>Poll Rate:</text>
@@ -114,7 +102,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="textupdate" version="2.0.0">
       <name>Poll_Rate</name>
       <pv_name>$(P):PollRate</pv_name>
@@ -129,7 +116,6 @@
       <format>1</format>
       <precision>1</precision>
     </widget>
-    
     <widget type="label" version="2.0.0">
       <name>Hz_Label</name>
       <text>Hz</text>
@@ -141,7 +127,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="label" version="2.0.0">
       <name>Errors_Label</name>
       <text>Errors:</text>
@@ -153,7 +138,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="textupdate" version="2.0.0">
       <name>Error_Count</name>
       <pv_name>$(P):ErrorCount</pv_name>
@@ -166,7 +150,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="label" version="2.0.0">
       <name>Polls_Label</name>
       <text>Polls:</text>
@@ -178,13 +161,11 @@
         </font>
       </font>
     </widget>
-    
     <widget type="textupdate" version="2.0.0">
       <name>Poll_Count</name>
       <pv_name>$(P):PollCount</pv_name>
       <x>200</x>
       <y>38</y>
-      <width>100</width>
       <height>22</height>
       <font>
         <font family="Liberation Sans" style="REGULAR" size="11.0">
@@ -192,8 +173,6 @@
       </font>
     </widget>
   </widget>
-
-  <!-- Main Navigation Buttons -->
   <widget type="action_button" version="3.0.0">
     <name>Open_Measurements</name>
     <actions>
@@ -218,13 +197,12 @@
     </background_color>
     <tooltip>Open Measurements Display</tooltip>
   </widget>
-
   <widget type="action_button" version="3.0.0">
     <name>Open_Scope</name>
     <actions>
       <action type="open_display">
         <description>Open Oscilloscope Display</description>
-        <file>mso.bob</file>
+        <file>mso_asyn.bob</file>
         <target>window</target>
       </action>
     </actions>
@@ -243,8 +221,6 @@
     </background_color>
     <tooltip>Open Full Oscilloscope Display</tooltip>
   </widget>
-
-  <!-- Configured Devices -->
   <widget type="group" version="3.0.0">
     <name>Devices_Group</name>
     <x>10</x>
@@ -252,11 +228,6 @@
     <width>480</width>
     <height>180</height>
     <style>1</style>
-    <background_color>
-      <color red="255" green="255" blue="255">
-      </color>
-    </background_color>
-    
     <widget type="label" version="2.0.0">
       <name>Devices_Title</name>
       <text>Configured Measurements</text>
@@ -273,73 +244,63 @@
         </color>
       </foreground_color>
     </widget>
-    
-    <!-- Device Row 1 - BEAMBPM01 -->
     <widget type="embedded" version="2.0.0">
       <name>Dev1</name>
-      <file>meas_row_compact.bob</file>
       <macros>
         <P>$(P)</P>
         <MEAS>1</MEAS>
         <NAME>BEAMBPM01</NAME>
         <CH>1</CH>
       </macros>
+      <file>meas_row_compact.bob</file>
       <x>5</x>
       <y>35</y>
       <width>470</width>
       <height>32</height>
     </widget>
-    
-    <!-- Device Row 2 - EOSPHD01 -->
     <widget type="embedded" version="2.0.0">
       <name>Dev2</name>
-      <file>meas_row_compact.bob</file>
       <macros>
         <P>$(P)</P>
         <MEAS>2</MEAS>
         <NAME>EOSPHD01</NAME>
         <CH>2</CH>
       </macros>
+      <file>meas_row_compact.bob</file>
       <x>5</x>
       <y>70</y>
       <width>470</width>
       <height>32</height>
     </widget>
-    
-    <!-- Device Row 3 - PLADIS01 -->
     <widget type="embedded" version="2.0.0">
       <name>Dev3</name>
-      <file>meas_row_compact.bob</file>
       <macros>
         <P>$(P)</P>
         <MEAS>3</MEAS>
         <NAME>PLADIS01</NAME>
         <CH>3</CH>
       </macros>
+      <file>meas_row_compact.bob</file>
       <x>5</x>
       <y>105</y>
       <width>470</width>
       <height>32</height>
     </widget>
-    
-    <!-- Device Row 4 - PLALAS01 -->
     <widget type="embedded" version="2.0.0">
       <name>Dev4</name>
-      <file>meas_row_compact.bob</file>
       <macros>
         <P>$(P)</P>
         <MEAS>4</MEAS>
         <NAME>PLALAS01</NAME>
         <CH>4</CH>
       </macros>
+      <file>meas_row_compact.bob</file>
       <x>5</x>
       <y>140</y>
       <width>470</width>
       <height>32</height>
     </widget>
   </widget>
-
-  <!-- Acquisition Control -->
   <widget type="group" version="3.0.0">
     <name>Control_Group</name>
     <x>10</x>
@@ -351,7 +312,6 @@
       <color red="230" green="230" blue="230">
       </color>
     </background_color>
-    
     <widget type="label" version="2.0.0">
       <name>Acq_Label</name>
       <text>Acquisition:</text>
@@ -363,7 +323,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="choice" version="2.0.0">
       <name>Acquire_Choice</name>
       <pv_name>$(P):Acquire</pv_name>
@@ -371,14 +330,11 @@
       <y>5</y>
       <width>150</width>
       <height>30</height>
-      <horizontal>true</horizontal>
       <items>
-        <item>Stop</item>
-        <item>Run</item>
+        <item>Item 1</item>
+        <item>Item 2</item>
       </items>
-      <items_from_pv>false</items_from_pv>
     </widget>
-    
     <widget type="label" version="2.0.0">
       <name>PollTime_Label</name>
       <text>Poll (s):</text>
@@ -390,7 +346,6 @@
         </font>
       </font>
     </widget>
-    
     <widget type="textentry" version="3.0.0">
       <name>PollTime_Entry</name>
       <pv_name>$(P):PollTime</pv_name>

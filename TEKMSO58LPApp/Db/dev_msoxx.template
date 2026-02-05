@@ -1,5 +1,26 @@
 # msoxx.template
 # Template for non-channel records from devTektronix_MSO58LP.db
+
+# ============================================================
+# Acquisition Control
+# ============================================================
+record(bo, "$(P):Acquire")
+{
+    field(DESC, "Enable/disable polling")
+    field(PINI, "YES")
+    field(VAL,  "1")
+    field(ZNAM, "Stop")
+    field(ONAM, "Run")
+}
+
+record(bi, "$(P):Acquire_RBV")
+{
+    field(DESC, "Polling status")
+    field(INP,  "$(P):Acquire CP")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Running")
+}
+
 record(bo, "$(P):Refresh")
 {
     field(DESC, "Manual refresh of all channels")

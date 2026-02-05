@@ -1,11 +1,38 @@
+/**
+ * wavestats.c - Waveform statistics aSub function
+ * 
+ * Calculates statistics for oscilloscope waveform data:
+ *   - Integral (area under curve)
+ *   - Mean (average value)
+ *   - Min/Max
+ *   - RMS (root mean square)
+ * 
+ * Inputs:
+ *   A - xinc (time increment between samples)
+ *   B - norm (normalization coefficient)
+ *   C - waveform array (double)
+ *   D - number of points
+ *   E - start sample index (for windowed calculation)
+ *   F - end sample index (for windowed calculation)
+ * 
+ * Outputs:
+ *   VALA - Integral
+ *   VALB - Mean
+ *   VALC - Min
+ *   VALD - Max
+ *   VALE - RMS
+ */
 #include <registryFunction.h>
 #include <epicsExport.h>
 #include "aSubRecord.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-   
+
+/**
+ * incrementor - Simple incrementor function for testing
+ */
 static long incrementor(aSubRecord *prec) {
     long i;
     double *a;
@@ -14,20 +41,18 @@ static long incrementor(aSubRecord *prec) {
     
     a = (double *)prec->a;
     
-    for(i=0; i < prec->nova; ++i)
-    {
-        //printf("index= %d", i);
+    for(i=0; i < prec->nova; ++i) {
         ((double *)prec->vala)[i] = (double)i * (*a);
     }
     
     prec->pact = 0;
-
-    //Debug message - prints to IOC
-    //printf("my_asub_routine called");
     
     return 0;
 }
 
+/**
+ * wavestats - Calculate waveform statistics
+ */
 static long wavestats(aSubRecord *prec) {
     double xinc = *((double *)prec->a);
     double norm = *((double *)prec->b);
@@ -36,74 +61,77 @@ static long wavestats(aSubRecord *prec) {
     long n = *(long*)prec->d;
     long start = *(long*)prec->e;
     long end = *(long*)prec->f;
+    
+    /* Get actual number of elements in input C */
+    long nec = prec->nec;  /* Max elements for input C */
+    long noc = prec->noc;  /* Actual elements in input C array */
 
-
-    double sum = 0.0, max = 0, min = 0, sumsq = 0.0;
-    *((double *)prec->vala) = -1;
-    *((double *)prec->valb) = -1;
-    *((double *)prec->valc) = -1;
-    *((double *)prec->vald) = -1;
-    *((double *)prec->vale) = -1;
-    if (n <= 0) {
-        printf("%s]# wavestats empty array\n",prec->name);
-       
-        return 0;
-    }
-    if (start >= n){
-        printf("%s]# wavestats start %ld > len %ld\n",prec->name,start,n);
-        return 0;
-
-    }
-    if (start >= end){
-        printf("%s]# wavestats start %ld > end %ld\n",prec->name,start,end);
-        return 0;
-
-    }
-    if (end > n){
-        printf("%s] wavestats end %ld > len %ld\n",prec->name,end,n);
-        end=n;
-
-    }
-    //printf("processing %d array\n",n);
-
-    max = min = y[0];
-
-   
-    for (int i = start; i < end; ++i) {
-        if (y[i] > max) {
-            max = y[i];
-         /*   if(!strcmp(prec->name,"SPARC:DIAG:TEK:wavestats_7_")){
-                printf("found new max %E at %d\n",max,i);
-
-            }*/
+    double sum = 0.0;
+    double sumsq = 0.0;
+    double max, min;
+    long count;
+    
+    /* Debug: print input info */
+    static int debugCount = 0;
+    if (debugCount < 10 || debugCount % 100 == 0) {
+        printf("wavestats[%s]: n=%ld, start=%ld, end=%ld, nec=%ld, noc=%ld, y=%p\n", 
+               prec->name, n, start, end, nec, noc, (void*)y);
+        if (y && nec > 0) {
+            printf("wavestats[%s]: y[0]=%f, y[1]=%f, y[2]=%f (nec=%ld elements available)\n", 
+                   prec->name, y[0], y[1], y[2], nec);
         }
-        if (y[i] < min) {
-            min = y[i];
-        }
-        double val = y[i]* xinc;
-        sum += y[i];
-        sumsq += val * val;
-       if ( (y[i] > 1) && (y[i]<10)){
-            printf("%s]-%d integral  len=%ld xinc=%f norm=%f val:%f\n",prec->name,i,n, xinc,norm,y[i]);
     }
-    }
-    double integral=sum * xinc * norm;
-    double avg=sum / n;
-    double RMS=sqrt(sumsq* norm / n);
-    *((double *)prec->vala) = integral;
-    *((double *)prec->valb) = avg ;
-    *((double *)prec->valc) = min ;
-    *((double *)prec->vald) = max;
-    *((double *)prec->vale) = RMS;
-    if(isnan(*((double *)prec->vala))){
-        printf("%s] integral NaN len=%ld xinc=%f norm=%f first:%f\n",prec->name,n, xinc,norm,y[0]);
-
-    } else {
-        // printf("%s] integral buffer=%ld start=%ld end=%ld end-size=%ld xinc=%f norm=%f integral:%f min:%f max:%f avg:%f rms:%f first:%f\n",prec->name,n, start,end,end-start,xinc,norm,integral,min,max,avg,RMS,y[0]);
+    debugCount++;
+    
+    /* Initialize outputs to invalid */
+    *((double *)prec->vala) = 0.0;  /* Integral */
+    *((double *)prec->valb) = 0.0;  /* Mean */
+    *((double *)prec->valc) = 0.0;  /* Min */
+    *((double *)prec->vald) = 0.0;  /* Max */
+    *((double *)prec->vale) = 0.0;  /* RMS */
+    
+    /* Validate inputs */
+    if (n <= 0 || y == NULL) {
+        return 0;
     }
     
-
-
+    /* Clamp start/end to valid range */
+    if (start < 0) start = 0;
+    if (start >= n) start = 0;
+    if (end <= start) end = n;
+    if (end > n) end = n;
+    
+    count = end - start;
+    if (count <= 0) {
+        return 0;
+    }
+    
+    /* Initialize min/max from first sample in window */
+    max = min = y[start];
+    
+    /* Calculate statistics over the window */
+    for (long i = start; i < end; ++i) {
+        double val = y[i];
+        
+        if (val > max) max = val;
+        if (val < min) min = val;
+        
+        sum += val;
+        sumsq += val * val;
+    }
+    
+    /* Calculate results */
+    double integral = sum * xinc * norm;
+    double mean = sum / count;
+    double rms = sqrt(sumsq / count);
+    
+    /* Output results */
+    *((double *)prec->vala) = integral;
+    *((double *)prec->valb) = mean;
+    *((double *)prec->valc) = min;
+    *((double *)prec->vald) = max;
+    *((double *)prec->vale) = rms;
+    
     return 0;
 }
 

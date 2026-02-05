@@ -89,7 +89,7 @@
   <!-- Current Value -->
   <widget type="textupdate" version="2.0.0">
     <name>Value_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):Value</pv_name>
+    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
     <x>260</x>
     <y>2</y>
     <width>120</width>

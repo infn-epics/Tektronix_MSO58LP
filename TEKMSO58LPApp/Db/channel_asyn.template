@@ -34,6 +34,89 @@ record(bi, "$(P):CH$(CHANNEL):Enable_RBV")
 }
 
 # ============================================================
+# Data Acquisition Window - Per-channel start/stop points
+# ============================================================
+record(longout, "$(P):CH$(CHANNEL):DataStart")
+{
+    field(DESC, "Acquisition window start point")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_START_$(CHANNEL)")
+    field(VAL,  "1")
+    field(PINI, "YES")
+    field(DRVL, "1")
+    field(DRVH, "$(NELM)")
+    field(LOPR, "1")
+    field(HOPR, "$(NELM)")
+}
+
+record(longin, "$(P):CH$(CHANNEL):DataStart_RBV")
+{
+    field(DESC, "Acquisition window start readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_DATA_START_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P):CH$(CHANNEL):DataStop")
+{
+    field(DESC, "Acquisition window stop point")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_STOP_$(CHANNEL)")
+    field(VAL,  "$(NELM)")
+    field(PINI, "YES")
+    field(DRVL, "1")
+    field(DRVH, "$(NELM)")
+    field(LOPR, "1")
+    field(HOPR, "$(NELM)")
+}
+
+record(longin, "$(P):CH$(CHANNEL):DataStop_RBV")
+{
+    field(DESC, "Acquisition window stop readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_DATA_STOP_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+}
+
+# Calculated window size (for display)
+record(calc, "$(P):CH$(CHANNEL):WindowSize")
+{
+    field(DESC, "Acquisition window size")
+    field(INPA, "$(P):CH$(CHANNEL):DataStop_RBV CP")
+    field(INPB, "$(P):CH$(CHANNEL):DataStart_RBV CP")
+    field(CALC, "A-B+1")
+    field(EGU,  "pts")
+}
+
+# ============================================================
+# Data Width (bytes per sample: 1 or 2)
+# ============================================================
+record(mbbo, "$(P):CH$(CHANNEL):DataWidth")
+{
+    field(DESC, "Bytes per sample (1 or 2)")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_WIDTH_$(CHANNEL)")
+    field(ZRST, "1 byte (8-bit)")
+    field(ZRVL, "1")
+    field(ONST, "2 bytes (16-bit)")
+    field(ONVL, "2")
+    field(VAL,  "1")
+    field(PINI, "YES")
+}
+
+record(mbbi, "$(P):CH$(CHANNEL):DataWidth_RBV")
+{
+    field(DESC, "Bytes per sample readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_DATA_WIDTH_$(CHANNEL)")
+    field(ZRST, "1 byte (8-bit)")
+    field(ZRVL, "1")
+    field(ONST, "2 bytes (16-bit)")
+    field(ONVL, "2")
+    field(SCAN, "I/O Intr")
+}
+
+# ============================================================
 # Channel Label
 # ============================================================
 record(stringout, "$(P):CH$(CHANNEL):Label")
@@ -88,11 +171,21 @@ record(ai, "$(P):CH$(CHANNEL):Ymult")
 
 record(ai, "$(P):CH$(CHANNEL):Yoff")
 {
-    field(DESC, "Y offset")
+    field(DESC, "Y offset (digitizer levels)")
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),0)TEK_CH_YOFF_$(CHANNEL)")
     field(SCAN, "I/O Intr")
     field(PREC, "9")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Yzero")
+{
+    field(DESC, "Y zero (voltage reference)")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_YZERO_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+    field(EGU,  "V")
 }
 
 record(stringin, "$(P):CH$(CHANNEL):Yunit")
@@ -116,6 +209,18 @@ record(longin, "$(P):CH$(CHANNEL):NrPt")
 }
 
 # ============================================================
+# Data Ready - Triggers waveform reads via I/O Intr
+# ============================================================
+record(longin, "$(P):CH$(CHANNEL):DataReady")
+{
+    field(DESC, "Data ready counter (triggers wfm read)")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_DATA_READY_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(P):CH$(CHANNEL):RawWaveform")
+}
+
+# ============================================================
 # Waveform Data - Raw (integer ADC counts)
 # ============================================================
 record(waveform, "$(P):CH$(CHANNEL):RawWaveform")
@@ -123,9 +228,10 @@ record(waveform, "$(P):CH$(CHANNEL):RawWaveform")
     field(DESC, "Raw waveform data (ADC counts)")
     field(DTYP, "asynInt32ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_$(CHANNEL)")
-    field(SCAN, "I/O Intr")
+    field(SCAN, "Passive")
     field(FTVL, "LONG")
     field(NELM, "$(NELM)")
+    field(FLNK, "$(P):CH$(CHANNEL):Waveform")
 }
 
 # ============================================================
@@ -136,11 +242,11 @@ record(waveform, "$(P):CH$(CHANNEL):Waveform")
     field(DESC, "Scaled waveform data")
     field(DTYP, "asynFloat64ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_SCALED_$(CHANNEL)")
-    field(SCAN, "I/O Intr")
+    field(SCAN, "Passive")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NELM)")
     field(EGU,  "V")
-    field(FLNK, "$(P):CH$(CHANNEL):CalcStats_")
+    field(FLNK, "$(P):CH$(CHANNEL):TimeArray")
 }
 
 # ============================================================
@@ -151,10 +257,11 @@ record(waveform, "$(P):CH$(CHANNEL):TimeArray")
     field(DESC, "Time array for waveform")
     field(DTYP, "asynFloat64ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_TIME_$(CHANNEL)")
-    field(SCAN, "I/O Intr")
+    field(SCAN, "Passive")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NELM)")
     field(EGU,  "s")
+    field(FLNK, "$(P):CH$(CHANNEL):CalcStats_")
 }
 
 # ============================================================
@@ -199,33 +306,36 @@ record(ai, "$(P):CH$(CHANNEL):Offset_RBV")
 }
 
 # ============================================================
-# Marker Positions (for window calculations)
+# Marker Positions (time-based, in seconds, for XYPlot markers)
+# Interactive markers on the waveform plot define the stats window
 # ============================================================
 record(ao, "$(P):CH$(CHANNEL):MarkerStart")
 {
-    field(DESC, "Window start marker time")
+    field(DESC, "Stats window start (time)")
     field(PREC, "9")
     field(EGU,  "s")
-    field(VAL,  "0.0")
+    field(VAL,  "0")
     field(PINI, "YES")
 }
 
 record(ao, "$(P):CH$(CHANNEL):MarkerEnd")
 {
-    field(DESC, "Window end marker time")
+    field(DESC, "Stats window end (time)")
     field(PREC, "9")
     field(EGU,  "s")
-    field(VAL,  "1e-6")
+    field(VAL,  "0")
     field(PINI, "YES")
 }
 
-# Calculate marker positions in samples
+# Convert marker time positions to sample indices for wavestats
+# sample = time / xinc  (clamped to 0..NrPt)
 record(calc, "$(P):CH$(CHANNEL):MarkerStartSample")
 {
     field(DESC, "Start marker in samples")
     field(INPA, "$(P):CH$(CHANNEL):MarkerStart CP")
     field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
-    field(CALC, "(B>0)?A/B:0")
+    field(INPC, "$(P):CH$(CHANNEL):NrPt CP")
+    field(CALC, "B>0?MAX(0,MIN(NINT(A/B),C)):0")
 }
 
 record(calc, "$(P):CH$(CHANNEL):MarkerEndSample")
@@ -233,7 +343,8 @@ record(calc, "$(P):CH$(CHANNEL):MarkerEndSample")
     field(DESC, "End marker in samples")
     field(INPA, "$(P):CH$(CHANNEL):MarkerEnd CP")
     field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
-    field(CALC, "(B>0)?A/B:0")
+    field(INPC, "$(P):CH$(CHANNEL):NrPt CP")
+    field(CALC, "A<=0&&B>0?C:B>0?MAX(0,MIN(NINT(A/B),C)):0")
 }
 
 # ============================================================
@@ -248,7 +359,7 @@ record(aSub, "$(P):CH$(CHANNEL):CalcStats_")
     field(FTB,  "DOUBLE")
     field(INPB, "$(COEFF=1.0)")
     field(FTC,  "DOUBLE")
-    field(INPC, "$(P):CH$(CHANNEL):Waveform NPP")
+    field(INPC, "$(P):CH$(CHANNEL):Waveform CA NMS")
     field(NEC,  "$(NELM)")
     field(FTD,  "LONG")
     field(INPD, "$(P):CH$(CHANNEL):NrPt NPP")
@@ -266,6 +377,7 @@ record(aSub, "$(P):CH$(CHANNEL):CalcStats_")
     field(OUTD, "$(P):CH$(CHANNEL):Max PP")
     field(FTVE, "DOUBLE")
     field(OUTE, "$(P):CH$(CHANNEL):RMS PP")
+    field(FLNK, "$(P):CH$(CHANNEL):PeakToPeak")
 }
 
 record(ai, "$(P):CH$(CHANNEL):Integral")
@@ -299,6 +411,53 @@ record(ai, "$(P):CH$(CHANNEL):Max")
 record(ai, "$(P):CH$(CHANNEL):RMS")
 {
     field(DESC, "Waveform RMS")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+# ============================================================
+# Per-Channel Refresh Rate (calculated by driver)
+# ============================================================
+record(ai, "$(P):CH$(CHANNEL):RefreshRate")
+{
+    field(DESC, "Actual refresh rate")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_REFRESH_RATE_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "2")
+    field(EGU,  "Hz")
+}
+
+# ============================================================
+# Reset Statistics
+# ============================================================
+record(bo, "$(P):CH$(CHANNEL):ResetStats")
+{
+    field(DESC, "Reset channel statistics")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_RESET_STATS_$(CHANNEL)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(HIGH, "0.1")
+}
+
+# Derived statistics
+record(calc, "$(P):CH$(CHANNEL):PeakToPeak")
+{
+    field(DESC, "Waveform peak-to-peak")
+    field(INPA, "$(P):CH$(CHANNEL):Max CP")
+    field(INPB, "$(P):CH$(CHANNEL):Min CP")
+    field(CALC, "A-B")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(calc, "$(P):CH$(CHANNEL):StdDev")
+{
+    field(DESC, "Waveform standard deviation")
+    field(INPA, "$(P):CH$(CHANNEL):RMS CP")
+    field(INPB, "$(P):CH$(CHANNEL):Mean CP")
+    field(CALC, "SQR(A*A-B*B)")
     field(PREC, "6")
     field(EGU,  "V")
 }

@@ -232,3 +232,47 @@ record(bo, "$(P):CommDisable")
     field(PINI, "YES")
     field(VAL,  "0")
 }
+
+# ============================================================
+# Debug Level Control
+# ============================================================
+record(mbbo, "$(P):DebugLevel")
+{
+    field(DESC, "Debug output level")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_DEBUG_LEVEL")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "None")
+    field(ONST, "Error")
+    field(TWST, "Warning")
+    field(THST, "Info")
+    field(FRST, "Detail")
+    field(FVST, "Trace")
+    field(PINI, "YES")
+    field(VAL,  "1")
+}
+
+record(mbbi, "$(P):DebugLevel_RBV")
+{
+    field(DESC, "Debug level readback")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_DEBUG_LEVEL")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "None")
+    field(ONST, "Error")
+    field(TWST, "Warning")
+    field(THST, "Info")
+    field(FRST, "Detail")
+    field(FVST, "Trace")
+}

@@ -97,7 +97,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Value</name>
-    <pv_name>$(P):MEAS$(MEAS):Value</pv_name>
+    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
     <x>370</x>
     <y>8</y>
     <width>130</width>

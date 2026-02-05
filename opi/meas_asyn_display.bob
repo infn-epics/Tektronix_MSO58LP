@@ -437,7 +437,7 @@
       <trace>
         <name>BEAMBPM01</name>
         <x_pv></x_pv>
-        <y_pv>$(P):MEAS1:Value</y_pv>
+        <y_pv>$(P):MEAS1:VALUE</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -454,7 +454,7 @@
       <trace>
         <name>EOSPHD01</name>
         <x_pv></x_pv>
-        <y_pv>$(P):MEAS2:Value</y_pv>
+        <y_pv>$(P):MEAS2:VALUE</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -471,7 +471,7 @@
       <trace>
         <name>PLADIS01</name>
         <x_pv></x_pv>
-        <y_pv>$(P):MEAS3:Value</y_pv>
+        <y_pv>$(P):MEAS3:VALUE</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -488,7 +488,7 @@
       <trace>
         <name>PLALAS01</name>
         <x_pv></x_pv>
-        <y_pv>$(P):MEAS4:Value</y_pv>
+        <y_pv>$(P):MEAS4:VALUE</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>

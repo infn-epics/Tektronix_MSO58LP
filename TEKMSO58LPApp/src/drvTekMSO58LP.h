@@ -45,6 +45,7 @@
 #define TEK_CH_XINC_STRING          "TEK_CH_XINC"
 #define TEK_CH_YMULT_STRING         "TEK_CH_YMULT"
 #define TEK_CH_YOFF_STRING          "TEK_CH_YOFF"
+#define TEK_CH_YZERO_STRING         "TEK_CH_YZERO"
 #define TEK_CH_XUNIT_STRING         "TEK_CH_XUNIT"
 #define TEK_CH_YUNIT_STRING         "TEK_CH_YUNIT"
 #define TEK_CH_NR_PT_STRING         "TEK_CH_NR_PT"
@@ -56,6 +57,12 @@
 #define TEK_CH_OFFSET_STRING        "TEK_CH_OFFSET"
 #define TEK_CH_POSITION_STRING      "TEK_CH_POSITION"
 #define TEK_CH_BANDWIDTH_STRING     "TEK_CH_BANDWIDTH"
+#define TEK_CH_DATA_READY_STRING    "TEK_CH_DATA_READY"
+#define TEK_CH_DATA_START_STRING    "TEK_CH_DATA_START"
+#define TEK_CH_DATA_STOP_STRING     "TEK_CH_DATA_STOP"
+#define TEK_CH_REFRESH_RATE_STRING  "TEK_CH_REFRESH_RATE"
+#define TEK_CH_RESET_STATS_STRING   "TEK_CH_RESET_STATS"
+#define TEK_CH_DATA_WIDTH_STRING    "TEK_CH_DATA_WIDTH"
 
 /* Per-measurement parameters */
 #define TEK_MEAS_ENABLE_STRING      "TEK_MEAS_ENABLE"
@@ -73,6 +80,15 @@
 #define TEK_ERROR_COUNT_STRING      "TEK_ERROR_COUNT"
 #define TEK_LAST_ERROR_STRING       "TEK_LAST_ERROR"
 #define TEK_COMM_TIME_STRING        "TEK_COMM_TIME"
+#define TEK_DEBUG_LEVEL_STRING      "TEK_DEBUG_LEVEL"
+
+/* Debug levels */
+#define TEK_DEBUG_NONE      0   /* No debug output */
+#define TEK_DEBUG_ERROR     1   /* Errors only */
+#define TEK_DEBUG_WARNING   2   /* Warnings and errors */
+#define TEK_DEBUG_INFO      3   /* Info, warnings, errors */
+#define TEK_DEBUG_FLOW      4   /* Detailed flow tracing */
+#define TEK_DEBUG_TRACE     5   /* Everything including data */
 
 /**
  * @brief ASYN Port Driver for Tektronix MSO58LP
@@ -134,6 +150,7 @@ protected:
     int P_ChXinc[TEK_MAX_CHANNELS];
     int P_ChYmult[TEK_MAX_CHANNELS];
     int P_ChYoff[TEK_MAX_CHANNELS];
+    int P_ChYzero[TEK_MAX_CHANNELS];
     int P_ChXunit[TEK_MAX_CHANNELS];
     int P_ChYunit[TEK_MAX_CHANNELS];
     int P_ChNrPt[TEK_MAX_CHANNELS];
@@ -145,6 +162,12 @@ protected:
     int P_ChOffset[TEK_MAX_CHANNELS];
     int P_ChPosition[TEK_MAX_CHANNELS];
     int P_ChBandwidth[TEK_MAX_CHANNELS];
+    int P_ChDataReady[TEK_MAX_CHANNELS];
+    int P_ChDataStart[TEK_MAX_CHANNELS];
+    int P_ChDataStop[TEK_MAX_CHANNELS];
+    int P_ChRefreshRate[TEK_MAX_CHANNELS];
+    int P_ChResetStats[TEK_MAX_CHANNELS];
+    int P_ChDataWidth[TEK_MAX_CHANNELS];
     
     /* Per-measurement parameters */
     int P_MeasEnable[TEK_MAX_MEASUREMENTS];
@@ -162,8 +185,12 @@ protected:
     int P_ErrorCount;
     int P_LastError;
     int P_CommTime;
+    int P_DebugLevel;
 
 private:
+    /* Debug output helper */
+    void debugPrint(int level, const char *fmt, ...);
+    
     /* Communication methods */
     asynStatus connectToScope();
     asynStatus disconnectFromScope();
@@ -219,10 +246,21 @@ private:
     double xinc_[TEK_MAX_CHANNELS];
     double ymult_[TEK_MAX_CHANNELS];
     double yoff_[TEK_MAX_CHANNELS];
+    double yzero_[TEK_MAX_CHANNELS];
+    
+    /* Track last-sent DATa settings to avoid redundant SCPI commands */
+    int lastDataSource_;   /* last channel set via DATa:SOUrce (-1 = none) */
+    int lastDataWidth_[TEK_MAX_CHANNELS];  /* last DATa:WIDth sent per channel */
+    
+    /* Per-channel refresh rate tracking */
+    epicsTimeStamp lastAcqTime_[TEK_MAX_CHANNELS];
+    int firstAcq_[TEK_MAX_CHANNELS];  /* 1 = first acquisition pending */
+    int configRead_[TEK_MAX_CHANNELS]; /* 0 = config not yet read */
     
     /* Statistics */
     unsigned long pollCount_;
     unsigned long errorCount_;
+    int debugLevel_;
     
     /* Mutex for thread safety */
     epicsMutexId dataLock_;

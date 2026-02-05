@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <math.h>
 #include <algorithm>
+#include <stdarg.h>
 
 #include <epicsStdio.h>
 #include <epicsString.h>
@@ -81,7 +82,8 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
       pollerRunning_(0),
       pollerExitRequest_(0),
       pollCount_(0),
-      errorCount_(0)
+      errorCount_(0),
+      debugLevel_(TEK_DEBUG_ERROR)  /* Default: only errors */
 {
     static const char *functionName = "drvTekMSO58LP";
     asynStatus status;
@@ -119,6 +121,10 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
     createParam(TEK_ERROR_COUNT_STRING,   asynParamInt32,   &P_ErrorCount);
     createParam(TEK_LAST_ERROR_STRING,    asynParamOctet,   &P_LastError);
     createParam(TEK_COMM_TIME_STRING,     asynParamFloat64, &P_CommTime);
+    createParam(TEK_DEBUG_LEVEL_STRING,   asynParamInt32,   &P_DebugLevel);
+    
+    /* Set initial debug level */
+    setIntegerParam(P_DebugLevel, debugLevel_);
 
     /* Create per-channel parameters */
     for (i = 0; i < numChannels_; i++) {
@@ -136,6 +142,9 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         
         snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_YOFF_STRING, i+1);
         createParam(paramName, asynParamFloat64, &P_ChYoff[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_YZERO_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChYzero[i]);
         
         snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_XUNIT_STRING, i+1);
         createParam(paramName, asynParamOctet, &P_ChXunit[i]);
@@ -170,6 +179,24 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_BANDWIDTH_STRING, i+1);
         createParam(paramName, asynParamFloat64, &P_ChBandwidth[i]);
         
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_DATA_READY_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChDataReady[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_DATA_START_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChDataStart[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_DATA_STOP_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChDataStop[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_REFRESH_RATE_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChRefreshRate[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_RESET_STATS_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChResetStats[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_DATA_WIDTH_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChDataWidth[i]);
+        
         /* Allocate waveform buffers */
         rawWaveform_[i] = (epicsInt32 *)calloc(maxPoints_, sizeof(epicsInt32));
         scaledWaveform_[i] = (epicsFloat64 *)calloc(maxPoints_, sizeof(epicsFloat64));
@@ -178,10 +205,25 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         xinc_[i] = 1.0;
         ymult_[i] = 1.0;
         yoff_[i] = 0.0;
+        yzero_[i] = 0.0;
+        firstAcq_[i] = 1;
+        configRead_[i] = 0;
+        lastDataWidth_[i] = 0;  /* 0 = not yet sent */
+        memset(&lastAcqTime_[i], 0, sizeof(epicsTimeStamp));
         
         /* Set default enable state */
         setIntegerParam(P_ChEnable[i], 0);
+        setDoubleParam(P_ChRefreshRate[i], 0.0);
+        setIntegerParam(P_ChResetStats[i], 0);
+        setIntegerParam(P_ChDataWidth[i], 2);
+        
+        /* Set default data window: 1 to maxPoints */
+        setIntegerParam(P_ChDataStart[i], 1);
+        setIntegerParam(P_ChDataStop[i], maxPoints_);
     }
+
+    /* Initialize DATa tracking */
+    lastDataSource_ = -1;
 
     /* Create per-measurement parameters */
     for (i = 0; i < numMeasurements_; i++) {
@@ -244,11 +286,14 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
             "%s:%s: Error connecting to octet port %s: %d\n",
             driverName, functionName, asynPortName, status);
+        pasynUserOctet_ = NULL;
     }
 
-    /* Set input/output terminators */
-    pasynOctetSyncIO->setInputEos(pasynUserOctet_, "\n", 1);
-    pasynOctetSyncIO->setOutputEos(pasynUserOctet_, "\n", 1);
+    /* Set input/output terminators (only if connected) */
+    if (pasynUserOctet_) {
+        pasynOctetSyncIO->setInputEos(pasynUserOctet_, "\n", 1);
+        pasynOctetSyncIO->setOutputEos(pasynUserOctet_, "\n", 1);
+    }
 
     /* Create event for signaling the poller */
     pollerEvent_ = epicsEventCreate(epicsEventEmpty);
@@ -304,6 +349,22 @@ drvTekMSO58LP::~drvTekMSO58LP()
 }
 
 /**
+ * Debug print function with level filtering
+ * Only prints if level <= debugLevel_
+ */
+void drvTekMSO58LP::debugPrint(int level, const char *format, ...)
+{
+    va_list args;
+    
+    if (level > debugLevel_) return;
+    
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+    fflush(stdout);
+}
+
+/**
  * Polling thread - main acquisition loop
  */
 void drvTekMSO58LP::pollerThread()
@@ -317,6 +378,8 @@ void drvTekMSO58LP::pollerThread()
     int enabledCh;
     int enabledMeas;
 
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: %s:%s: Poller thread started\n", driverName, functionName);
+
     asynPrint(pasynUserSelf, ASYN_TRACE_FLOW,
         "%s:%s: Poller thread started\n", driverName, functionName);
 
@@ -328,6 +391,9 @@ void drvTekMSO58LP::pollerThread()
         getDoubleParam(P_PollTime, &pollTime_);
         unlock();
 
+        debugPrint(TEK_DEBUG_TRACE, "DEBUG: pollerThread loop: acquire=%d, connected=%d, pollTime=%.3f\n", 
+               acquire, connected, pollTime_);
+
         if (acquire && connected) {
             epicsTimeGetCurrent(&startTime);
 
@@ -338,12 +404,17 @@ void drvTekMSO58LP::pollerThread()
                 unlock();
 
                 if (enabledCh) {
-                    /* Read channel configuration (less frequently) */
-                    if ((pollCount_ % 100) == 0) {
+                    debugPrint(TEK_DEBUG_TRACE, "DEBUG: Reading channel %d (enabled)\n", i+1);
+                    /* Read channel configuration on first enable or periodically */
+                    if (!configRead_[i] || (pollCount_ % 100) == 0) {
+                        debugPrint(TEK_DEBUG_INFO, "DEBUG: Reading channel %d config (first=%d)\n", i+1, !configRead_[i]);
                         readChannelConfig(i);
+                        configRead_[i] = 1;
                     }
                     /* Read waveform data */
+                    debugPrint(TEK_DEBUG_TRACE, "DEBUG: Reading channel %d waveform\n", i+1);
                     readWaveformBinary(i);
+                    debugPrint(TEK_DEBUG_TRACE, "DEBUG: Channel %d waveform done\n", i+1);
                 }
             }
 
@@ -372,17 +443,21 @@ void drvTekMSO58LP::pollerThread()
             unlock();
 
         } else if (!connected) {
-            /* Try to connect */
-            asynStatus status = connectToScope();
-            if (status == asynSuccess) {
-                lock();
-                setIntegerParam(P_Connected, 1);
-                connected_ = 1;
-                callParamCallbacks();
-                unlock();
+            /* Try to connect - but only if pasynUserOctet_ is valid */
+            debugPrint(TEK_DEBUG_INFO, "DEBUG: Not connected, pasynUserOctet_=%p\n", (void*)pasynUserOctet_);
+            if (pasynUserOctet_) {
+                debugPrint(TEK_DEBUG_INFO, "DEBUG: Attempting to connect...\n");
+                asynStatus status = connectToScope();
+                if (status == asynSuccess) {
+                    lock();
+                    setIntegerParam(P_Connected, 1);
+                    connected_ = 1;
+                    callParamCallbacks();
+                    unlock();
 
-                /* Read identification after connect */
-                readIdentification();
+                    /* Read identification after connect */
+                    readIdentification();
+                }
             }
         }
 
@@ -406,15 +481,47 @@ asynStatus drvTekMSO58LP::connectToScope()
     size_t nWrite, nRead;
     int eomReason;
 
+    printf("DEBUG: connectToScope() called\n");
+    fflush(stdout);
+
+    /* Check if octet interface is available */
+    if (!pasynUserOctet_) {
+        debugPrint(TEK_DEBUG_ERROR, "DEBUG: connectToScope - pasynUserOctet_ is NULL!\n");
+        asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+            "%s:%s: pasynUserOctet_ is NULL\n", driverName, functionName);
+        return asynError;
+    }
+
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: connectToScope - calling writeRead for *IDN?\n");
+
     /* Try a simple query to verify connection */
     status = pasynOctetSyncIO->writeRead(pasynUserOctet_, "*IDN?", 5,
                                          response, sizeof(response)-1,
                                          TEK_DEFAULT_TIMEOUT, &nWrite, &nRead, &eomReason);
     
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: connectToScope - writeRead returned status=%d, nRead=%zu\n", status, nRead);
+    
     if (status == asynSuccess && nRead > 0) {
         response[nRead] = '\0';
         asynPrint(pasynUserSelf, ASYN_TRACE_FLOW,
             "%s:%s: Connected to %s\n", driverName, functionName, response);
+        
+        /* Configure scope for optimized communication */
+        pasynOctetSyncIO->write(pasynUserOctet_, "HEADer OFF", 10,
+                                TEK_WRITE_TIMEOUT, &nWrite);
+        pasynOctetSyncIO->write(pasynUserOctet_, "VERBose OFF", 11,
+                                TEK_WRITE_TIMEOUT, &nWrite);
+        /* Use SRIbinary: signed integer, little-endian (native x86 byte order) */
+        pasynOctetSyncIO->write(pasynUserOctet_, ":DATa:ENCdg SRIbinary", 21,
+                                TEK_WRITE_TIMEOUT, &nWrite);
+        
+        /* Reset tracking so DATa:SOUrce/WIDth are re-sent on first use */
+        lastDataSource_ = -1;
+        for (int j = 0; j < numChannels_; j++) {
+            lastDataWidth_[j] = 0;
+            configRead_[j] = 0;
+        }
+        
         return asynSuccess;
     }
 
@@ -443,6 +550,10 @@ asynStatus drvTekMSO58LP::writeRead(const char *writeBuffer, char *readBuffer,
     asynStatus status;
     size_t nWrite;
     int eomReason;
+
+    if (!pasynUserOctet_) {
+        return asynError;
+    }
 
     status = pasynOctetSyncIO->writeRead(pasynUserOctet_,
                                          writeBuffer, strlen(writeBuffer),
@@ -476,6 +587,10 @@ asynStatus drvTekMSO58LP::writeCmd(const char *cmd)
 {
     asynStatus status;
     size_t nWrite;
+
+    if (!pasynUserOctet_) {
+        return asynError;
+    }
 
     status = pasynOctetSyncIO->write(pasynUserOctet_, cmd, strlen(cmd),
                                      TEK_WRITE_TIMEOUT, &nWrite);
@@ -525,89 +640,138 @@ asynStatus drvTekMSO58LP::readIdentification()
 
 /**
  * Read channel configuration (scale factors, etc.)
+ * Uses individual WFMOutpre queries for reliability.
+ * Must be called AFTER DATa:SOUrce and DATa:WIDth are set for this channel.
  */
 asynStatus drvTekMSO58LP::readChannelConfig(int channel)
 {
     char cmd[64], response[256];
     asynStatus status;
-    double xinc, ymult, yoff;
-    int nrPt;
     int ch = channel + 1;  /* 1-indexed */
+    int dataWidth;
 
-    /* Set data source to this channel */
-    snprintf(cmd, sizeof(cmd), ":DATa:SOUrce CH%d", ch);
-    writeCmd(cmd);
-    epicsThreadSleep(0.01);
-
-    /* Get X increment */
-    status = query("WFMOutpre:XINcr?", response, sizeof(response));
-    if (status == asynSuccess) {
-        xinc = atof(response);
-        xinc_[channel] = xinc;
-        lock();
-        setDoubleParam(P_ChXinc[channel], xinc);
-        unlock();
+    /* Ensure DATa:SOUrce is set to this channel */
+    if (lastDataSource_ != channel) {
+        snprintf(cmd, sizeof(cmd), ":DATa:SOUrce CH%d", ch);
+        writeCmd(cmd);
+        lastDataSource_ = channel;
     }
 
-    /* Get Y multiplier */
-    status = query("WFMOutpre:YMUlt?", response, sizeof(response));
-    if (status == asynSuccess) {
-        ymult = atof(response);
-        ymult_[channel] = ymult;
-        lock();
-        setDoubleParam(P_ChYmult[channel], ymult);
-        unlock();
+    /* Set DATa:WIDth for this channel (affects YMUlt scaling) */
+    getIntegerParam(P_ChDataWidth[channel], &dataWidth);
+    if (dataWidth != 1 && dataWidth != 2) dataWidth = 2;
+    if (lastDataWidth_[channel] != dataWidth) {
+        snprintf(cmd, sizeof(cmd), ":DATa:WIDth %d", dataWidth);
+        writeCmd(cmd);
+        lastDataWidth_[channel] = dataWidth;
     }
 
-    /* Get Y offset */
-    status = query("WFMOutpre:YZEro?", response, sizeof(response));
-    if (status == asynSuccess) {
-        yoff = atof(response);
-        yoff_[channel] = yoff;
-        lock();
-        setDoubleParam(P_ChYoff[channel], yoff);
-        unlock();
-    }
+    /* Query each parameter individually for reliable parsing.
+     * With HEADER OFF, each response is just the value (e.g. "80.0000E-9").
+     * With HEADER ON, response has prefix (e.g. ":WFMOUTPRE:XINCR 80.0000E-9"). */
 
-    /* Get number of points */
+    double xinc = 0, ymult = 0, yoff = 0, yzero = 0;
+    int nrPt = 0;
+    char xunit[32] = "", yunit[32] = "";
+
+    /* Helper: extract numeric value from response (handles both HEADER ON/OFF) */
+    /* With HEADER OFF: "80.0E-9"  With HEADER ON: ":WFMOUTPRE:XINCR 80.0E-9" */
+
     status = query("WFMOutpre:NR_Pt?", response, sizeof(response));
     if (status == asynSuccess) {
-        nrPt = atoi(response);
-        lock();
-        setIntegerParam(P_ChNrPt[channel], nrPt);
-        unlock();
+        char *val = strrchr(response, ' ');
+        nrPt = atoi(val ? val + 1 : response);
+        debugPrint(TEK_DEBUG_INFO, "DEBUG: readChannelConfig ch%d NR_Pt raw='%s' parsed=%d\n", ch, response, nrPt);
+    } else {
+        debugPrint(TEK_DEBUG_ERROR, "DEBUG: readChannelConfig ch%d NR_Pt query FAILED\n", ch);
     }
 
-    /* Get X units */
+    status = query("WFMOutpre:XINcr?", response, sizeof(response));
+    if (status == asynSuccess) {
+        char *val = strrchr(response, ' ');
+        xinc = atof(val ? val + 1 : response);
+        debugPrint(TEK_DEBUG_INFO, "DEBUG: readChannelConfig ch%d XINcr raw='%s' parsed=%e\n", ch, response, xinc);
+    } else {
+        debugPrint(TEK_DEBUG_ERROR, "DEBUG: readChannelConfig ch%d XINcr query FAILED\n", ch);
+    }
+
     status = query("WFMOutpre:XUNit?", response, sizeof(response));
     if (status == asynSuccess) {
-        /* Remove quotes if present */
-        char *p = response;
+        char *val = strrchr(response, ' ');
+        char *p = val ? val + 1 : response;
         if (*p == '"') p++;
         char *end = strchr(p, '"');
         if (end) *end = '\0';
-        lock();
-        setStringParam(P_ChXunit[channel], p);
-        unlock();
+        strncpy(xunit, p, sizeof(xunit) - 1);
     }
 
-    /* Get Y units */
+    status = query("WFMOutpre:YMUlt?", response, sizeof(response));
+    if (status == asynSuccess) {
+        char *val = strrchr(response, ' ');
+        ymult = atof(val ? val + 1 : response);
+        debugPrint(TEK_DEBUG_INFO, "DEBUG: readChannelConfig ch%d YMUlt raw='%s' parsed=%e\n", ch, response, ymult);
+    } else {
+        debugPrint(TEK_DEBUG_ERROR, "DEBUG: readChannelConfig ch%d YMUlt query FAILED\n", ch);
+    }
+
+    status = query("WFMOutpre:YOFf?", response, sizeof(response));
+    if (status == asynSuccess) {
+        char *val = strrchr(response, ' ');
+        yoff = atof(val ? val + 1 : response);
+    }
+
+    status = query("WFMOutpre:YZEro?", response, sizeof(response));
+    if (status == asynSuccess) {
+        char *val = strrchr(response, ' ');
+        yzero = atof(val ? val + 1 : response);
+    }
+    
+    /* Warn if critical values are zero */
+    if (xinc == 0.0) {
+        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d xinc=0! Time array will be all zeros\n", ch);
+    }
+    if (ymult == 0.0) {
+        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d ymult=0! Waveform will be all zeros\n", ch);
+    }
+
     status = query("WFMOutpre:YUNit?", response, sizeof(response));
     if (status == asynSuccess) {
-        char *p = response;
+        char *val = strrchr(response, ' ');
+        char *p = val ? val + 1 : response;
         if (*p == '"') p++;
         char *end = strchr(p, '"');
         if (end) *end = '\0';
-        lock();
-        setStringParam(P_ChYunit[channel], p);
-        unlock();
+        strncpy(yunit, p, sizeof(yunit) - 1);
     }
+
+    /* Update cache and parameters */
+    xinc_[channel] = xinc;
+    ymult_[channel] = ymult;
+    yoff_[channel] = yoff;
+    yzero_[channel] = yzero;
+
+    lock();
+    setDoubleParam(P_ChXinc[channel], xinc);
+    setDoubleParam(P_ChYmult[channel], ymult);
+    setDoubleParam(P_ChYoff[channel], yoff);
+    setDoubleParam(P_ChYzero[channel], yzero);
+    setIntegerParam(P_ChNrPt[channel], nrPt);
+    if (xunit[0]) setStringParam(P_ChXunit[channel], xunit);
+    if (yunit[0]) setStringParam(P_ChYunit[channel], yunit);
+    unlock();
+
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: readChannelConfig: ch%d width=%d xinc=%e ymult=%e yoff=%e yzero=%e nrPt=%d\n",
+               ch, dataWidth, xinc, ymult, yoff, yzero, nrPt);
 
     return asynSuccess;
 }
 
 /**
  * Read waveform using binary transfer (faster than ASCII)
+ * 
+ * Optimization: DATa:SOUrce, DATa:ENCdg, DATa:WIDth are only sent when changed.
+ * DATa:ENCdg is set once at connect (SRIbinary = little-endian signed integer).
+ * Y scaling params (YMUlt, YOFf, YZEro) are read in readChannelConfig().
  */
 asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
 {
@@ -619,67 +783,179 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
     int ch = channel + 1;
     int numPoints;
     int i;
+    int dataStart, dataStop;
+    int dataWidth;
+
+    /* Check if connected */
+    if (!pasynUserOctet_) {
+        return asynError;
+    }
+
+    /* Get per-channel data window */
+    getIntegerParam(P_ChDataStart[channel], &dataStart);
+    getIntegerParam(P_ChDataStop[channel], &dataStop);
+    getIntegerParam(P_ChDataWidth[channel], &dataWidth);
+    
+    /* Validate */
+    if (dataWidth != 1 && dataWidth != 2) dataWidth = 2;
+    if (dataStart < 1) dataStart = 1;
+    if (dataStop > maxPoints_) dataStop = maxPoints_;
+    if (dataStop < dataStart) dataStop = dataStart;
+    
+    int windowSize = dataStop - dataStart + 1;
+
+    debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: channel=%d, ch=%d, start=%d, stop=%d, size=%d\n", 
+               channel, ch, dataStart, dataStop, windowSize);
 
     /* Allocate large buffer for waveform data */
     response = (char *)malloc(TEK_WAVEFORM_BUFFER_SIZE);
-    if (!response) return asynError;
+    if (!response) {
+        debugPrint(TEK_DEBUG_ERROR, "DEBUG: readWaveformBinary: malloc failed!\n");
+        return asynError;
+    }
 
-    /* Configure transfer settings */
-    snprintf(cmd, sizeof(cmd), ":DATa:SOUrce CH%d", ch);
+    /* Only send DATa:SOUrce when channel changes */
+    if (lastDataSource_ != channel) {
+        snprintf(cmd, sizeof(cmd), ":DATa:SOUrce CH%d", ch);
+        writeCmd(cmd);
+        lastDataSource_ = channel;
+    }
+    
+    /* Only send DATa:WIDth when width changes for this channel */
+    if (lastDataWidth_[channel] != dataWidth) {
+        snprintf(cmd, sizeof(cmd), ":DATa:WIDth %d", dataWidth);
+        writeCmd(cmd);
+        lastDataWidth_[channel] = dataWidth;
+        /* Width changed: must re-read config for updated YMUlt */
+        configRead_[channel] = 0;
+    }
+    
+    /* DATa:STARt and DATa:STOP - always set (cheap, values may change) */
+    snprintf(cmd, sizeof(cmd), ":DATa:STARt %d", dataStart);
     writeCmd(cmd);
-    
-    writeCmd(":DATa:ENCdg ASCIi");
-    writeCmd(":DATa:WIDth 2");
-    
-    snprintf(cmd, sizeof(cmd), ":DATa:STARt 1");
-    writeCmd(cmd);
-    
-    snprintf(cmd, sizeof(cmd), ":DATa:STOP %d", maxPoints_);
+    snprintf(cmd, sizeof(cmd), ":DATa:STOP %d", dataStop);
     writeCmd(cmd);
 
     /* Query the curve data */
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: querying CURVe?, window=%d-%d (%d points)\n", dataStart, dataStop, windowSize);
     status = pasynOctetSyncIO->writeRead(pasynUserOctet_,
                                          ":CURVe?", 7,
                                          response, TEK_WAVEFORM_BUFFER_SIZE - 1,
                                          TEK_WAVEFORM_TIMEOUT, &nWrite, &nRead, &eomReason);
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: CURVe returned status=%d, nRead=%zu\n", status, nRead);
 
     if (status != asynSuccess || nRead == 0) {
+        debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: CURVe failed, freeing buffer\n");
         free(response);
         return status;
     }
-    response[nRead] = '\0';
 
-    /* Parse CSV data */
+    debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: parsing binary data, nRead=%zu\n", nRead);
+
+    /* Parse IEEE 488.2 definite length binary block
+     * Format: #<n><length><binary_data>
+     * <n> = number of digits in length field
+     * <length> = byte count of binary data
+     * SRIbinary encoding: signed integer, little-endian (native x86 byte order)
+     */
     epicsMutexLock(dataLock_);
     
     numPoints = 0;
-    char *token = strtok(response, ",");
-    while (token && numPoints < maxPoints_) {
-        rawWaveform_[channel][numPoints] = atoi(token);
-        numPoints++;
-        token = strtok(NULL, ",");
+    char *dataPtr = response;
+    
+    /* Check for # header */
+    if (*dataPtr == '#') {
+        dataPtr++;
+        int numDigits = *dataPtr - '0';  /* Number of digits in length field */
+        dataPtr++;
+        
+        if (numDigits > 0 && numDigits < 10) {
+            /* Parse the length field */
+            char lenStr[16];
+            strncpy(lenStr, dataPtr, numDigits);
+            lenStr[numDigits] = '\0';
+            int byteCount = atoi(lenStr);
+            dataPtr += numDigits;
+            
+            debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: binary header: #%d, byteCount=%d, width=%d\n", numDigits, byteCount, dataWidth);
+            
+            /* Each sample is dataWidth bytes */
+            int expectedPoints = byteCount / dataWidth;
+            numPoints = (expectedPoints < windowSize) ? expectedPoints : windowSize;
+            if (numPoints > maxPoints_) numPoints = maxPoints_;
+            
+            /* Parse little-endian signed integers (SRIbinary = native x86) */
+            unsigned char *binData = (unsigned char *)dataPtr;
+            if (dataWidth == 2) {
+                /* 16-bit signed little-endian: can memcpy directly on x86 */
+                int16_t *srcData = (int16_t *)binData;
+                for (i = 0; i < numPoints; i++) {
+                    rawWaveform_[channel][i] = srcData[i];
+                }
+            } else {
+                /* 8-bit signed */
+                for (i = 0; i < numPoints; i++) {
+                    int8_t value = (int8_t)binData[i];
+                    rawWaveform_[channel][i] = value;
+                }
+            }
+        } else {
+            debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: invalid binary header numDigits=%d\n", numDigits);
+        }
+    } else {
+        debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: expected # header, got 0x%02X\n", (unsigned char)*dataPtr);
     }
+    
     waveformLength_[channel] = numPoints;
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: parsed %d points\n", numPoints);
 
-    /* Scale the waveform */
+    /* Scale the waveform: voltage = (raw - YOFf) * YMUlt + YZEro */
     double xinc = xinc_[channel];
     double ymult = ymult_[channel];
     double yoff = yoff_[channel];
+    double yzero = yzero_[channel];
+    debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: scaling with xinc=%e, ymult=%e, yoff=%e, yzero=%e\n", xinc, ymult, yoff, yzero);
 
+    /* Time array starts from dataStart offset */
     for (i = 0; i < numPoints; i++) {
-        scaledWaveform_[channel][i] = (rawWaveform_[channel][i] * ymult) + yoff;
-        timeArray_[channel][i] = i * xinc;
+        scaledWaveform_[channel][i] = (rawWaveform_[channel][i] - yoff) * ymult + yzero;
+        timeArray_[channel][i] = (dataStart - 1 + i) * xinc;  /* Account for start offset */
     }
 
     epicsMutexUnlock(dataLock_);
+    debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: dataLock_ released, numPoints=%d\n", numPoints);
 
-    /* Update parameters */
-    lock();
-    setIntegerParam(P_ChNrPt[channel], numPoints);
-    doCallbacksInt32Array(rawWaveform_[channel], numPoints, P_ChWaveform[channel], 0);
-    doCallbacksFloat64Array(scaledWaveform_[channel], numPoints, P_ChWaveformScaled[channel], 0);
-    doCallbacksFloat64Array(timeArray_[channel], numPoints, P_ChWaveformTime[channel], 0);
-    unlock();
+    /* Update NrPt parameter and signal DataReady to trigger waveform reads */
+    if (numPoints > 0) {
+        static int dataReadyCount[TEK_MAX_CHANNELS] = {0};
+        dataReadyCount[channel]++;
+        
+        /* Calculate refresh rate from timestamps */
+        epicsTimeStamp now;
+        epicsTimeGetCurrent(&now);
+        double refreshRate = 0.0;
+        
+        if (!firstAcq_[channel]) {
+            double elapsed = epicsTimeDiffInSeconds(&now, &lastAcqTime_[channel]);
+            if (elapsed > 0.0) {
+                refreshRate = 1.0 / elapsed;
+            }
+        }
+        firstAcq_[channel] = 0;
+        lastAcqTime_[channel] = now;
+        
+        lock();
+        setIntegerParam(P_ChNrPt[channel], numPoints);
+        setDoubleParam(P_ChRefreshRate[channel], refreshRate);
+        
+        /* Signal DataReady (I/O Intr supported on scalar Int32) to trigger waveform record processing */
+        setIntegerParam(P_ChDataReady[channel], dataReadyCount[channel]);
+        
+        callParamCallbacks();
+        unlock();
+        
+        debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: DataReady[%d]=%d, %d points, rate=%.1f Hz\n", channel+1, dataReadyCount[channel], numPoints, refreshRate);
+    }
 
     free(response);
     return asynSuccess;
@@ -777,6 +1053,14 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
     asynStatus status = asynSuccess;
     int i;
 
+    /* Debug level parameter */
+    if (function == P_DebugLevel) {
+        if (value >= TEK_DEBUG_NONE && value <= TEK_DEBUG_TRACE) {
+            debugLevel_ = value;
+            debugPrint(TEK_DEBUG_INFO, "DEBUG: Debug level set to %d\n", debugLevel_);
+        }
+    }
+
     /* Global parameters */
     if (function == P_RecordLength) {
         status = setRecordLength(value);
@@ -797,7 +1081,39 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
     /* Channel enable parameters */
     for (i = 0; i < numChannels_; i++) {
         if (function == P_ChEnable[i]) {
-            /* Nothing special needed - polling loop checks this */
+            /* Reset config read flag so config is re-read on next enable */
+            if (value == 0) {
+                configRead_[i] = 0;
+                firstAcq_[i] = 1;
+                setDoubleParam(P_ChRefreshRate[i], 0.0);
+            }
+            break;
+        }
+        if (function == P_ChDataWidth[i]) {
+            /* Width changed - force config re-read to get updated YMUlt */
+            debugPrint(TEK_DEBUG_INFO, "DEBUG: DataWidth changed for channel %d to %d\n", i+1, value);
+            configRead_[i] = 0;
+            break;
+        }
+        if (function == P_ChResetStats[i]) {
+            /* Reset waveform data and refresh rate for this channel */
+            debugPrint(TEK_DEBUG_INFO, "DEBUG: Resetting stats for channel %d\n", i+1);
+            epicsMutexLock(dataLock_);
+            memset(scaledWaveform_[i], 0, maxPoints_ * sizeof(epicsFloat64));
+            memset(rawWaveform_[i], 0, maxPoints_ * sizeof(epicsInt32));
+            memset(timeArray_[i], 0, maxPoints_ * sizeof(epicsFloat64));
+            waveformLength_[i] = 0;
+            epicsMutexUnlock(dataLock_);
+            firstAcq_[i] = 1;
+            setDoubleParam(P_ChRefreshRate[i], 0.0);
+            /* Trigger DataReady so FLNK chain processes the zeroed arrays
+               and CalcStats_ pushes zeros to Mean/Min/Max/RMS/Integral */
+            {
+                static int resetCount[TEK_MAX_CHANNELS] = {0};
+                resetCount[i]++;
+                setIntegerParam(P_ChNrPt[i], 0);
+                setIntegerParam(P_ChDataReady[i], resetCount[i]);
+            }
             break;
         }
     }
@@ -947,8 +1263,8 @@ void drvTekMSO58LP::report(FILE *fp, int details)
         for (int i = 0; i < numChannels_; i++) {
             int enabled;
             getIntegerParam(P_ChEnable[i], &enabled);
-            fprintf(fp, "  CH%d: enabled=%d, points=%d, xinc=%.3e, ymult=%.3e\n",
-                    i+1, enabled, waveformLength_[i], xinc_[i], ymult_[i]);
+            fprintf(fp, "  CH%d: enabled=%d, points=%d, xinc=%.3e, ymult=%.3e, yoff=%.1f, yzero=%.3e\n",
+                    i+1, enabled, waveformLength_[i], xinc_[i], ymult_[i], yoff_[i], yzero_[i]);
         }
     }
 
