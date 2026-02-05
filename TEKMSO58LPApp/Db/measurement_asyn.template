@@ -119,7 +119,7 @@ record(stringin, "$(P):MEAS$(MEAS):Type_RBV")
 # ============================================================
 # Measurement Values - Updated at poll rate
 # ============================================================
-record(ai, "$(P):MEAS$(MEAS):Value")
+record(ai, "$(P):MEAS$(MEAS):VALUE")
 {
     field(DESC, "Current measurement value")
     field(DTYP, "asynFloat64")
@@ -186,7 +186,7 @@ record(ao, "$(P):MEAS$(MEAS):ChargeCoeff")
 record(calc, "$(P):MEAS$(MEAS):Charge")
 {
     field(DESC, "Charge from measurement")
-    field(INPA, "$(P):MEAS$(MEAS):Value CP")
+    field(INPA, "$(P):MEAS$(MEAS):VALUE CP")
     field(INPB, "$(P):MEAS$(MEAS):ChargeCoeff")
     field(CALC, "A*B")
     field(PREC, "12")
@@ -253,7 +253,7 @@ record(calcout, "$(P):MEAS$(MEAS):DoReset_")
 # ============================================================
 # Aliases for device-based access (must be after record definitions)
 # ============================================================
-alias("$(P):MEAS$(MEAS):Value",  "$(P):$(NAME=MEAS$(MEAS)):Value")
+alias("$(P):MEAS$(MEAS):VALUE",  "$(P):$(NAME=MEAS$(MEAS)):VALUE")
 alias("$(P):MEAS$(MEAS):Mean",   "$(P):$(NAME=MEAS$(MEAS)):Mean")
 alias("$(P):MEAS$(MEAS):Enable", "$(P):$(NAME=MEAS$(MEAS)):Enable")
 alias("$(P):MEAS$(MEAS):Charge", "$(P):$(NAME=MEAS$(MEAS)):Charge")
