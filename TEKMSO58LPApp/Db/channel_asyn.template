@@ -261,7 +261,6 @@ record(waveform, "$(P):CH$(CHANNEL):TimeArray")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NELM)")
     field(EGU,  "s")
-    field(FLNK, "$(P):CH$(CHANNEL):CalcStats_")
 }
 
 # ============================================================
@@ -307,89 +306,79 @@ record(ai, "$(P):CH$(CHANNEL):Offset_RBV")
 
 # ============================================================
 # Marker Positions (time-based, in seconds, for XYPlot markers)
-# Interactive markers on the waveform plot define the stats window
+# Interactive markers on the waveform plot define the stats window.
+# Writing a new value recalculates statistics immediately in the driver.
 # ============================================================
 record(ao, "$(P):CH$(CHANNEL):MarkerStart")
 {
     field(DESC, "Stats window start (time)")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_MARKER_START_$(CHANNEL)")
     field(PREC, "9")
     field(EGU,  "s")
     field(VAL,  "0")
     field(PINI, "YES")
+}
+
+record(ai, "$(P):CH$(CHANNEL):MarkerStart_RBV")
+{
+    field(DESC, "Stats window start readback")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_MARKER_START_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+    field(EGU,  "s")
 }
 
 record(ao, "$(P):CH$(CHANNEL):MarkerEnd")
 {
     field(DESC, "Stats window end (time)")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_MARKER_END_$(CHANNEL)")
     field(PREC, "9")
     field(EGU,  "s")
     field(VAL,  "0")
     field(PINI, "YES")
 }
 
-# Convert marker time positions to sample indices for wavestats
-# sample = time / xinc  (clamped to 0..NrPt)
-record(calc, "$(P):CH$(CHANNEL):MarkerStartSample")
+record(ai, "$(P):CH$(CHANNEL):MarkerEnd_RBV")
+{
+    field(DESC, "Stats window end readback")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_MARKER_END_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+    field(EGU,  "s")
+}
+
+# Marker sample indices (computed by driver, read-only)
+record(longin, "$(P):CH$(CHANNEL):MarkerStartSample")
 {
     field(DESC, "Start marker in samples")
-    field(INPA, "$(P):CH$(CHANNEL):MarkerStart CP")
-    field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
-    field(INPC, "$(P):CH$(CHANNEL):NrPt CP")
-    field(CALC, "B>0?MAX(0,MIN(NINT(A/B),C)):0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_MARKER_START_SAMPLE_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
 }
 
-record(calc, "$(P):CH$(CHANNEL):MarkerEndSample")
+record(longin, "$(P):CH$(CHANNEL):MarkerEndSample")
 {
     field(DESC, "End marker in samples")
-    field(INPA, "$(P):CH$(CHANNEL):MarkerEnd CP")
-    field(INPB, "$(P):CH$(CHANNEL):Xinc CP")
-    field(INPC, "$(P):CH$(CHANNEL):NrPt CP")
-    field(CALC, "A<=0&&B>0?C:B>0?MAX(0,MIN(NINT(A/B),C)):0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_MARKER_END_SAMPLE_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
 }
 
 # ============================================================
-# Waveform Statistics (using aSub for efficiency)
+# Waveform Statistics (computed by driver in readWaveformBinary)
+# All stats are pushed via I/O Intr when a new waveform is acquired
+# or when marker positions change.
 # ============================================================
-record(aSub, "$(P):CH$(CHANNEL):CalcStats_")
-{
-    field(DESC, "Calculate waveform statistics")
-    field(SNAM, "wavestats")
-    field(FTA,  "DOUBLE")
-    field(INPA, "$(P):CH$(CHANNEL):Xinc NPP")
-    field(FTB,  "DOUBLE")
-    field(INPB, "$(COEFF=1.0)")
-    field(FTC,  "DOUBLE")
-    field(INPC, "$(P):CH$(CHANNEL):Waveform CA NMS")
-    field(NEC,  "$(NELM)")
-    field(FTD,  "LONG")
-    field(INPD, "$(P):CH$(CHANNEL):NrPt NPP")
-    field(FTE,  "LONG")
-    field(INPE, "$(P):CH$(CHANNEL):MarkerStartSample NPP")
-    field(FTF,  "LONG")
-    field(INPF, "$(P):CH$(CHANNEL):MarkerEndSample NPP")
-    field(FTVA, "DOUBLE")
-    field(OUTA, "$(P):CH$(CHANNEL):Integral PP")
-    field(FTVB, "DOUBLE")
-    field(OUTB, "$(P):CH$(CHANNEL):Mean PP")
-    field(FTVC, "DOUBLE")
-    field(OUTC, "$(P):CH$(CHANNEL):Min PP")
-    field(FTVD, "DOUBLE")
-    field(OUTD, "$(P):CH$(CHANNEL):Max PP")
-    field(FTVE, "DOUBLE")
-    field(OUTE, "$(P):CH$(CHANNEL):RMS PP")
-    field(FLNK, "$(P):CH$(CHANNEL):PeakToPeak")
-}
-
-record(ai, "$(P):CH$(CHANNEL):Integral")
-{
-    field(DESC, "Waveform integral")
-    field(PREC, "9")
-    field(EGU,  "V*s")
-}
-
 record(ai, "$(P):CH$(CHANNEL):Mean")
 {
     field(DESC, "Waveform mean")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_MEAN_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
     field(PREC, "6")
     field(EGU,  "V")
 }
@@ -397,6 +386,9 @@ record(ai, "$(P):CH$(CHANNEL):Mean")
 record(ai, "$(P):CH$(CHANNEL):Min")
 {
     field(DESC, "Waveform minimum")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_MIN_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
     field(PREC, "6")
     field(EGU,  "V")
 }
@@ -404,6 +396,9 @@ record(ai, "$(P):CH$(CHANNEL):Min")
 record(ai, "$(P):CH$(CHANNEL):Max")
 {
     field(DESC, "Waveform maximum")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_MAX_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
     field(PREC, "6")
     field(EGU,  "V")
 }
@@ -411,6 +406,39 @@ record(ai, "$(P):CH$(CHANNEL):Max")
 record(ai, "$(P):CH$(CHANNEL):RMS")
 {
     field(DESC, "Waveform RMS")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_RMS_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):Integral")
+{
+    field(DESC, "Waveform integral")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_INTEGRAL_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "9")
+    field(EGU,  "V*s")
+}
+
+record(ai, "$(P):CH$(CHANNEL):PeakToPeak")
+{
+    field(DESC, "Waveform peak-to-peak")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_PP_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
+    field(PREC, "6")
+    field(EGU,  "V")
+}
+
+record(ai, "$(P):CH$(CHANNEL):StdDev")
+{
+    field(DESC, "Waveform standard deviation")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0)TEK_CH_STATS_STDDEV_$(CHANNEL)")
+    field(SCAN, "I/O Intr")
     field(PREC, "6")
     field(EGU,  "V")
 }
@@ -441,27 +469,6 @@ record(bo, "$(P):CH$(CHANNEL):ResetStats")
     field(HIGH, "0.1")
 }
 
-# Derived statistics
-record(calc, "$(P):CH$(CHANNEL):PeakToPeak")
-{
-    field(DESC, "Waveform peak-to-peak")
-    field(INPA, "$(P):CH$(CHANNEL):Max CP")
-    field(INPB, "$(P):CH$(CHANNEL):Min CP")
-    field(CALC, "A-B")
-    field(PREC, "6")
-    field(EGU,  "V")
-}
-
-record(calc, "$(P):CH$(CHANNEL):StdDev")
-{
-    field(DESC, "Waveform standard deviation")
-    field(INPA, "$(P):CH$(CHANNEL):RMS CP")
-    field(INPB, "$(P):CH$(CHANNEL):Mean CP")
-    field(CALC, "SQR(A*A-B*B)")
-    field(PREC, "6")
-    field(EGU,  "V")
-}
-
 # ============================================================
 # Charge Calculation (for BCM applications)
 # ============================================================
@@ -481,4 +488,77 @@ record(calc, "$(P):CH$(CHANNEL):Charge")
     field(CALC, "A*B")
     field(PREC, "12")
     field(EGU,  "$(CHARGE_EGU=pC)")
+}
+
+# ============================================================
+# Copy Markers to Data Window
+# Quick-action records: write 1 to trigger records to copy
+# current marker sample positions into DataStart/DataStop.
+# ============================================================
+
+# Copy MarkerStartSample -> DataStart
+record(bo, "$(P):CH$(CHANNEL):CopyMarkerStart")
+{
+    field(DESC, "Copy marker start to DataStart")
+    field(ZNAM, "Idle")
+    field(ONAM, "Copy")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):copyMkrStart_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):copyMkrStart_")
+{
+    field(DESC, "Copy start sample to DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerStartSample NPP NMS")
+    field(CALC, "A>0?A:1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+}
+
+# Copy MarkerEndSample -> DataStop
+record(bo, "$(P):CH$(CHANNEL):CopyMarkerEnd")
+{
+    field(DESC, "Copy marker end to DataStop")
+    field(ZNAM, "Idle")
+    field(ONAM, "Copy")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):copyMkrEnd_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):copyMkrEnd_")
+{
+    field(DESC, "Copy end sample to DataStop")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerEndSample NPP NMS")
+    field(CALC, "A>0?A:1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStop PP")
+}
+
+# Copy both markers to Data Window at once
+record(bo, "$(P):CH$(CHANNEL):CopyMarkersToWindow")
+{
+    field(DESC, "Copy both markers to data window")
+    field(ZNAM, "Idle")
+    field(ONAM, "Copy")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):copyMkrBothStart_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):copyMkrBothStart_")
+{
+    field(DESC, "Copy start sample to DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerStartSample NPP NMS")
+    field(CALC, "A>0?A:1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):copyMkrBothEnd_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):copyMkrBothEnd_")
+{
+    field(DESC, "Copy end sample to DataStop")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerEndSample NPP NMS")
+    field(CALC, "A>0?A:1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStop PP")
 }

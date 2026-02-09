@@ -28,9 +28,9 @@
   </widget>
   
   <!-- Device Name -->
-  <widget type="label" version="2.0.0">
+  <widget type="textupdate" version="2.0.0">
     <name>Name_Label</name>
-    <text>$(NAME)</text>
+    <pv_name>$(P):MEAS$(MEAS):Name</pv_name>
     <x>32</x>
     <y>5</y>
     <width>100</width>

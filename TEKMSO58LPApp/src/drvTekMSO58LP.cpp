@@ -197,6 +197,39 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_DATA_WIDTH_STRING, i+1);
         createParam(paramName, asynParamInt32, &P_ChDataWidth[i]);
         
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_MARKER_START_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChMarkerStart[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_MARKER_END_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChMarkerEnd[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_MARKER_START_SAMPLE_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChMarkerStartSample[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_MARKER_END_SAMPLE_STRING, i+1);
+        createParam(paramName, asynParamInt32, &P_ChMarkerEndSample[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_MEAN_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsMean[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_MIN_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsMin[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_MAX_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsMax[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_RMS_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsRMS[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_INTEGRAL_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsIntegral[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_PP_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsPP[i]);
+        
+        snprintf(paramName, sizeof(paramName), "%s_%d", TEK_CH_STATS_STDDEV_STRING, i+1);
+        createParam(paramName, asynParamFloat64, &P_ChStatsStdDev[i]);
+        
         /* Allocate waveform buffers */
         rawWaveform_[i] = (epicsInt32 *)calloc(maxPoints_, sizeof(epicsInt32));
         scaledWaveform_[i] = (epicsFloat64 *)calloc(maxPoints_, sizeof(epicsFloat64));
@@ -216,6 +249,17 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         setDoubleParam(P_ChRefreshRate[i], 0.0);
         setIntegerParam(P_ChResetStats[i], 0);
         setIntegerParam(P_ChDataWidth[i], 2);
+        setDoubleParam(P_ChMarkerStart[i], 0.0);
+        setDoubleParam(P_ChMarkerEnd[i], 0.0);
+        setIntegerParam(P_ChMarkerStartSample[i], 0);
+        setIntegerParam(P_ChMarkerEndSample[i], 0);
+        setDoubleParam(P_ChStatsMean[i], 0.0);
+        setDoubleParam(P_ChStatsMin[i], 0.0);
+        setDoubleParam(P_ChStatsMax[i], 0.0);
+        setDoubleParam(P_ChStatsRMS[i], 0.0);
+        setDoubleParam(P_ChStatsIntegral[i], 0.0);
+        setDoubleParam(P_ChStatsPP[i], 0.0);
+        setDoubleParam(P_ChStatsStdDev[i], 0.0);
         
         /* Set default data window: 1 to maxPoints */
         setIntegerParam(P_ChDataStart[i], 1);
@@ -945,6 +989,10 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
         lastAcqTime_[channel] = now;
         
         lock();
+
+        /* Compute statistics over marker window before signaling DataReady */
+        computeStats(channel, numPoints);
+
         setIntegerParam(P_ChNrPt[channel], numPoints);
         setDoubleParam(P_ChRefreshRate[channel], refreshRate);
         
@@ -959,6 +1007,90 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
 
     free(response);
     return asynSuccess;
+}
+
+/**
+ * Compute statistics over the marker window for a given channel.
+ * Must be called with dataLock_ NOT held (we lock internally).
+ * Caller must hold the asyn port lock (lock()/unlock()) when calling.
+ */
+void drvTekMSO58LP::computeStats(int channel, int numPoints)
+{
+    double markerStart = 0.0, markerEnd = 0.0;
+    getDoubleParam(P_ChMarkerStart[channel], &markerStart);
+    getDoubleParam(P_ChMarkerEnd[channel], &markerEnd);
+
+    double xinc = xinc_[channel];
+
+    /* Convert marker times to sample indices */
+    int startSample = 0;
+    int endSample = numPoints;
+
+    if (xinc > 0.0) {
+        if (markerStart > 0.0) {
+            startSample = (int)(markerStart / xinc + 0.5);
+        }
+        if (markerEnd > 0.0) {
+            endSample = (int)(markerEnd / xinc + 0.5);
+        }
+    }
+
+    /* Clamp to valid range */
+    if (startSample < 0) startSample = 0;
+    if (startSample > numPoints) startSample = numPoints;
+    if (endSample <= 0 || endSample > numPoints) endSample = numPoints;
+    if (endSample <= startSample) endSample = numPoints;
+
+    /* Publish computed sample indices */
+    setIntegerParam(P_ChMarkerStartSample[channel], startSample);
+    setIntegerParam(P_ChMarkerEndSample[channel], endSample);
+
+    int count = endSample - startSample;
+    if (count <= 0) {
+        setDoubleParam(P_ChStatsMean[channel], 0.0);
+        setDoubleParam(P_ChStatsMin[channel], 0.0);
+        setDoubleParam(P_ChStatsMax[channel], 0.0);
+        setDoubleParam(P_ChStatsRMS[channel], 0.0);
+        setDoubleParam(P_ChStatsIntegral[channel], 0.0);
+        setDoubleParam(P_ChStatsPP[channel], 0.0);
+        setDoubleParam(P_ChStatsStdDev[channel], 0.0);
+        return;
+    }
+
+    /* Compute stats over [startSample, endSample) */
+    epicsMutexLock(dataLock_);
+
+    double sum = 0.0, sumSq = 0.0;
+    double vmin = scaledWaveform_[channel][startSample];
+    double vmax = vmin;
+
+    for (int i = startSample; i < endSample; i++) {
+        double v = scaledWaveform_[channel][i];
+        sum += v;
+        sumSq += v * v;
+        if (v < vmin) vmin = v;
+        if (v > vmax) vmax = v;
+    }
+
+    epicsMutexUnlock(dataLock_);
+
+    double mean = sum / count;
+    double rms = sqrt(sumSq / count);
+    double integral = sum * xinc;
+    double pp = vmax - vmin;
+    double variance = (sumSq / count) - (mean * mean);
+    double stddev = (variance > 0.0) ? sqrt(variance) : 0.0;
+
+    setDoubleParam(P_ChStatsMean[channel], mean);
+    setDoubleParam(P_ChStatsMin[channel], vmin);
+    setDoubleParam(P_ChStatsMax[channel], vmax);
+    setDoubleParam(P_ChStatsRMS[channel], rms);
+    setDoubleParam(P_ChStatsIntegral[channel], integral);
+    setDoubleParam(P_ChStatsPP[channel], pp);
+    setDoubleParam(P_ChStatsStdDev[channel], stddev);
+
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: computeStats CH%d: samples=%d-%d mean=%.6e pp=%.6e rms=%.6e\n",
+               channel + 1, startSample, endSample, mean, pp, rms);
 }
 
 /**
@@ -1096,7 +1228,7 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             break;
         }
         if (function == P_ChResetStats[i]) {
-            /* Reset waveform data and refresh rate for this channel */
+            /* Reset waveform data, stats, and refresh rate for this channel */
             debugPrint(TEK_DEBUG_INFO, "DEBUG: Resetting stats for channel %d\n", i+1);
             epicsMutexLock(dataLock_);
             memset(scaledWaveform_[i], 0, maxPoints_ * sizeof(epicsFloat64));
@@ -1106,8 +1238,17 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             epicsMutexUnlock(dataLock_);
             firstAcq_[i] = 1;
             setDoubleParam(P_ChRefreshRate[i], 0.0);
-            /* Trigger DataReady so FLNK chain processes the zeroed arrays
-               and CalcStats_ pushes zeros to Mean/Min/Max/RMS/Integral */
+            /* Zero all stats directly */
+            setDoubleParam(P_ChStatsMean[i], 0.0);
+            setDoubleParam(P_ChStatsMin[i], 0.0);
+            setDoubleParam(P_ChStatsMax[i], 0.0);
+            setDoubleParam(P_ChStatsRMS[i], 0.0);
+            setDoubleParam(P_ChStatsIntegral[i], 0.0);
+            setDoubleParam(P_ChStatsPP[i], 0.0);
+            setDoubleParam(P_ChStatsStdDev[i], 0.0);
+            setIntegerParam(P_ChMarkerStartSample[i], 0);
+            setIntegerParam(P_ChMarkerEndSample[i], 0);
+            /* Trigger DataReady so FLNK chain processes the zeroed arrays */
             {
                 static int resetCount[TEK_MAX_CHANNELS] = {0};
                 resetCount[i]++;
@@ -1144,10 +1285,25 @@ asynStatus drvTekMSO58LP::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 {
     int function = pasynUser->reason;
     asynStatus status = asynSuccess;
+    int i;
 
     if (function == P_PollTime) {
         if (value >= 0.001) {
             pollTime_ = value;
+        }
+    }
+
+    /* Marker changes: store value and recompute stats immediately */
+    for (i = 0; i < numChannels_; i++) {
+        if (function == P_ChMarkerStart[i] || function == P_ChMarkerEnd[i]) {
+            setDoubleParam(function, value);
+            int nrpt = 0;
+            getIntegerParam(P_ChNrPt[i], &nrpt);
+            if (nrpt > 0) {
+                computeStats(i, nrpt);
+            }
+            callParamCallbacks();
+            return asynSuccess;
         }
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <display version="2.0.0">
   <name>Tektronix MSO58LP ASYN</name>
-  <width>1488</width>
+  <width>1568</width>
   <height>962</height>
   <background_color>
     <color red="240" green="240" blue="240">
@@ -352,6 +352,7 @@
     <name>Channel_Control</name>
     <x>932</x>
     <y>42</y>
+    <width>370</width>
     <height>292</height>
     <style>1</style>
     <background_color>
@@ -832,7 +833,7 @@
       <width>50</width>
       <height>18</height>
       <format>1</format>
-      <precision>3</precision>
+      <precision>1</precision>
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH8</name>
@@ -890,6 +891,177 @@
       <height>18</height>
       <format>1</format>
       <precision>1</precision>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Hdr_View</name>
+      <text>View</text>
+      <x>295</x>
+      <y>30</y>
+      <width>40</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH1</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>1</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH1 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>50</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH1 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH2</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>2</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH2 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>75</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH2 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH3</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>3</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH3 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>100</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH3 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH4</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>4</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH4 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>125</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH4 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH5</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>5</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH5 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>150</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH5 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH6</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>6</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH6 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>175</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH6 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH7</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>7</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH7 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>200</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH7 waveform display</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Btn_View_CH8</name>
+      <actions>
+        <action type="open_display">
+          <file>channel_asyn_display.bob</file>
+          <macros>
+            <P>$(P)</P>
+            <CHAN>8</CHAN>
+          </macros>
+          <target>window</target>
+          <description>Open CH8 Waveform</description>
+        </action>
+      </actions>
+      <text>&#x1f50d;</text>
+      <x>295</x>
+      <y>225</y>
+      <width>35</width>
+      <height>22</height>
+      <tooltip>Open CH8 waveform display</tooltip>
     </widget>
     <widget type="action_button" version="3.0.0">
       <name>Btn_EnableAll</name>
@@ -976,7 +1148,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Acquisition_Control</name>
-    <x>1232</x>
+    <x>1310</x>
     <y>42</y>
     <width>250</width>
     <height>140</height>
@@ -1073,7 +1245,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Debug_Control</name>
-    <x>1232</x>
+    <x>1310</x>
     <y>281</y>
     <width>250</width>
     <height>68</height>
@@ -1695,16 +1867,17 @@
       <x>45</x>
       <y>78</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+      
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End2</name>
       <pv_name>$(P):CH2:MarkerEnd</pv_name>
       <x>125</x>
       <y>78</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples2_S</name>
       <pv_name>$(P):CH2:MarkerStartSample</pv_name>
@@ -1757,16 +1930,16 @@
       <x>45</x>
       <y>100</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End3</name>
       <pv_name>$(P):CH3:MarkerEnd</pv_name>
       <x>125</x>
       <y>100</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples3_S</name>
       <pv_name>$(P):CH3:MarkerStartSample</pv_name>
@@ -1819,16 +1992,16 @@
       <x>45</x>
       <y>122</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End4</name>
       <pv_name>$(P):CH4:MarkerEnd</pv_name>
       <x>125</x>
       <y>122</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples4_S</name>
       <pv_name>$(P):CH4:MarkerStartSample</pv_name>
@@ -1881,16 +2054,16 @@
       <x>45</x>
       <y>148</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End5</name>
       <pv_name>$(P):CH5:MarkerEnd</pv_name>
       <x>125</x>
       <y>148</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples5_S</name>
       <pv_name>$(P):CH5:MarkerStartSample</pv_name>
@@ -1943,16 +2116,16 @@
       <x>45</x>
       <y>170</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End6</name>
       <pv_name>$(P):CH6:MarkerEnd</pv_name>
       <x>125</x>
       <y>170</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples6_S</name>
       <pv_name>$(P):CH6:MarkerStartSample</pv_name>
@@ -2005,16 +2178,16 @@
       <x>45</x>
       <y>192</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End7</name>
       <pv_name>$(P):CH7:MarkerEnd</pv_name>
       <x>125</x>
       <y>192</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples7_S</name>
       <pv_name>$(P):CH7:MarkerStartSample</pv_name>
@@ -2067,16 +2240,16 @@
       <x>45</x>
       <y>214</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End8</name>
       <pv_name>$(P):CH8:MarkerEnd</pv_name>
       <x>125</x>
       <y>214</y>
       <width>75</width>
-      <precision>6</precision>
-    </widget>
+<format>2</format>
+      <precision>3</precision>    </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples8_S</name>
       <pv_name>$(P):CH8:MarkerStartSample</pv_name>
@@ -2311,7 +2484,7 @@
   </widget>
   <widget type="group" version="3.0.0">
     <name>Diagnostics</name>
-    <x>1232</x>
+    <x>1310</x>
     <y>182</y>
     <width>250</width>
     <height>99</height>

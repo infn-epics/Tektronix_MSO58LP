@@ -1,40 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <display version="2.0.0">
   <name>Measurement Row (ASYN)</name>
-  <macros>
-    <P>SPARC:DIAG:TEK-TEST</P>
-    <MEAS>1</MEAS>
-    <NAME>MEAS</NAME>
-  </macros>
   <width>880</width>
   <height>45</height>
   <background_color>
     <color red="245" green="245" blue="248">
     </color>
   </background_color>
-  <widget type="led" version="2.0.0">
-    <name>Enable_LED</name>
+  <widget type="choice" version="2.0.0">
+    <name>Enable_Choice</name>
     <pv_name>$(P):MEAS$(MEAS):Enable</pv_name>
     <x>8</x>
-    <y>10</y>
-    <width>22</width>
-    <height>22</height>
-    <off_color>
-      <color red="150" green="150" blue="150">
-      </color>
-    </off_color>
-    <on_color>
-      <color red="50" green="200" blue="50">
-      </color>
-    </on_color>
-    <tooltip>Measurement $(MEAS) Enable Status</tooltip>
+    <y>8</y>
+    <width>60</width>
+    <height>28</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="10.0">
+      </font>
+    </font>
+    <horizontal>false</horizontal>
+    <tooltip>Start/Stop Measurement $(MEAS)</tooltip>
+    <items>
+      <item>Item 1</item>
+      <item>Item 2</item>
+    </items>
   </widget>
   <widget type="label" version="2.0.0">
     <name>Meas_Num</name>
     <text>$(MEAS)</text>
-    <x>40</x>
+    <x>75</x>
     <y>12</y>
-    <width>55</width>
+    <width>40</width>
     <font>
       <font family="Liberation Sans" style="BOLD" size="12.0">
       </font>
@@ -45,12 +41,13 @@
     </foreground_color>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
-  <widget type="label" version="2.0.0">
+  <widget type="textupdate" version="2.0.0">
     <name>Device_Name</name>
-    <text>$(NAME)</text>
-    <x>100</x>
+    <pv_name>$(P):MEAS$(MEAS):Name</pv_name>
+    <x>120</x>
     <y>12</y>
-    <width>110</width>
+    <width>105</width>
+    <height>22</height>
     <font>
       <font family="Liberation Sans" style="BOLD" size="11.0">
       </font>
@@ -59,14 +56,18 @@
       <color red="0" green="100" blue="0">
       </color>
     </foreground_color>
-    <tooltip>Device: $(P):$(NAME):Value</tooltip>
+    <background_color>
+      <color red="245" green="245" blue="248">
+      </color>
+    </background_color>
+    <tooltip>Device name from $(P):MEAS$(MEAS):Name</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Source</name>
     <pv_name>$(P):MEAS$(MEAS):Source_RBV</pv_name>
-    <x>215</x>
+    <x>230</x>
     <y>10</y>
-    <width>60</width>
+    <width>55</width>
     <height>22</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="11.0">
@@ -81,9 +82,9 @@
   <widget type="textupdate" version="2.0.0">
     <name>Type</name>
     <pv_name>$(P):MEAS$(MEAS):Type_RBV</pv_name>
-    <x>280</x>
+    <x>290</x>
     <y>10</y>
-    <width>80</width>
+    <width>75</width>
     <height>22</height>
     <font>
       <font family="Liberation Sans" style="REGULAR" size="11.0">
@@ -110,7 +111,7 @@
       <color red="240" green="248" blue="255">
       </color>
     </background_color>
-    <format>2</format>
+    <format>3</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
     <tooltip>Current measurement value (via alias: $(P):$(NAME):Value)</tooltip>
@@ -129,7 +130,7 @@
       <color red="255" green="255" blue="255">
       </color>
     </background_color>
-    <format>2</format>
+    <format>3</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
@@ -148,7 +149,7 @@
       <color red="255" green="255" blue="255">
       </color>
     </background_color>
-    <format>2</format>
+    <format>3</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
@@ -167,7 +168,7 @@
       <color red="255" green="255" blue="255">
       </color>
     </background_color>
-    <format>2</format>
+    <format>3</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>
@@ -186,7 +187,7 @@
       <color red="255" green="255" blue="255">
       </color>
     </background_color>
-    <format>2</format>
+    <format>3</format>
     <precision>3</precision>
     <horizontal_alignment>1</horizontal_alignment>
   </widget>

@@ -5,6 +5,7 @@
     <P>SPARC:DIAG:TEK-TEST</P>
   </macros>
   <width>900</width>
+  <height>800</height>
   <background_color>
     <color red="240" green="240" blue="240">
     </color>
@@ -333,57 +334,173 @@
     <macros>
       <P>$(P)</P>
       <MEAS>1</MEAS>
-      <NAME>BEAMBPM01</NAME>
     </macros>
     <file>meas_asyn_row.bob</file>
     <x>10</x>
     <y>130</y>
     <width>880</width>
     <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH1:Enable_RBV</pv_name>
+      </rule>
+    </rules>
   </widget>
   <widget type="embedded" version="2.0.0">
     <name>Meas2</name>
     <macros>
       <P>$(P)</P>
       <MEAS>2</MEAS>
-      <NAME>EOSPHD01</NAME>
     </macros>
     <file>meas_asyn_row.bob</file>
     <x>10</x>
     <y>180</y>
     <width>880</width>
     <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH2:Enable_RBV</pv_name>
+      </rule>
+    </rules>
   </widget>
   <widget type="embedded" version="2.0.0">
     <name>Meas3</name>
     <macros>
       <P>$(P)</P>
       <MEAS>3</MEAS>
-      <NAME>PLADIS01</NAME>
     </macros>
     <file>meas_asyn_row.bob</file>
     <x>10</x>
     <y>230</y>
     <width>880</width>
     <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH3:Enable_RBV</pv_name>
+      </rule>
+    </rules>
   </widget>
   <widget type="embedded" version="2.0.0">
     <name>Meas4</name>
     <macros>
       <P>$(P)</P>
       <MEAS>4</MEAS>
-      <NAME>PLALAS01</NAME>
     </macros>
     <file>meas_asyn_row.bob</file>
     <x>10</x>
     <y>280</y>
     <width>880</width>
     <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH4:Enable_RBV</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Meas5</name>
+    <macros>
+      <P>$(P)</P>
+      <MEAS>5</MEAS>
+    </macros>
+    <file>meas_asyn_row.bob</file>
+    <x>10</x>
+    <y>330</y>
+    <width>880</width>
+    <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH5:Enable_RBV</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Meas6</name>
+    <macros>
+      <P>$(P)</P>
+      <MEAS>6</MEAS>
+    </macros>
+    <file>meas_asyn_row.bob</file>
+    <x>10</x>
+    <y>380</y>
+    <width>880</width>
+    <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH6:Enable_RBV</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Meas7</name>
+    <macros>
+      <P>$(P)</P>
+      <MEAS>7</MEAS>
+    </macros>
+    <file>meas_asyn_row.bob</file>
+    <x>10</x>
+    <y>430</y>
+    <width>880</width>
+    <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH7:Enable_RBV</pv_name>
+      </rule>
+    </rules>
+  </widget>
+  <widget type="embedded" version="2.0.0">
+    <name>Meas8</name>
+    <macros>
+      <P>$(P)</P>
+      <MEAS>8</MEAS>
+    </macros>
+    <file>meas_asyn_row.bob</file>
+    <x>10</x>
+    <y>480</y>
+    <width>880</width>
+    <height>45</height>
+    <visible>true</visible>
+    <rules>
+      <rule name="VisibilityRule" prop_id="visible" out_exp="false">
+        <exp bool_exp="pv0==1">
+          <value>true</value>
+        </exp>
+        <pv_name>$(P):CH8:Enable_RBV</pv_name>
+      </rule>
+    </rules>
   </widget>
   <widget type="xyplot" version="3.0.0">
     <name>Trend_Plot</name>
     <x>10</x>
-    <y>340</y>
+    <y>540</y>
     <width>880</width>
     <height>250</height>
     <title>Measurement Trend</title>
@@ -435,7 +552,7 @@
     </y_axes>
     <traces>
       <trace>
-        <name>BEAMBPM01</name>
+        <name>MEAS1</name>
         <x_pv></x_pv>
         <y_pv>$(P):MEAS1:VALUE</y_pv>
         <err_pv></err_pv>
@@ -452,7 +569,7 @@
         <visible>true</visible>
       </trace>
       <trace>
-        <name>EOSPHD01</name>
+        <name>MEAS2</name>
         <x_pv></x_pv>
         <y_pv>$(P):MEAS2:VALUE</y_pv>
         <err_pv></err_pv>
@@ -469,7 +586,7 @@
         <visible>true</visible>
       </trace>
       <trace>
-        <name>PLADIS01</name>
+        <name>MEAS3</name>
         <x_pv></x_pv>
         <y_pv>$(P):MEAS3:VALUE</y_pv>
         <err_pv></err_pv>
@@ -486,7 +603,7 @@
         <visible>true</visible>
       </trace>
       <trace>
-        <name>PLALAS01</name>
+        <name>MEAS4</name>
         <x_pv></x_pv>
         <y_pv>$(P):MEAS4:VALUE</y_pv>
         <err_pv></err_pv>
@@ -494,6 +611,74 @@
         <trace_type>1</trace_type>
         <color>
           <color red="200" green="0" blue="200">
+          </color>
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>10</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>MEAS5</name>
+        <x_pv></x_pv>
+        <y_pv>$(P):MEAS5:VALUE</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="150" blue="0">
+          </color>
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>10</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>MEAS6</name>
+        <x_pv></x_pv>
+        <y_pv>$(P):MEAS6:VALUE</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="0" green="150" blue="150">
+          </color>
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>10</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>MEAS7</name>
+        <x_pv></x_pv>
+        <y_pv>$(P):MEAS7:VALUE</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="150" green="75" blue="0">
+          </color>
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>10</point_size>
+        <visible>true</visible>
+      </trace>
+      <trace>
+        <name>MEAS8</name>
+        <x_pv></x_pv>
+        <y_pv>$(P):MEAS8:VALUE</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="128" green="128" blue="0">
           </color>
         </color>
         <line_width>2</line_width>

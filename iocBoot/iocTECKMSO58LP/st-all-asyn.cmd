@@ -101,6 +101,32 @@ dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=7,NELM=$(NEL
 # CH7 - TEST
 dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=8,NELM=$(NELM),CHANAME=TEST2,COEFF=1.0,CHARGE_EGU=pC")
 
+
+
+# MEAS1 - BEAMBPM01 on Channel 1
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=1,CHANNEL=1,TYPE=MEAN,ENABLE=1,NAME=BEAMBPM01")
+
+# MEAS2 - EOSPHD01 on Channel 2
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=2,CHANNEL=2,TYPE=MEAN,ENABLE=1,NAME=EOSPHD01")
+
+# MEAS3 - PLADIS01 on Channel 3
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=3,CHANNEL=3,TYPE=MEAN,ENABLE=1,NAME=PLADIS01")
+
+# MEAS4 - PLALAS01 on Channel 4
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=4,CHANNEL=4,TYPE=MEAN,ENABLE=1,NAME=PLALAS01")
+
+# MEAS5 - CH5 (available for future use)
+#dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=5,CHANNEL=5,TYPE=MEAN,ENABLE=0,NAME=CH5")
+
+# MEAS6 - CH6 (available for future use)
+#dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=6,CHANNEL=6,TYPE=MEAN,ENABLE=0,NAME=CH6")
+
+# MEAS7 - TEST on Channel 7
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=7,CHANNEL=7,TYPE=MEAN,ENABLE=1,NAME=TEST")
+
+# MEAS8 - TEST2 on Channel 8
+dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=8,CHANNEL=8,TYPE=MEAN,ENABLE=1,NAME=TEST2")
+
 #============================================================
 # Measurement Devices
 #============================================================

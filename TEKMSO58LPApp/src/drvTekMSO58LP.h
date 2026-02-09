@@ -63,6 +63,17 @@
 #define TEK_CH_REFRESH_RATE_STRING  "TEK_CH_REFRESH_RATE"
 #define TEK_CH_RESET_STATS_STRING   "TEK_CH_RESET_STATS"
 #define TEK_CH_DATA_WIDTH_STRING    "TEK_CH_DATA_WIDTH"
+#define TEK_CH_MARKER_START_STRING  "TEK_CH_MARKER_START"
+#define TEK_CH_MARKER_END_STRING    "TEK_CH_MARKER_END"
+#define TEK_CH_MARKER_START_SAMPLE_STRING "TEK_CH_MARKER_START_SAMPLE"
+#define TEK_CH_MARKER_END_SAMPLE_STRING   "TEK_CH_MARKER_END_SAMPLE"
+#define TEK_CH_STATS_MEAN_STRING    "TEK_CH_STATS_MEAN"
+#define TEK_CH_STATS_MIN_STRING     "TEK_CH_STATS_MIN"
+#define TEK_CH_STATS_MAX_STRING     "TEK_CH_STATS_MAX"
+#define TEK_CH_STATS_RMS_STRING     "TEK_CH_STATS_RMS"
+#define TEK_CH_STATS_INTEGRAL_STRING "TEK_CH_STATS_INTEGRAL"
+#define TEK_CH_STATS_PP_STRING      "TEK_CH_STATS_PP"
+#define TEK_CH_STATS_STDDEV_STRING  "TEK_CH_STATS_STDDEV"
 
 /* Per-measurement parameters */
 #define TEK_MEAS_ENABLE_STRING      "TEK_MEAS_ENABLE"
@@ -168,6 +179,17 @@ protected:
     int P_ChRefreshRate[TEK_MAX_CHANNELS];
     int P_ChResetStats[TEK_MAX_CHANNELS];
     int P_ChDataWidth[TEK_MAX_CHANNELS];
+    int P_ChMarkerStart[TEK_MAX_CHANNELS];
+    int P_ChMarkerEnd[TEK_MAX_CHANNELS];
+    int P_ChMarkerStartSample[TEK_MAX_CHANNELS];
+    int P_ChMarkerEndSample[TEK_MAX_CHANNELS];
+    int P_ChStatsMean[TEK_MAX_CHANNELS];
+    int P_ChStatsMin[TEK_MAX_CHANNELS];
+    int P_ChStatsMax[TEK_MAX_CHANNELS];
+    int P_ChStatsRMS[TEK_MAX_CHANNELS];
+    int P_ChStatsIntegral[TEK_MAX_CHANNELS];
+    int P_ChStatsPP[TEK_MAX_CHANNELS];
+    int P_ChStatsStdDev[TEK_MAX_CHANNELS];
     
     /* Per-measurement parameters */
     int P_MeasEnable[TEK_MAX_MEASUREMENTS];
@@ -215,6 +237,7 @@ private:
     void parseWaveformData(const char *data, int channel);
     void scaleWaveform(int channel);
     void generateTimeArray(int channel);
+    void computeStats(int channel, int numPoints);
     
     /* Configuration */
     char ipAddress_[TEK_MAX_STRING_SIZE];
