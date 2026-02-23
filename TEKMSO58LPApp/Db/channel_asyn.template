@@ -6,7 +6,8 @@
 #   P       - PV prefix
 #   PORT    - ASYN port name (from drvTekMSO58LPConfigure)
 #   CHANNEL - Channel number (1-8)
-#   NELM    - Max waveform elements
+#   NELM    - Max waveform elements (transfer buffer size)
+#   START   - Initial data start sample (default 1)
 #   CHANAME - Channel name/label (optional, default CH$(CHANNEL))
 
 # ============================================================
@@ -41,12 +42,12 @@ record(longout, "$(P):CH$(CHANNEL):DataStart")
     field(DESC, "Acquisition window start point")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_START_$(CHANNEL)")
-    field(VAL,  "1")
+    field(VAL,  "$(START=1)")
     field(PINI, "YES")
     field(DRVL, "1")
-    field(DRVH, "$(NELM)")
     field(LOPR, "1")
-    field(HOPR, "$(NELM)")
+    field(EGU,  "pts")
+    field(FLNK, "$(P):CH$(CHANNEL):computeStop_")
 }
 
 record(longin, "$(P):CH$(CHANNEL):DataStart_RBV")
@@ -57,17 +58,41 @@ record(longin, "$(P):CH$(CHANNEL):DataStart_RBV")
     field(SCAN, "I/O Intr")
 }
 
-record(longout, "$(P):CH$(CHANNEL):DataStop")
+# User-writable window size (1..NELM)
+record(longout, "$(P):CH$(CHANNEL):WindowSize")
 {
-    field(DESC, "Acquisition window stop point")
-    field(DTYP, "asynInt32")
-    field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_STOP_$(CHANNEL)")
+    field(DESC, "Acquisition window size")
     field(VAL,  "$(NELM)")
     field(PINI, "YES")
     field(DRVL, "1")
     field(DRVH, "$(NELM)")
     field(LOPR, "1")
     field(HOPR, "$(NELM)")
+    field(EGU,  "pts")
+    field(FLNK, "$(P):CH$(CHANNEL):computeStop_")
+}
+
+# Compute DataStop = DataStart + WindowSize - 1
+record(calcout, "$(P):CH$(CHANNEL):computeStop_")
+{
+    field(DESC, "Compute stop from start+size")
+    field(INPA, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):WindowSize NPP NMS")
+    field(CALC, "A+B-1")
+    field(DOPT, "Use CALC")
+    field(OOPT, "Every Time")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStop PP")
+}
+
+# Internal DataStop - driven by computeStop_, not user-writable
+record(longout, "$(P):CH$(CHANNEL):DataStop")
+{
+    field(DESC, "Acquisition window stop point")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_CH_DATA_STOP_$(CHANNEL)")
+    field(DRVL, "1")
+    field(LOPR, "1")
+    field(EGU,  "pts")
 }
 
 record(longin, "$(P):CH$(CHANNEL):DataStop_RBV")
@@ -78,13 +103,12 @@ record(longin, "$(P):CH$(CHANNEL):DataStop_RBV")
     field(SCAN, "I/O Intr")
 }
 
-# Calculated window size (for display)
-record(calc, "$(P):CH$(CHANNEL):WindowSize")
+# Max window size (buffer limit, read-only)
+record(longin, "$(P):CH$(CHANNEL):NELM")
 {
-    field(DESC, "Acquisition window size")
-    field(INPA, "$(P):CH$(CHANNEL):DataStop_RBV CP")
-    field(INPB, "$(P):CH$(CHANNEL):DataStart_RBV CP")
-    field(CALC, "A-B+1")
+    field(DESC, "Max transfer window size")
+    field(VAL,  "$(NELM)")
+    field(PINI, "YES")
     field(EGU,  "pts")
 }
 
@@ -369,6 +393,83 @@ record(longin, "$(P):CH$(CHANNEL):MarkerEndSample")
 }
 
 # ============================================================
+# Marker Positions in Sample Numbers (user-writable)
+# Absolute scope sample numbers (1-indexed, matching DataStart)
+# Converted to time via Xinc and written to MarkerStart/MarkerEnd
+# for XY plot markers and driver stats computation.
+# ============================================================
+record(longout, "$(P):CH$(CHANNEL):MarkerStartPt")
+{
+    field(DESC, "Stats marker start (sample)")
+    field(VAL,  "$(START=1)")
+    field(PINI, "YES")
+    field(DRVL, "1")
+    field(EGU,  "pts")
+    field(FLNK, "$(P):CH$(CHANNEL):computeMkrStartTime_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):computeMkrStartTime_")
+{
+    field(DESC, "Convert start sample to time")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerStartPt NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):Xinc CP NMS")
+    field(CALC, "(A-1)*B")
+    field(DOPT, "Use CALC")
+    field(OOPT, "Every Time")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerStart PP")
+}
+
+record(longout, "$(P):CH$(CHANNEL):MarkerEndPt")
+{
+    field(DESC, "Stats marker end (sample)")
+    field(VAL,  "0")
+    field(DRVL, "0")
+    field(EGU,  "pts")
+    field(FLNK, "$(P):CH$(CHANNEL):computeMkrEndTime_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):computeMkrEndTime_")
+{
+    field(DESC, "Convert end sample to time")
+    field(INPA, "$(P):CH$(CHANNEL):MarkerEndPt NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):Xinc CP NMS")
+    field(CALC, "A>0?(A-1)*B:0")
+    field(DOPT, "Use CALC")
+    field(OOPT, "Every Time")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerEnd PP")
+}
+
+# Reset markers to current data window boundaries
+record(bo, "$(P):CH$(CHANNEL):ResetMarkers")
+{
+    field(DESC, "Reset markers to data window")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_Start_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):resetMkr_Start_")
+{
+    field(DESC, "Reset marker start to DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerStartPt PP")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_End_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):resetMkr_End_")
+{
+    field(DESC, "Reset marker end to window end")
+    field(INPA, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):WindowSize NPP NMS")
+    field(CALC, "A+B-1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerEndPt PP")
+}
+
+# ============================================================
 # Waveform Statistics (computed by driver in readWaveformBinary)
 # All stats are pushed via I/O Intr when a new waveform is acquired
 # or when marker positions change.
@@ -515,10 +616,10 @@ record(calcout, "$(P):CH$(CHANNEL):copyMkrStart_")
     field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
 }
 
-# Copy MarkerEndSample -> DataStop
+# Copy MarkerEndSample -> DataSize (computed from markers)
 record(bo, "$(P):CH$(CHANNEL):CopyMarkerEnd")
 {
-    field(DESC, "Copy marker end to DataStop")
+    field(DESC, "Copy marker end to DataSize")
     field(ZNAM, "Idle")
     field(ONAM, "Copy")
     field(HIGH, "0.1")
@@ -527,11 +628,13 @@ record(bo, "$(P):CH$(CHANNEL):CopyMarkerEnd")
 
 record(calcout, "$(P):CH$(CHANNEL):copyMkrEnd_")
 {
-    field(DESC, "Copy end sample to DataStop")
+    field(DESC, "Compute size from marker end")
     field(INPA, "$(P):CH$(CHANNEL):MarkerEndSample NPP NMS")
-    field(CALC, "A>0?A:1")
+    field(INPB, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(INPC, "$(P):CH$(CHANNEL):NELM NPP NMS")
+    field(CALC, "(A-B+1)>0&&(A-B+1)<=C?A-B+1:C")
     field(DOPT, "Use CALC")
-    field(OUT,  "$(P):CH$(CHANNEL):DataStop PP")
+    field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
 }
 
 # Copy both markers to Data Window at once
@@ -551,14 +654,46 @@ record(calcout, "$(P):CH$(CHANNEL):copyMkrBothStart_")
     field(CALC, "A>0?A:1")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
-    field(FLNK, "$(P):CH$(CHANNEL):copyMkrBothEnd_")
+    field(FLNK, "$(P):CH$(CHANNEL):copyMkrBothSize_")
 }
 
-record(calcout, "$(P):CH$(CHANNEL):copyMkrBothEnd_")
+record(calcout, "$(P):CH$(CHANNEL):copyMkrBothSize_")
 {
-    field(DESC, "Copy end sample to DataStop")
+    field(DESC, "Compute size from marker range")
     field(INPA, "$(P):CH$(CHANNEL):MarkerEndSample NPP NMS")
-    field(CALC, "A>0?A:1")
+    field(INPB, "$(P):CH$(CHANNEL):MarkerStartSample NPP NMS")
+    field(INPC, "$(P):CH$(CHANNEL):NELM NPP NMS")
+    field(CALC, "(A-B+1)>0&&(A-B+1)<=C?A-B+1:C")
     field(DOPT, "Use CALC")
-    field(OUT,  "$(P):CH$(CHANNEL):DataStop PP")
+    field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
+}
+
+# ============================================================
+# Reset Data Window to defaults (1..NELM)
+# ============================================================
+record(bo, "$(P):CH$(CHANNEL):ResetDataWindow")
+{
+    field(DESC, "Reset data window to 1..NELM")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):resetDW_Start_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):resetDW_Start_")
+{
+    field(DESC, "Reset DataStart to 1")
+    field(CALC, "1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):resetDW_Size_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):resetDW_Size_")
+{
+    field(DESC, "Reset WindowSize to NELM")
+    field(INPA, "$(P):CH$(CHANNEL):NELM NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
 }

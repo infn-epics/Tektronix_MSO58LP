@@ -261,9 +261,10 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         setDoubleParam(P_ChStatsPP[i], 0.0);
         setDoubleParam(P_ChStatsStdDev[i], 0.0);
         
-        /* Set default data window: 1 to maxPoints */
-        setIntegerParam(P_ChDataStart[i], 1);
-        setIntegerParam(P_ChDataStop[i], maxPoints_);
+        /* Data window defaults: let PINI records from the template
+         * set the initial values via macros (START, NELM).
+         * Do NOT setIntegerParam here or it will override the
+         * record VAL during init_record -> readInt32 callback. */
     }
 
     /* Initialize DATa tracking */
@@ -843,10 +844,16 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
     /* Validate */
     if (dataWidth != 1 && dataWidth != 2) dataWidth = 2;
     if (dataStart < 1) dataStart = 1;
-    if (dataStop > maxPoints_) dataStop = maxPoints_;
     if (dataStop < dataStart) dataStop = dataStart;
     
     int windowSize = dataStop - dataStart + 1;
+    
+    /* Window size must not exceed buffer (maxPoints_ = NELM) */
+    if (windowSize > maxPoints_) {
+        windowSize = maxPoints_;
+        dataStop = dataStart + maxPoints_ - 1;
+        debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: window size clamped to %d (NELM), dataStop adjusted to %d\n", maxPoints_, dataStop);
+    }
 
     debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: channel=%d, ch=%d, start=%d, stop=%d, size=%d\n", 
                channel, ch, dataStart, dataStop, windowSize);
@@ -1020,32 +1027,40 @@ void drvTekMSO58LP::computeStats(int channel, int numPoints)
     getDoubleParam(P_ChMarkerStart[channel], &markerStart);
     getDoubleParam(P_ChMarkerEnd[channel], &markerEnd);
 
+    int dataStart = 1;
+    getIntegerParam(P_ChDataStart[channel], &dataStart);
+
     double xinc = xinc_[channel];
 
-    /* Convert marker times to sample indices */
-    int startSample = 0;
-    int endSample = numPoints;
+    /* Convert marker times to buffer-relative sample indices */
+    int startIdx = 0;
+    int endIdx = numPoints;
 
     if (xinc > 0.0) {
         if (markerStart > 0.0) {
-            startSample = (int)(markerStart / xinc + 0.5);
+            int abs0 = (int)(markerStart / xinc + 0.5);  /* absolute 0-based sample */
+            startIdx = abs0 - (dataStart - 1);            /* buffer-relative index */
         }
         if (markerEnd > 0.0) {
-            endSample = (int)(markerEnd / xinc + 0.5);
+            int abs0 = (int)(markerEnd / xinc + 0.5);
+            endIdx = abs0 - (dataStart - 1);
         }
     }
 
-    /* Clamp to valid range */
-    if (startSample < 0) startSample = 0;
-    if (startSample > numPoints) startSample = numPoints;
-    if (endSample <= 0 || endSample > numPoints) endSample = numPoints;
-    if (endSample <= startSample) endSample = numPoints;
+    /* Clamp to valid buffer range */
+    if (startIdx < 0) startIdx = 0;
+    if (startIdx >= numPoints) startIdx = 0;
+    if (endIdx <= 0 || endIdx > numPoints) endIdx = numPoints;
+    if (endIdx <= startIdx) {
+        startIdx = 0;
+        endIdx = numPoints;
+    }
 
-    /* Publish computed sample indices */
-    setIntegerParam(P_ChMarkerStartSample[channel], startSample);
-    setIntegerParam(P_ChMarkerEndSample[channel], endSample);
+    /* Publish absolute 1-based sample indices for display */
+    setIntegerParam(P_ChMarkerStartSample[channel], dataStart + startIdx);
+    setIntegerParam(P_ChMarkerEndSample[channel], dataStart + endIdx - 1);
 
-    int count = endSample - startSample;
+    int count = endIdx - startIdx;
     if (count <= 0) {
         setDoubleParam(P_ChStatsMean[channel], 0.0);
         setDoubleParam(P_ChStatsMin[channel], 0.0);
@@ -1057,14 +1072,14 @@ void drvTekMSO58LP::computeStats(int channel, int numPoints)
         return;
     }
 
-    /* Compute stats over [startSample, endSample) */
+    /* Compute stats over [startIdx, endIdx) in buffer */
     epicsMutexLock(dataLock_);
 
     double sum = 0.0, sumSq = 0.0;
-    double vmin = scaledWaveform_[channel][startSample];
+    double vmin = scaledWaveform_[channel][startIdx];
     double vmax = vmin;
 
-    for (int i = startSample; i < endSample; i++) {
+    for (int i = startIdx; i < endIdx; i++) {
         double v = scaledWaveform_[channel][i];
         sum += v;
         sumSq += v * v;
@@ -1089,8 +1104,8 @@ void drvTekMSO58LP::computeStats(int channel, int numPoints)
     setDoubleParam(P_ChStatsPP[channel], pp);
     setDoubleParam(P_ChStatsStdDev[channel], stddev);
 
-    debugPrint(TEK_DEBUG_INFO, "DEBUG: computeStats CH%d: samples=%d-%d mean=%.6e pp=%.6e rms=%.6e\n",
-               channel + 1, startSample, endSample, mean, pp, rms);
+    debugPrint(TEK_DEBUG_INFO, "DEBUG: computeStats CH%d: buf[%d-%d) dataStart=%d mean=%.6e pp=%.6e rms=%.6e\n",
+               channel + 1, startIdx, endIdx, dataStart, mean, pp, rms);
 }
 
 /**

@@ -38,6 +38,7 @@ epicsEnvSet "TEK_PORT" "4004"
 # POLL_TIME in seconds: 0.01 = 100Hz, 0.02 = 50Hz, 0.1 = 10Hz
 epicsEnvSet "POLL_TIME" "0.1"
 epicsEnvSet "NELM"      "10000"
+epicsEnvSet "START"     "30000"
 epicsEnvSet "NUM_CH"    "8"
 epicsEnvSet "NUM_MEAS"  "8"
 
@@ -81,25 +82,25 @@ dbLoadRecords("db/device_asyn.template", "P=$(P),PORT=TEK1,NELM=$(NELM),POLL_TIM
 #============================================================
 
 # CH1 - BEAMBPM01
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=1,NELM=$(NELM),CHANAME=BEAMBPM01,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=1,NELM=$(NELM),START=$(START),CHANAME=BEAMBPM01,COEFF=1.0,CHARGE_EGU=pC")
 
 # CH2 - EOSPHD01
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=2,NELM=$(NELM),CHANAME=EOSPHD01,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=2,NELM=$(NELM),START=$(START),CHANAME=EOSPHD01,COEFF=1.0,CHARGE_EGU=pC")
 
 # CH3 - PLADIS01
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=3,NELM=$(NELM),CHANAME=PLADIS01,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=3,NELM=$(NELM),START=$(START),CHANAME=PLADIS01,COEFF=1.0,CHARGE_EGU=pC")
 
 # CH4 - PLALAS01
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=4,NELM=$(NELM),CHANAME=PLALAS01,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=4,NELM=$(NELM),START=$(START),CHANAME=PLALAS01,COEFF=1.0,CHARGE_EGU=pC")
 
 
 
 # CH7 - TEST
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=7,NELM=$(NELM),CHANAME=TEST,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=7,NELM=$(NELM),START=$(START),CHANAME=TEST,COEFF=1.0,CHARGE_EGU=pC")
 
 
 # CH7 - TEST
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=8,NELM=$(NELM),CHANAME=TEST2,COEFF=1.0,CHARGE_EGU=pC")
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=8,NELM=$(NELM),START=$(START),CHANAME=TEST2,COEFF=1.0,CHARGE_EGU=pC")
 
 
 

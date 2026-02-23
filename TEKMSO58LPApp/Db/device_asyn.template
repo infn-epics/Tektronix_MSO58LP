@@ -157,9 +157,9 @@ record(longout, "$(P):RecordLength")
     field(PINI, "YES")
     field(VAL,  "$(NELM=10000)")
     field(DRVL, "500")
-    field(DRVH, "250000")
+    field(DRVH, "62500000")
     field(LOPR, "500")
-    field(HOPR, "250000")
+    field(HOPR, "62500000")
     field(EGU,  "pts")
 }
 
