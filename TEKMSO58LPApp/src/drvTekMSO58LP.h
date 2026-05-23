@@ -264,6 +264,10 @@ private:
     epicsFloat64 *scaledWaveform_[TEK_MAX_CHANNELS];
     epicsFloat64 *timeArray_[TEK_MAX_CHANNELS];
     int waveformLength_[TEK_MAX_CHANNELS];
+
+    /* Pre-allocated response buffer for CURVe? binary reads (avoids mmap allocation) */
+    char *waveformResponse_;
+    size_t waveformResponseSize_;
     
     /* Channel configuration cache */
     double xinc_[TEK_MAX_CHANNELS];

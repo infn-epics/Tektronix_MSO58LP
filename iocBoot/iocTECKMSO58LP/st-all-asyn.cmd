@@ -38,9 +38,9 @@ epicsEnvSet "TEK_PORT" "4004"
 # POLL_TIME in seconds: 0.01 = 100Hz, 0.02 = 50Hz, 0.1 = 10Hz
 epicsEnvSet "POLL_TIME" "0.1"
 epicsEnvSet "NELM"      "10000"
-epicsEnvSet "START"     "30000"
+epicsEnvSet "START"     "1"
 epicsEnvSet "NUM_CH"    "8"
-epicsEnvSet "NUM_MEAS"  "8"
+epicsEnvSet "NUM_MEAS"  "0"
 
 cd ${TOP}
 
@@ -94,39 +94,47 @@ dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=3,NELM=$(NEL
 dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=4,NELM=$(NELM),START=$(START),CHANAME=PLALAS01,COEFF=1.0,CHARGE_EGU=pC")
 
 
+# CH5 - CH5
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=5,NELM=$(NELM),START=$(START),CHANAME=CH5,COEFF=1.0,CHARGE_EGU=pC")
+
+
+# CH6 - CH6
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=6,NELM=$(NELM),START=$(START),CHANAME=CH6,COEFF=1.0,CHARGE_EGU=pC")
+
+
 
 # CH7 - TEST
 dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=7,NELM=$(NELM),START=$(START),CHANAME=TEST,COEFF=1.0,CHARGE_EGU=pC")
 
 
-# CH7 - TEST
-dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=8,NELM=$(NELM),START=$(START),CHANAME=TEST2,COEFF=1.0,CHARGE_EGU=pC")
+# CH8 - TEST
+dbLoadRecords("db/channel_asyn.template", "P=$(P),PORT=TEK1,CHANNEL=8,NELM=$(NELM),START=$(START),CHANAME=CH8,COEFF=1.0,CHARGE_EGU=pC")
 
 
 
-# MEAS1 - BEAMBPM01 on Channel 1
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=1,CHANNEL=1,TYPE=MEAN,ENABLE=1,NAME=BEAMBPM01")
+# # MEAS1 - BEAMBPM01 on Channel 1
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=1,CHANNEL=1,TYPE=MEAN,ENABLE=1,NAME=BEAMBPM01")
 
-# MEAS2 - EOSPHD01 on Channel 2
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=2,CHANNEL=2,TYPE=MEAN,ENABLE=1,NAME=EOSPHD01")
+# # MEAS2 - EOSPHD01 on Channel 2
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=2,CHANNEL=2,TYPE=MEAN,ENABLE=1,NAME=EOSPHD01")
 
-# MEAS3 - PLADIS01 on Channel 3
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=3,CHANNEL=3,TYPE=MEAN,ENABLE=1,NAME=PLADIS01")
+# # MEAS3 - PLADIS01 on Channel 3
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=3,CHANNEL=3,TYPE=MEAN,ENABLE=1,NAME=PLADIS01")
 
-# MEAS4 - PLALAS01 on Channel 4
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=4,CHANNEL=4,TYPE=MEAN,ENABLE=1,NAME=PLALAS01")
+# # MEAS4 - PLALAS01 on Channel 4
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=4,CHANNEL=4,TYPE=MEAN,ENABLE=1,NAME=PLALAS01")
 
-# MEAS5 - CH5 (available for future use)
-#dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=5,CHANNEL=5,TYPE=MEAN,ENABLE=0,NAME=CH5")
+# # MEAS5 - CH5 (available for future use)
+# #dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=5,CHANNEL=5,TYPE=MEAN,ENABLE=0,NAME=CH5")
 
-# MEAS6 - CH6 (available for future use)
-#dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=6,CHANNEL=6,TYPE=MEAN,ENABLE=0,NAME=CH6")
+# # MEAS6 - CH6 (available for future use)
+# #dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=6,CHANNEL=6,TYPE=MEAN,ENABLE=0,NAME=CH6")
 
-# MEAS7 - TEST on Channel 7
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=7,CHANNEL=7,TYPE=MEAN,ENABLE=1,NAME=TEST")
+# # MEAS7 - TEST on Channel 7
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=7,CHANNEL=7,TYPE=MEAN,ENABLE=1,NAME=TEST")
 
-# MEAS8 - TEST2 on Channel 8
-dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=8,CHANNEL=8,TYPE=MEAN,ENABLE=1,NAME=TEST2")
+# # MEAS8 - TEST2 on Channel 8
+# dbLoadRecords("db/measurement_asyn.template", "P=$(P),PORT=TEK1,MEAS=8,CHANNEL=8,TYPE=MEAN,ENABLE=1,NAME=TEST2")
 
 #============================================================
 # Measurement Devices
@@ -155,17 +163,24 @@ iocInit
 # Post-initialization commands
 #============================================================
 
-# Enable measurements for acquisition (do after iocInit)
-dbpf "$(P):MEAS1:Enable" "1"
-dbpf "$(P):MEAS2:Enable" "1"
-dbpf "$(P):MEAS3:Enable" "1"
-dbpf "$(P):MEAS4:Enable" "1"
+# # Enable measurements for acquisition (do after iocInit)
+# dbpf "$(P):MEAS1:Enable" "1"
+# dbpf "$(P):MEAS2:Enable" "1"
+# dbpf "$(P):MEAS3:Enable" "1"
+# dbpf "$(P):MEAS4:Enable" "1"
 
 # Enable channels for waveform acquisition
 dbpf "$(P):CH1:Enable" "1"
 dbpf "$(P):CH2:Enable" "1"
 dbpf "$(P):CH3:Enable" "1"
 dbpf "$(P):CH4:Enable" "1"
+
+# Enable info-level driver debug while diagnosing startup crash
+dbpf "$(P):DebugLevel" "1"
+epicsThreadSleep 1.0
+
+# Start acquisition only after all records are loaded
+dbpf "$(P):Acquire" "1"
 
 # Set polling rate (can also be changed at runtime)
 # dbpf "$(P):PollTime" "0.1"

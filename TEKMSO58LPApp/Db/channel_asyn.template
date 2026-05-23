@@ -21,7 +21,7 @@ record(bo, "$(P):CH$(CHANNEL):Enable")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
     field(PINI, "YES")
-    field(VAL,  "0")
+    field(VAL,  "1")
 }
 
 record(bi, "$(P):CH$(CHANNEL):Enable_RBV")
@@ -93,6 +93,7 @@ record(longout, "$(P):CH$(CHANNEL):DataStop")
     field(DRVL, "1")
     field(LOPR, "1")
     field(EGU,  "pts")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_Start_")
 }
 
 record(longin, "$(P):CH$(CHANNEL):DataStop_RBV")
@@ -241,7 +242,6 @@ record(longin, "$(P):CH$(CHANNEL):DataReady")
     field(DTYP, "asynInt32")
     field(INP,  "@asyn($(PORT),0)TEK_CH_DATA_READY_$(CHANNEL)")
     field(SCAN, "I/O Intr")
-    field(FLNK, "$(P):CH$(CHANNEL):RawWaveform")
 }
 
 # ============================================================
@@ -252,10 +252,9 @@ record(waveform, "$(P):CH$(CHANNEL):RawWaveform")
     field(DESC, "Raw waveform data (ADC counts)")
     field(DTYP, "asynInt32ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_$(CHANNEL)")
-    field(SCAN, "Passive")
+    field(SCAN, "I/O Intr")
     field(FTVL, "LONG")
     field(NELM, "$(NELM)")
-    field(FLNK, "$(P):CH$(CHANNEL):Waveform")
 }
 
 # ============================================================
@@ -266,11 +265,10 @@ record(waveform, "$(P):CH$(CHANNEL):Waveform")
     field(DESC, "Scaled waveform data")
     field(DTYP, "asynFloat64ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_SCALED_$(CHANNEL)")
-    field(SCAN, "Passive")
+    field(SCAN, "I/O Intr")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NELM)")
     field(EGU,  "V")
-    field(FLNK, "$(P):CH$(CHANNEL):TimeArray")
 }
 
 # ============================================================
@@ -281,7 +279,7 @@ record(waveform, "$(P):CH$(CHANNEL):TimeArray")
     field(DESC, "Time array for waveform")
     field(DTYP, "asynFloat64ArrayIn")
     field(INP,  "@asyn($(PORT),0)TEK_CH_WAVEFORM_TIME_$(CHANNEL)")
-    field(SCAN, "Passive")
+    field(SCAN, "I/O Intr")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NELM)")
     field(EGU,  "s")
@@ -422,7 +420,8 @@ record(calcout, "$(P):CH$(CHANNEL):computeMkrStartTime_")
 record(longout, "$(P):CH$(CHANNEL):MarkerEndPt")
 {
     field(DESC, "Stats marker end (sample)")
-    field(VAL,  "0")
+    field(VAL,  "$(NELM)")
+    field(PINI, "YES")
     field(DRVL, "0")
     field(EGU,  "pts")
     field(FLNK, "$(P):CH$(CHANNEL):computeMkrEndTime_")
@@ -467,6 +466,155 @@ record(calcout, "$(P):CH$(CHANNEL):resetMkr_End_")
     field(CALC, "A+B-1")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):MarkerEndPt PP")
+}
+
+# ============================================================
+# Auto Marker Detection (within acquired buffer)
+# ============================================================
+record(ao, "$(P):CH$(CHANNEL):AUTO_THRESHOLD")
+{
+    field(DESC, "Auto marker detection threshold")
+    field(DTYP, "Soft Channel")
+    field(PREC, "6")
+    field(VAL,  "0.1")
+    field(EGU,  "V")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P):CH$(CHANNEL):AUTO_MARKER")
+{
+    field(DESC, "Auto-find signal and set markers")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Find")
+    field(VAL,  "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):CH$(CHANNEL):auto_scan_reset_")
+    field(DOL,  "1")
+    field(OMSL, "supervisory")
+    field(OUT,  "$(P):CH$(CHANNEL):AUTO_MARKER.PROC")
+}
+
+# First reset window to full scope record so the next acquisition covers all data
+record(calcout, "$(P):CH$(CHANNEL):auto_scan_reset_")
+{
+    field(DESC, "Reset DataStart=1 before auto-scan")
+    field(CALC, "1")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):auto_scan_reset2_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):auto_scan_reset2_")
+{
+    field(DESC, "Reset WindowSize=NELM before auto-scan")
+    field(CALC, "$(NELM)")
+    field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
+    field(FLNK, "$(P):CH$(CHANNEL):auto_detect_signal_")
+}
+
+record(aSub, "$(P):CH$(CHANNEL):auto_detect_signal_")
+{
+    field(SNAM, "autoDetectSignal")
+    field(DESC, "Find signal edges automatically")
+
+    field(FTA, "DOUBLE") field(NOA, "1") field(INPA, "$(P):CH$(CHANNEL):AUTO_THRESHOLD")
+    field(FTB, "DOUBLE") field(NOB, "1") field(INPB, "$(P):CH$(CHANNEL):Xinc")
+    field(FTC, "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)") field(INPC, "$(P):CH$(CHANNEL):Waveform.VALA NPP NMS")
+    field(FTD, "LONG")   field(NOD, "1") field(INPD, "$(P):CH$(CHANNEL):NrPt")
+    field(FTE, "LONG")   field(NOE, "1") field(INPE, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(FTVB, "DOUBLE") field(NOVB, "1")
+    field(FTVC, "LONG")   field(NOVC, "1")
+    field(FTVD, "LONG")   field(NOVD, "1")
+    field(FTVE, "LONG")   field(NOVE, "1")
+
+    field(OUTA, "$(P):CH$(CHANNEL):AUTO_START_TIME PP")
+    field(OUTB, "$(P):CH$(CHANNEL):AUTO_END_TIME PP")
+    field(OUTC, "$(P):CH$(CHANNEL):AUTO_FOUND PP")
+    field(OUTD, "$(P):CH$(CHANNEL):AUTO_NEW_START PP")
+    field(OUTE, "$(P):CH$(CHANNEL):AUTO_NEW_SIZE PP")
+}
+
+record(ai, "$(P):CH$(CHANNEL):AUTO_START_TIME")
+{
+    field(DESC, "Auto-detected start time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU,  "s")
+    field(FLNK, "$(P):CH$(CHANNEL):apply_auto_markers_")
+}
+
+record(ai, "$(P):CH$(CHANNEL):AUTO_END_TIME")
+{
+    field(DESC, "Auto-detected end time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU,  "s")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AUTO_FOUND")
+{
+    field(DESC, "Signal found flag (1=found)")
+    field(DTYP, "Soft Channel")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AUTO_NEW_START")
+{
+    field(DESC, "Suggested new DataStart")
+    field(DTYP, "Soft Channel")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AUTO_NEW_SIZE")
+{
+    field(DESC, "Suggested new WindowSize")
+    field(DTYP, "Soft Channel")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):apply_auto_markers_")
+{
+    field(DESC, "Apply auto markers if found")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_FOUND NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AUTO_START_TIME NPP NMS")
+    field(CALC, "A>0?B:0")
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):set_auto_end_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):set_auto_end_")
+{
+    field(DESC, "Set end marker from auto-detected time")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_END_TIME NPP NMS")
+    field(CALC, "A")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):MarkerEnd PP")
+    field(FLNK, "$(P):CH$(CHANNEL):apply_auto_window_")
+}
+
+# When the signal was found, reframe the data window around the detected signal
+record(calcout, "$(P):CH$(CHANNEL):apply_auto_window_")
+{
+    field(DESC, "Apply auto-detected DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_FOUND NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AUTO_NEW_START NPP NMS")
+    field(CALC, "A>0?B:0")
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):apply_auto_winsize_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):apply_auto_winsize_")
+{
+    field(DESC, "Apply auto-detected WindowSize")
+    field(INPA, "$(P):CH$(CHANNEL):AUTO_FOUND NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AUTO_NEW_SIZE NPP NMS")
+    field(CALC, "A>0?B:0")
+    field(DOPT, "Use CALC")
+    field(OOPT, "When Non-zero")
+    field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
 }
 
 # ============================================================

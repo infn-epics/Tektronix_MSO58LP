@@ -135,10 +135,10 @@
           <color red="0" green="200" blue="255">
           </color>
         </color>
-        <line_width>1</line_width>
+          <line_width>1</line_width>
         <line_style>0</line_style>
-        <point_type>0</point_type>
-        <point_size>0</point_size>
+          <point_type>0</point_type>
+          <point_size>0</point_size>
         <visible>true</visible>
       </trace>
     </traces>
@@ -285,7 +285,7 @@
       <text>Statistics Window (markers)</text>
       <x>6</x>
       <y>4</y>
-      <width>260</width>
+      <width>165</width>
       <font>
         <font family="Liberation Sans" style="BOLD" size="12.0">
         </font>
@@ -305,6 +305,71 @@
         <color red="100" green="100" blue="100">
         </color>
       </foreground_color>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>Auto_Threshold_Label</name>
+      <text>Auto Threshold:</text>
+      <x>170</x>
+      <y>4</y>
+      <width>70</width>
+      <font>
+        <font family="Liberation Sans" style="REGULAR" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>Auto_Threshold_Entry</name>
+      <pv_name>$(P):CH$(CHAN):AUTO_THRESHOLD</pv_name>
+      <x>240</x>
+      <y>2</y>
+      <width>42</width>
+      <height>20</height>
+      <background_color>
+        <color red="255" green="255" blue="200">
+        </color>
+      </background_color>
+      <format>1</format>
+      <precision>3</precision>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>Auto_Detect_Button</name>
+      <actions>
+        <action type="write_pv">
+          <description>Auto Detect Signal</description>
+          <pv_name>$(P):CH$(CHAN):AUTO_MARKER</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <text>Auto Detect</text>
+      <x>284</x>
+      <y>2</y>
+      <width>52</width>
+      <height>20</height>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="8.0">
+        </font>
+      </font>
+      <background_color>
+        <color red="100" green="255" blue="100">
+        </color>
+      </background_color>
+      <tooltip>Automatically find signal and set markers</tooltip>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>Auto_Found_LED</name>
+      <pv_name>$(P):CH$(CHAN):AUTO_FOUND</pv_name>
+      <x>322</x>
+      <y>24</y>
+      <off_color>
+        <color red="80" green="80" blue="80">
+        </color>
+      </off_color>
+      <on_color>
+        <color red="0" green="200" blue="0">
+        </color>
+      </on_color>
+      <square>true</square>
+      <tooltip>Green when auto-detection finds a signal window</tooltip>
     </widget>
     <widget type="label" version="2.0.0">
       <name>Lbl_MStart</name>
