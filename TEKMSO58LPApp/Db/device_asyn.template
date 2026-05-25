@@ -276,3 +276,60 @@ record(mbbi, "$(P):DebugLevel_RBV")
     field(FRST, "Detail")
     field(FVST, "Trace")
 }
+
+# ============================================================
+# Waveform Storage (global session controls)
+# ------------------------------------------------------------
+# Path/Basename are CHAR-waveform "long string" PVs (use caput
+# -S or the OPI long-string widget to write).  Each enabled
+# channel that participates in a session dumps to a file:
+#    <Path>/<Basename>-<ChannelName>-<YYYYMMDDTHHMMSS>.dat
+# ============================================================
+record(waveform, "$(P):Store:Path")
+{
+    field(DESC, "Directory for waveform dumps")
+    field(FTVL, "CHAR")
+    field(NELM, "512")
+    field(PINI, "YES")
+}
+
+record(waveform, "$(P):Store:Basename")
+{
+    field(DESC, "Common file basename")
+    field(FTVL, "CHAR")
+    field(NELM, "128")
+    field(PINI, "YES")
+}
+
+record(longout, "$(P):Store:NumAcq")
+{
+    field(DESC, "Acquisitions per channel per session")
+    field(VAL,  "$(STORE_NUM_ACQ=100)")
+    field(DRVL, "1")
+    field(DRVH, "10000000")
+    field(PINI, "YES")
+}
+
+# Edge-trigger to start a storage session on every enabled channel
+record(bo, "$(P):Store:Start")
+{
+    field(DESC, "Start storage on enabled channels")
+    field(ZNAM, "Idle")
+    field(ONAM, "Start")
+    field(HIGH, "0.1")
+}
+
+# Edge-trigger to abort an in-progress session
+record(bo, "$(P):Store:Stop")
+{
+    field(DESC, "Abort storage session")
+    field(ZNAM, "Idle")
+    field(ONAM, "Stop")
+    field(HIGH, "0.1")
+}
+
+# Aggregate status (max of channel statuses; informational)
+record(stringin, "$(P):Store:LastError")
+{
+    field(DESC, "Last storage error (channel sets it)")
+}

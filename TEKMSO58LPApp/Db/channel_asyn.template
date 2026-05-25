@@ -697,3 +697,587 @@ record(calcout, "$(P):CH$(CHANNEL):resetDW_Size_")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):WindowSize PP")
 }
+
+# ============================================================
+# Auto-Discovery of Data Window
+# ------------------------------------------------------------
+# Iteratively slides the acquisition window forward in DataStart
+# steps of AutoIncrement until the signal amplitude (PeakToPeak,
+# computed by the driver over the current marker window) exceeds
+# AutoThreshold, or DataStart exceeds the maximum search start.
+#
+# Algorithm:
+#   1. User writes 1 to AutoDetect -> AutoStatus = Searching.
+#      Markers are reset to the current data window so PeakToPeak
+#      reflects the full acquisition window.
+#   2. On each new DataReady (waveform acquired) while Searching:
+#        - If PeakToPeak >= AutoThreshold -> AutoStatus = Found.
+#        - Else newStart = DataStart + AutoIncrement.
+#          If newStart > effectiveMax (AutoMaxStart > 0 ?
+#          AutoMaxStart : 50 * NELM) -> AutoStatus = NotFound.
+#          Else write newStart to DataStart and reset markers.
+#   3. Writing 1 to AutoStop while Searching halts the loop
+#      (AutoStatus = Stopped). Writing anything to AutoStatus
+#      other than Searching also halts the iteration.
+#
+# Macros (with defaults):
+#   AUTO_THRESHOLD   = 0.1  (V, peak-to-peak detection threshold)
+#   AUTO_INCREMENT   = 1000 (pts, DataStart step per iteration)
+#   AUTO_MAX_START   = 0    (pts, 0 = use 50 * NELM as ceiling)
+# ============================================================
+
+record(ao, "$(P):CH$(CHANNEL):AutoThreshold")
+{
+    field(DESC, "Auto-detect signal threshold")
+    field(PREC, "6")
+    field(EGU,  "V")
+    field(VAL,  "$(AUTO_THRESHOLD=0.1)")
+    field(PINI, "YES")
+}
+
+record(longout, "$(P):CH$(CHANNEL):AutoIncrement")
+{
+    field(DESC, "DataStart step per iteration")
+    field(VAL,  "$(AUTO_INCREMENT=1000)")
+    field(PINI, "YES")
+    field(DRVL, "1")
+    field(LOPR, "1")
+    field(EGU,  "pts")
+}
+
+record(longout, "$(P):CH$(CHANNEL):AutoMaxStart")
+{
+    field(DESC, "Max DataStart (0 = 50*NELM)")
+    field(VAL,  "$(AUTO_MAX_START=0)")
+    field(PINI, "YES")
+    field(DRVL, "0")
+    field(LOPR, "0")
+    field(EGU,  "pts")
+}
+
+# Effective max DataStart actually used by the iteration (read-only)
+record(calc, "$(P):CH$(CHANNEL):AutoMaxStart_RBV")
+{
+    field(DESC, "Effective max DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):AutoMaxStart CP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):NELM CP NMS")
+    field(CALC, "A>0?A:B*50")
+    field(EGU,  "pts")
+}
+
+record(mbbo, "$(P):CH$(CHANNEL):AutoStatus")
+{
+    field(DESC, "Auto-detect status")
+    field(ZRST, "Idle")      field(ZRVL, "0")
+    field(ONST, "Searching") field(ONVL, "1")
+    field(TWST, "Found")     field(TWVL, "2")
+    field(THST, "NotFound")  field(THVL, "3")
+    field(FRST, "Stopped")   field(FRVL, "4")
+    field(FVST, "Centering") field(FVVL, "5")
+    field(VAL,  "0")
+    field(PINI, "YES")
+}
+
+# Trigger: write 1 to start auto-discovery
+record(bo, "$(P):CH$(CHANNEL):AutoDetect")
+{
+    field(DESC, "Start auto-detect")
+    field(ZNAM, "Idle")
+    field(ONAM, "Start")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):autoStart_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):autoStart_")
+{
+    field(DESC, "Set status=Searching")
+    field(CALC, "1")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_Start_")
+}
+
+# Trigger: write 1 to halt search
+record(bo, "$(P):CH$(CHANNEL):AutoStop")
+{
+    field(DESC, "Stop auto-detect")
+    field(ZNAM, "Idle")
+    field(ONAM, "Stop")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):autoStopAction_")
+}
+
+record(calcout, "$(P):CH$(CHANNEL):autoStopAction_")
+{
+    field(DESC, "Stop if currently Searching")
+    field(INPA, "$(P):CH$(CHANNEL):AutoStatus NPP NMS")
+    field(CALC, "A=1?4:A")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+}
+
+# Eval after each new waveform; only acts while Searching.
+# Result code: 1 = Found, 2 = Continue, 0 = ignore (idle/stopped/finished)
+record(calcout, "$(P):CH$(CHANNEL):autoEval_")
+{
+    field(DESC, "Eval signal vs threshold")
+    field(INPA, "$(P):CH$(CHANNEL):DataReady CP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AutoStatus NPP NMS")
+    field(INPC, "$(P):CH$(CHANNEL):PeakToPeak NPP NMS")
+    field(INPD, "$(P):CH$(CHANNEL):AutoThreshold NPP NMS")
+    field(CALC, "B=1?(C>=D?1:2):0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):autoFound_.A PP")
+}
+
+# Step 1: if result was Found (1), set status to Centering (5).
+# The centering chain (autoCenterTrig_ -> autoFindEdge_ -> autoEdgeApply_
+# -> autoEdgeDone_) then refines DataStart so the signal sits at the
+# start of the window, and finally writes AutoStatus = Found (2).
+record(calcout, "$(P):CH$(CHANNEL):autoFound_")
+{
+    field(DESC, "Handle Found result")
+    field(INPA, "0")
+    field(CALC, "A=1?5:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoCenterTrig_")
+}
+
+# Bridge: in the Found path (autoFound_.A == 1), trigger centering aSub;
+# in the Continue path (autoFound_.A == 2), fall through to autoNext_.
+record(calcout, "$(P):CH$(CHANNEL):autoCenterTrig_")
+{
+    field(DESC, "Trigger edge-find aSub on Found")
+    field(INPA, "$(P):CH$(CHANNEL):autoFound_.A NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AutoCenter NPP NMS")
+    field(CALC, "(A=1)&&(B=1)?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):autoFindEdge_.PROC PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoFoundDirect_")
+}
+
+# If centering is disabled (AutoCenter=0) but signal was Found, jump
+# directly to status=Found(2) without running the aSub.
+record(calcout, "$(P):CH$(CHANNEL):autoFoundDirect_")
+{
+    field(DESC, "Found w/o centering -> status Found")
+    field(INPA, "$(P):CH$(CHANNEL):autoFound_.A NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):AutoCenter NPP NMS")
+    field(CALC, "(A=1)&&(B=0)?2:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoNext_")
+}
+
+# Step 2: if Continue (autoFound_.A == 2), compute newStart.
+# Output: -1 = overflow (NotFound), >0 = newStart, 0 = no action.
+record(calcout, "$(P):CH$(CHANNEL):autoNext_")
+{
+    field(DESC, "Compute next DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):autoFound_.A NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(INPC, "$(P):CH$(CHANNEL):AutoIncrement NPP NMS")
+    field(INPD, "$(P):CH$(CHANNEL):AutoMaxStart NPP NMS")
+    field(INPE, "$(P):CH$(CHANNEL):NELM NPP NMS")
+    field(CALC, "A=2?(B+C>(D>0?D:E*50)?-1:B+C):0")
+    field(DOPT, "Use CALC")
+    field(OOPT, "Every Time")
+    field(FLNK, "$(P):CH$(CHANNEL):autoOverflow_")
+}
+
+# Step 3: overflow -> set status NotFound (3)
+record(calcout, "$(P):CH$(CHANNEL):autoOverflow_")
+{
+    field(DESC, "Handle search-overflow")
+    field(INPA, "$(P):CH$(CHANNEL):autoNext_ NPP NMS")
+    field(CALC, "A=-1?3:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoWriteStart_")
+}
+
+# Step 4: positive newStart -> write to DataStart, then realign markers
+# with the new window so PeakToPeak on the next DataReady reflects the
+# freshly acquired window.
+record(calcout, "$(P):CH$(CHANNEL):autoWriteStart_")
+{
+    field(DESC, "Apply new DataStart")
+    field(INPA, "$(P):CH$(CHANNEL):autoNext_ NPP NMS")
+    field(CALC, "A>0?A:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_Start_")
+}
+
+# ----------------------------------------------------------------------
+# Window-centering: once a signal is detected, run the autoDetectSignal
+# aSub on the just-acquired Waveform to locate the rising edge inside
+# the current window, then shift DataStart so the edge lands at the
+# beginning of the next acquisition (minus an optional pre-trigger
+# margin to keep some baseline visible).
+# ----------------------------------------------------------------------
+
+# Enable / disable post-found centering (auto-discovery and manual)
+record(bo, "$(P):CH$(CHANNEL):AutoCenter")
+{
+    field(DESC, "Center signal at window start")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(VAL,  "$(AUTO_CENTER=1)")
+    field(PINI, "YES")
+}
+
+# Pre-signal margin (samples to keep BEFORE the detected edge)
+record(longout, "$(P):CH$(CHANNEL):AutoMargin")
+{
+    field(DESC, "Samples kept before signal start")
+    field(VAL,  "$(AUTO_MARGIN=100)")
+    field(EGU,  "pts")
+    field(DRVL, "0")
+    field(DRVH, "100000")
+    field(PINI, "YES")
+}
+
+# Manual "Center Now" trigger (re-runs aSub + offset apply on demand)
+record(bo, "$(P):CH$(CHANNEL):CenterNow")
+{
+    field(DESC, "Manual recenter")
+    field(ZNAM, "Idle")
+    field(ONAM, "Run")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):autoFindEdge_")
+}
+
+# aSub: edge detector. Inputs: threshold, xinc, waveform, nsamples.
+# Outputs (PP): start_time [s], end_time [s], found flag.
+record(aSub, "$(P):CH$(CHANNEL):autoFindEdge_")
+{
+    field(DESC, "Find signal edges in window")
+    field(SNAM, "autoDetectSignal")
+
+    field(FTA,  "DOUBLE") field(NOA, "1")
+    field(INPA, "$(P):CH$(CHANNEL):AutoThreshold NPP NMS")
+
+    field(FTB,  "DOUBLE") field(NOB, "1")
+    field(INPB, "$(P):CH$(CHANNEL):Xinc NPP NMS")
+
+    field(FTC,  "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)")
+    field(INPC, "$(P):CH$(CHANNEL):Waveform NPP NMS")
+
+    field(FTD,  "LONG")   field(NOD, "1")
+    field(INPD, "$(P):CH$(CHANNEL):NrPt NPP NMS")
+
+    field(FTVA, "DOUBLE") field(NOVA, "1")
+    field(FTVB, "DOUBLE") field(NOVB, "1")
+    field(FTVC, "LONG")   field(NOVC, "1")
+    field(FTVD, "LONG")   field(NOVD, "1")
+    field(FTVE, "LONG")   field(NOVE, "1")
+
+    field(OUTA, "$(P):CH$(CHANNEL):AutoEdgeStartTime PP")
+    field(OUTB, "$(P):CH$(CHANNEL):AutoEdgeEndTime PP")
+    field(OUTC, "$(P):CH$(CHANNEL):AutoEdgeFound PP")
+    field(OUTD, "$(P):CH$(CHANNEL):AutoEdgeStartIdx PP")
+    field(OUTE, "$(P):CH$(CHANNEL):AutoEdgeEndIdx PP")
+
+    field(FLNK, "$(P):CH$(CHANNEL):autoEdgeApply_")
+}
+
+record(ai, "$(P):CH$(CHANNEL):AutoEdgeStartTime")
+{
+    field(DESC, "Detected signal start time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU,  "s")
+}
+
+record(ai, "$(P):CH$(CHANNEL):AutoEdgeEndTime")
+{
+    field(DESC, "Detected signal end time")
+    field(DTYP, "Soft Channel")
+    field(PREC, "9")
+    field(EGU,  "s")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AutoEdgeStartIdx")
+{
+    field(DESC, "Detected signal start sample index")
+    field(DTYP, "Soft Channel")
+    field(EGU,  "samples")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AutoEdgeEndIdx")
+{
+    field(DESC, "Detected signal end sample index")
+    field(DTYP, "Soft Channel")
+    field(EGU,  "samples")
+}
+
+record(longin, "$(P):CH$(CHANNEL):AutoEdgeFound")
+{
+    field(DESC, "1 if edge was found")
+    field(DTYP, "Soft Channel")
+}
+
+# Convert detected start_time to a new DataStart sample index:
+#   offset_samples = floor(start_time / Xinc)
+#   newStart       = max(1, DataStart + offset_samples - AutoMargin)
+# Only writes when an edge was found (E>0). FLNKs to autoEdgeDone_ which
+# moves AutoStatus from Centering(5) -> Found(2).
+# A = signal start sample index *within the current window* (integer, 0..N-1)
+#     produced directly by autoDetectSignal (no Xinc round-trip).
+# C = current DataStart (absolute sample in scope record).
+# D = AutoMargin (samples to keep before the signal).
+# E = found flag.
+# newStart = MAX(1, C + A - D)
+record(calcout, "$(P):CH$(CHANNEL):autoEdgeApply_")
+{
+    field(DESC, "Shift DataStart to center signal")
+    field(INPA, "$(P):CH$(CHANNEL):AutoEdgeStartIdx NPP NMS")
+    field(INPC, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(INPD, "$(P):CH$(CHANNEL):AutoMargin NPP NMS")
+    field(INPE, "$(P):CH$(CHANNEL):AutoEdgeFound NPP NMS")
+    field(CALC, "(E>0)?MAX(1,C+A-D):0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoEdgeDone_")
+}
+
+# Finalize: write AutoStatus = Found (2) if status is still Centering (5).
+# Also realign markers to the freshly applied window.
+record(calcout, "$(P):CH$(CHANNEL):autoEdgeDone_")
+{
+    field(DESC, "Centering done -> Found")
+    field(INPA, "$(P):CH$(CHANNEL):AutoStatus NPP NMS")
+    field(CALC, "A=5?2:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):AutoStatus PP")
+    field(FLNK, "$(P):CH$(CHANNEL):resetMkr_Start_")
+}
+
+# ======================================================================
+# Waveform Storage (per-channel)
+# ----------------------------------------------------------------------
+# Each enabled channel maintains its own file when a global storage
+# session is started by $(P):Store:Start.  The C aSub function
+# `tekStoreWaveform` handles open/header/append/close; the records
+# below sequence the control word for that aSub:
+#     1 = INIT (open file, write metadata header)
+#     2 = APPEND (write one CSV row of Waveform)
+#     3 = CLOSE (force close)
+# After each APPEND the engine reports status == 2 when the requested
+# NumAcq has been written; Store:Active is then cleared automatically.
+# ======================================================================
+
+# Per-channel name (provided to the file name builder).
+record(stringout, "$(P):CH$(CHANNEL):Store:ChName")
+{
+    field(DESC, "Channel label for filename")
+    field(VAL,  "$(CHANAME=CH$(CHANNEL))")
+    field(PINI, "YES")
+}
+
+# Active flag: 1 while this channel is dumping rows to a file.
+record(bo, "$(P):CH$(CHANNEL):Store:Active")
+{
+    field(DESC, "Channel storage in progress")
+    field(ZNAM, "Idle")
+    field(ONAM, "Active")
+    field(VAL,  "0")
+    field(PINI, "YES")
+}
+
+# Optional per-channel opt-out (default = 1 = participate in sessions).
+record(bo, "$(P):CH$(CHANNEL):Store:Enable")
+{
+    field(DESC, "Allow storage on this channel")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+    field(VAL,  "$(STORE_ENABLE=1)")
+    field(PINI, "YES")
+}
+
+# Latest status from the engine: 0=idle, 1=open/active, 2=done, 3=closed
+record(longin, "$(P):CH$(CHANNEL):Store:Status")
+{
+    field(DESC, "Storage engine status")
+}
+
+# Currently-open file name (truncated to 40 chars by EPICS STRING).
+record(stringin, "$(P):CH$(CHANNEL):Store:File")
+{
+    field(DESC, "Open dump filename (truncated)")
+}
+
+# Rows written so far in current session.
+record(longin, "$(P):CH$(CHANNEL):Store:Count")
+{
+    field(DESC, "Rows written in session")
+}
+
+# Control word fed to the aSub on every PROC.
+record(longout, "$(P):CH$(CHANNEL):Store:Ctrl")
+{
+    field(DESC, "Engine action 0/1/2/3")
+    field(VAL,  "0")
+}
+
+# The C engine itself.  Processed by the trigger calcouts below.
+record(aSub, "$(P):CH$(CHANNEL):storeEngine_")
+{
+    field(DESC, "Per-channel store engine")
+    field(SNAM, "tekStoreWaveform")
+    field(INAM, "tekStoreWaveform_init")
+
+    field(FTA,  "LONG")   field(NOA, "1")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Ctrl NPP NMS")
+
+    field(FTB,  "CHAR")   field(NOB, "512")
+    field(INPB, "$(P):Store:Path NPP NMS")
+
+    field(FTC,  "CHAR")   field(NOC, "128")
+    field(INPC, "$(P):Store:Basename NPP NMS")
+
+    field(FTD,  "STRING") field(NOD, "1")
+    field(INPD, "$(P):CH$(CHANNEL):Store:ChName NPP NMS")
+
+    field(FTE,  "LONG")   field(NOE, "1")
+    field(INPE, "$(P):Store:NumAcq NPP NMS")
+
+    field(FTF,  "DOUBLE") field(NOF, "1")
+    field(INPF, "$(P):CH$(CHANNEL):Xinc NPP NMS")
+
+    field(FTG,  "DOUBLE") field(NOG, "1")
+    field(INPG, "$(P):CH$(CHANNEL):Ymult NPP NMS")
+
+    field(FTH,  "DOUBLE") field(NOH, "1")
+    field(INPH, "$(P):CH$(CHANNEL):Yzero NPP NMS")
+
+    field(FTI,  "DOUBLE") field(NOI, "1")
+    field(INPI, "$(P):CH$(CHANNEL):Yoff NPP NMS")
+
+    field(FTJ,  "DOUBLE") field(NOJ, "$(NELM)") field(NEVJ, "$(NELM)")
+    field(INPJ, "$(P):CH$(CHANNEL):Waveform NPP NMS")
+
+    field(FTK,  "LONG")   field(NOK, "1")
+    field(INPK, "$(P):CH$(CHANNEL):NrPt NPP NMS")
+
+    field(FTL,  "LONG")   field(NOL, "1")
+    field(INPL, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+
+    field(FTVA, "LONG")   field(NOVA, "1")
+    field(FTVB, "STRING") field(NOVB, "1")
+    field(FTVC, "LONG")   field(NOVC, "1")
+
+    field(OUTA, "$(P):CH$(CHANNEL):Store:Status PP")
+    field(OUTB, "$(P):CH$(CHANNEL):Store:File PP")
+    field(OUTC, "$(P):CH$(CHANNEL):Store:Count PP")
+
+    field(FLNK, "$(P):CH$(CHANNEL):storeAutoStop_")
+}
+
+# After every engine processing, if status == 2 (NumAcq reached) clear
+# the per-channel Active flag.
+record(calcout, "$(P):CH$(CHANNEL):storeAutoStop_")
+{
+    field(DESC, "Auto-stop when NumAcq reached")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Status NPP NMS")
+    field(CALC, "A=2?0:A")
+    field(OOPT, "On Change")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Active NPP")
+}
+
+# Trigger on global Store:Start: if Enable=1, set Ctrl=1, PROC engine,
+# then turn Active=1.
+record(calcout, "$(P):CH$(CHANNEL):storeStartTrig_")
+{
+    field(DESC, "Start storage on this channel")
+    field(INPA, "$(P):Store:Start CP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):Store:Enable NPP NMS")
+    field(CALC, "(A=1)&&(B=1)?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Ctrl PP")
+    field(FLNK, "$(P):CH$(CHANNEL):storeStartProc_")
+}
+record(calcout, "$(P):CH$(CHANNEL):storeStartProc_")
+{
+    field(DESC, "Process engine for INIT")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Ctrl NPP NMS")
+    field(CALC, "A=1?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):storeEngine_.PROC PP")
+    field(FLNK, "$(P):CH$(CHANNEL):storeMarkActive_")
+}
+record(calcout, "$(P):CH$(CHANNEL):storeMarkActive_")
+{
+    field(DESC, "Mark channel as actively storing")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Status NPP NMS")
+    field(CALC, "A=1?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Active NPP")
+}
+
+# Trigger on each DataReady tick when Active=1: set Ctrl=2 and PROC.
+record(calcout, "$(P):CH$(CHANNEL):storeTick_")
+{
+    field(DESC, "Append row on DataReady")
+    field(INPA, "$(P):CH$(CHANNEL):DataReady CP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):Store:Active NPP NMS")
+    field(CALC, "B=1?2:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Ctrl PP")
+    field(FLNK, "$(P):CH$(CHANNEL):storeTickProc_")
+}
+record(calcout, "$(P):CH$(CHANNEL):storeTickProc_")
+{
+    field(DESC, "Process engine for APPEND")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Ctrl NPP NMS")
+    field(CALC, "A=2?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):storeEngine_.PROC PP")
+}
+
+# Trigger on global Store:Stop: force CLOSE if Active, regardless of
+# Enable (so a session can always be aborted).
+record(calcout, "$(P):CH$(CHANNEL):storeStopTrig_")
+{
+    field(DESC, "Abort storage")
+    field(INPA, "$(P):Store:Stop CP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):Store:Active NPP NMS")
+    field(CALC, "(A=1)&&(B=1)?3:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Ctrl PP")
+    field(FLNK, "$(P):CH$(CHANNEL):storeStopProc_")
+}
+record(calcout, "$(P):CH$(CHANNEL):storeStopProc_")
+{
+    field(DESC, "Process engine for CLOSE")
+    field(INPA, "$(P):CH$(CHANNEL):Store:Ctrl NPP NMS")
+    field(CALC, "A=3?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):storeEngine_.PROC PP")
+    field(FLNK, "$(P):CH$(CHANNEL):storeForceIdle_")
+}
+record(calcout, "$(P):CH$(CHANNEL):storeForceIdle_")
+{
+    field(DESC, "Clear Active after CLOSE")
+    field(CALC, "0")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):Store:Active NPP")
+}
