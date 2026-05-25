@@ -394,16 +394,17 @@ record(longin, "$(P):CH$(CHANNEL):MarkerEndSample")
 
 # ============================================================
 # Marker Positions in Sample Numbers (user-writable)
-# Absolute scope sample numbers (1-indexed, matching DataStart)
-# Converted to time via Xinc and written to MarkerStart/MarkerEnd
-# for XY plot markers and driver stats computation.
+# Window-relative sample index (0-indexed, 0..WindowSize-1) so they
+# align with the OPI sample-index X axis. Converted to absolute time
+# via Xinc and DataStart, then written to MarkerStart/MarkerEnd for
+# driver stats computation.
 # ============================================================
 record(longout, "$(P):CH$(CHANNEL):MarkerStartPt")
 {
-    field(DESC, "Stats marker start (sample)")
-    field(VAL,  "$(START=1)")
+    field(DESC, "Stats marker start (sample, window-rel)")
+    field(VAL,  "0")
     field(PINI, "YES")
-    field(DRVL, "1")
+    field(DRVL, "0")
     field(EGU,  "pts")
     field(FLNK, "$(P):CH$(CHANNEL):computeMkrStartTime_")
 }
@@ -413,7 +414,8 @@ record(calcout, "$(P):CH$(CHANNEL):computeMkrStartTime_")
     field(DESC, "Convert start sample to time")
     field(INPA, "$(P):CH$(CHANNEL):MarkerStartPt NPP NMS")
     field(INPB, "$(P):CH$(CHANNEL):Xinc CP NMS")
-    field(CALC, "(A-1)*B")
+    field(INPC, "$(P):CH$(CHANNEL):DataStart CP NMS")
+    field(CALC, "(A+C-1)*B")
     field(DOPT, "Use CALC")
     field(OOPT, "Every Time")
     field(OUT,  "$(P):CH$(CHANNEL):MarkerStart PP")
@@ -421,7 +423,7 @@ record(calcout, "$(P):CH$(CHANNEL):computeMkrStartTime_")
 
 record(longout, "$(P):CH$(CHANNEL):MarkerEndPt")
 {
-    field(DESC, "Stats marker end (sample)")
+    field(DESC, "Stats marker end (sample, window-rel)")
     field(VAL,  "0")
     field(DRVL, "0")
     field(EGU,  "pts")
@@ -433,7 +435,8 @@ record(calcout, "$(P):CH$(CHANNEL):computeMkrEndTime_")
     field(DESC, "Convert end sample to time")
     field(INPA, "$(P):CH$(CHANNEL):MarkerEndPt NPP NMS")
     field(INPB, "$(P):CH$(CHANNEL):Xinc CP NMS")
-    field(CALC, "A>0?(A-1)*B:0")
+    field(INPC, "$(P):CH$(CHANNEL):DataStart CP NMS")
+    field(CALC, "A>0?(A+C-1)*B:0")
     field(DOPT, "Use CALC")
     field(OOPT, "Every Time")
     field(OUT,  "$(P):CH$(CHANNEL):MarkerEnd PP")
@@ -451,9 +454,8 @@ record(bo, "$(P):CH$(CHANNEL):ResetMarkers")
 
 record(calcout, "$(P):CH$(CHANNEL):resetMkr_Start_")
 {
-    field(DESC, "Reset marker start to DataStart")
-    field(INPA, "$(P):CH$(CHANNEL):DataStart NPP NMS")
-    field(CALC, "A")
+    field(DESC, "Reset marker start to window begin (0)")
+    field(CALC, "0")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):MarkerStartPt PP")
     field(FLNK, "$(P):CH$(CHANNEL):resetMkr_End_")
@@ -461,12 +463,77 @@ record(calcout, "$(P):CH$(CHANNEL):resetMkr_Start_")
 
 record(calcout, "$(P):CH$(CHANNEL):resetMkr_End_")
 {
-    field(DESC, "Reset marker end to window end")
-    field(INPA, "$(P):CH$(CHANNEL):DataStart NPP NMS")
+    field(DESC, "Reset marker end to window end (WindowSize-1)")
     field(INPB, "$(P):CH$(CHANNEL):WindowSize NPP NMS")
-    field(CALC, "A+B-1")
+    field(CALC, "B-1")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):MarkerEndPt PP")
+}
+
+# ============================================================
+# Snap markers to first threshold crossing
+# FindMarkerStart : scans the current Waveform buffer LEFT->RIGHT,
+#                   sets MarkerStartPt to the first index where
+#                   |sample| > AutoThreshold.
+# FindMarkerEnd   : scans RIGHT->LEFT, sets MarkerEndPt similarly.
+# If nothing crosses threshold the marker is left at the window edge.
+# ============================================================
+record(bo, "$(P):CH$(CHANNEL):FindMarkerStart")
+{
+    field(DESC, "Snap start marker to first xing (L)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Find")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):findMkrStart_")
+}
+
+record(aSub, "$(P):CH$(CHANNEL):findMkrStart_")
+{
+    field(DESC, "Scan waveform L->R for threshold")
+    field(SNAM, "findMarkerStart")
+
+    field(FTA,  "DOUBLE") field(NOA, "1")
+    field(INPA, "$(P):CH$(CHANNEL):AutoThreshold NPP NMS")
+
+    field(FTC,  "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)")
+    field(INPC, "$(P):CH$(CHANNEL):Waveform NPP NMS")
+
+    field(FTD,  "LONG")   field(NOD, "1")
+    field(INPD, "$(P):CH$(CHANNEL):NrPt NPP NMS")
+
+    field(FTVA, "LONG")   field(NOVA, "1")
+    field(FTVB, "LONG")   field(NOVB, "1")
+
+    field(OUTA, "$(P):CH$(CHANNEL):MarkerStartPt PP")
+}
+
+record(bo, "$(P):CH$(CHANNEL):FindMarkerEnd")
+{
+    field(DESC, "Snap end marker to first xing (R)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Find")
+    field(HIGH, "0.1")
+    field(FLNK, "$(P):CH$(CHANNEL):findMkrEnd_")
+}
+
+record(aSub, "$(P):CH$(CHANNEL):findMkrEnd_")
+{
+    field(DESC, "Scan waveform R->L for threshold")
+    field(SNAM, "findMarkerEnd")
+
+    field(FTA,  "DOUBLE") field(NOA, "1")
+    field(INPA, "$(P):CH$(CHANNEL):AutoThreshold NPP NMS")
+
+    field(FTC,  "DOUBLE") field(NOC, "$(NELM)") field(NEVC, "$(NELM)")
+    field(INPC, "$(P):CH$(CHANNEL):Waveform NPP NMS")
+
+    field(FTD,  "LONG")   field(NOD, "1")
+    field(INPD, "$(P):CH$(CHANNEL):NrPt NPP NMS")
+
+    field(FTVA, "LONG")   field(NOVA, "1")
+    field(FTVB, "LONG")   field(NOVB, "1")
+
+    field(OUTA, "$(P):CH$(CHANNEL):MarkerEndPt PP")
 }
 
 # ============================================================
@@ -1035,7 +1102,12 @@ record(longin, "$(P):CH$(CHANNEL):AutoEdgeFound")
 # C = current DataStart (absolute sample in scope record).
 # D = AutoMargin (samples to keep before the signal).
 # E = found flag.
-# newStart = MAX(1, C + A - D)
+# F = current DataReady counter (driver-incremented per acquisition).
+# G = DataReady value captured at last successful centering apply.
+# Freshness gate: skip the shift if F<=G, i.e. the buffer still reflects
+# the previous DataStart -- otherwise consecutive Center Now presses
+# would re-apply the same offset and walk past the signal.
+# newStart = MAX(1, C + A - D)  (only if E>0 and F>G)
 record(calcout, "$(P):CH$(CHANNEL):autoEdgeApply_")
 {
     field(DESC, "Shift DataStart to center signal")
@@ -1043,11 +1115,34 @@ record(calcout, "$(P):CH$(CHANNEL):autoEdgeApply_")
     field(INPC, "$(P):CH$(CHANNEL):DataStart NPP NMS")
     field(INPD, "$(P):CH$(CHANNEL):AutoMargin NPP NMS")
     field(INPE, "$(P):CH$(CHANNEL):AutoEdgeFound NPP NMS")
-    field(CALC, "(E>0)?MAX(1,C+A-D):0")
+    field(INPF, "$(P):CH$(CHANNEL):DataReady NPP NMS")
+    field(INPG, "$(P):CH$(CHANNEL):LastCenterRdy NPP NMS")
+    field(CALC, "(E>0)&&(F>G)?MAX(1,C+A-D):0")
     field(OOPT, "When Non-zero")
     field(DOPT, "Use CALC")
     field(OUT,  "$(P):CH$(CHANNEL):DataStart PP")
+    field(FLNK, "$(P):CH$(CHANNEL):autoEdgeStamp_")
+}
+
+# Stamp the DataReady counter at the time of the shift so the next
+# Center Now / auto-found cycle waits for a fresh acquisition.
+record(calcout, "$(P):CH$(CHANNEL):autoEdgeStamp_")
+{
+    field(DESC, "Record DataReady at last center")
+    field(INPA, "$(P):CH$(CHANNEL):autoEdgeApply_.VAL NPP NMS")
+    field(INPB, "$(P):CH$(CHANNEL):DataReady NPP NMS")
+    field(CALC, "A>0?B:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):CH$(CHANNEL):LastCenterRdy PP")
     field(FLNK, "$(P):CH$(CHANNEL):autoEdgeDone_")
+}
+
+record(longout, "$(P):CH$(CHANNEL):LastCenterRdy")
+{
+    field(DESC, "DataReady at last centering")
+    field(VAL,  "0")
+    field(PINI, "YES")
 }
 
 # Finalize: write AutoStatus = Found (2) if status is still Centering (5).

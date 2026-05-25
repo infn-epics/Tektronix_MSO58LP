@@ -56,6 +56,7 @@ $(APPNAME)_DBD += drvVxi11.dbd
 
 $(APPNAME)_DBD += wavestats.dbd
 $(APPNAME)_DBD += autoDetectSignal.dbd
+$(APPNAME)_DBD += findMarkerEdge.dbd
 $(APPNAME)_DBD += tekStoreWaveform.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
@@ -99,6 +100,7 @@ endif
 $(APPNAME)_LIBS += $(APPNAME)iocSupport
 $(APPNAME)iocSupport_SRCS += wavestats.c
 $(APPNAME)iocSupport_SRCS += autoDetectSignal.c
+$(APPNAME)iocSupport_SRCS += findMarkerEdge.c
 $(APPNAME)iocSupport_SRCS += tekStoreWaveform.c
 
 # ASYN driver for high-speed acquisition
