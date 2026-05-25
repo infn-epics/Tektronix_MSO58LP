@@ -83,7 +83,7 @@
     </title_font>
     <show_toolbar>true</show_toolbar>
     <x_axis>
-      <title>Time (s)</title>
+      <title>Samples (window relative)</title>
       <autoscale>true</autoscale>
       <log_scale>false</log_scale>
       <minimum>0.0</minimum>
@@ -126,7 +126,7 @@
     <traces>
       <trace>
         <name>CH$(CHAN)</name>
-        <x_pv>$(P):CH$(CHAN):TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH$(CHAN):Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -143,22 +143,6 @@
       </trace>
     </traces>
     <marker>
-      <marker>
-        <color>
-          <color red="0" green="100" blue="255">
-          </color>
-        </color>
-        <pv_name>$(P):CH$(CHAN):MarkerStart</pv_name>
-        <interactive>true</interactive>
-      </marker>
-      <marker>
-        <color>
-          <color red="255" green="50" blue="50">
-          </color>
-        </color>
-        <pv_name>$(P):CH$(CHAN):MarkerEnd</pv_name>
-        <interactive>true</interactive>
-      </marker>
     </marker>
   </widget>
   <widget type="group" version="3.0.0">

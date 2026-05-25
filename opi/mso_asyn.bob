@@ -151,7 +151,7 @@
       </rule>
     </rules>
     <x_axis>
-      <title>Time (s)</title>
+      <title>Samples (window relative)</title>
       <autoscale>true</autoscale>
       <log_scale>false</log_scale>
       <minimum>0.0</minimum>
@@ -194,7 +194,7 @@
     <traces>
       <trace>
         <name>CH1</name>
-        <x_pv>$(P):CH1:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH1:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -211,7 +211,7 @@
       </trace>
       <trace>
         <name>CH2</name>
-        <x_pv>$(P):CH2:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH2:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -228,7 +228,7 @@
       </trace>
       <trace>
         <name>CH3</name>
-        <x_pv>$(P):CH3:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH3:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -245,7 +245,7 @@
       </trace>
       <trace>
         <name>CH4</name>
-        <x_pv>$(P):CH4:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH4:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -262,7 +262,7 @@
       </trace>
       <trace>
         <name>CH5</name>
-        <x_pv>$(P):CH5:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH5:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -279,7 +279,7 @@
       </trace>
       <trace>
         <name>CH6</name>
-        <x_pv>$(P):CH6:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH6:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -296,7 +296,7 @@
       </trace>
       <trace>
         <name>CH7</name>
-        <x_pv>$(P):CH7:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH7:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
@@ -313,7 +313,7 @@
       </trace>
       <trace>
         <name>CH8</name>
-        <x_pv>$(P):CH8:TimeArray</x_pv>
+        <x_pv></x_pv>
         <y_pv>$(P):CH8:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>

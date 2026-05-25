@@ -972,6 +972,17 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
         scaledWaveform_[channel][i] = (rawWaveform_[channel][i] - yoff) * ymult + yzero;
         timeArray_[channel][i] = (dataStart - 1 + i) * xinc;  /* Account for start offset */
     }
+    /* Mark trailing (unused) buffer slots as NaN so plot widgets / clients
+     * that read the full NELM array do not draw stale samples from
+     * previous, larger acquisitions. NaN is universally treated as
+     * "missing value" by Phoebus xyplot and skipped by autoscale. */
+    {
+        double nanv = (double)NAN;
+        for (i = numPoints; i < maxPoints_; i++) {
+            scaledWaveform_[channel][i] = nanv;
+            timeArray_[channel][i]      = nanv;
+        }
+    }
 
     epicsMutexUnlock(dataLock_);
     debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: dataLock_ released, numPoints=%d\n", numPoints);
