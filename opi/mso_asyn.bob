@@ -337,6 +337,7 @@
         </color>
         <pv_name>$(P):CH1:MarkerStart</pv_name>
         <interactive>true</interactive>
+        <visible>true</visible>
       </marker>
       <marker>
         <color>
@@ -345,6 +346,7 @@
         </color>
         <pv_name>$(P):CH1:MarkerEnd</pv_name>
         <interactive>true</interactive>
+        <visible>true</visible>
       </marker>
     </marker>
   </widget>
@@ -3703,6 +3705,495 @@
         <color red="120" green="120" blue="120">
         </color>
       </foreground_color>
+    </widget>
+  </widget>
+  <widget type="group" version="3.0.0">
+    <name>Storage_Control</name>
+    <x>1308</x>
+    <y>42</y>
+    <width>254</width>
+    <height>336</height>
+    <style>1</style>
+    <background_color>
+      <color red="240" green="230" blue="225">
+      </color>
+    </background_color>
+    <widget type="label" version="2.0.0">
+      <name>St_Title</name>
+      <text>Waveform Storage</text>
+      <x>6</x>
+      <y>6</y>
+      <width>240</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="12.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_LblPath</name>
+      <text>Path</text>
+      <x>6</x>
+      <y>34</y>
+      <width>50</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>St_Path</name>
+      <pv_name>$(P):Store:Path</pv_name>
+      <x>58</x>
+      <y>32</y>
+      <width>190</width>
+      <height>22</height>
+      <format>6</format>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_LblBase</name>
+      <text>Basename</text>
+      <x>6</x>
+      <y>60</y>
+      <width>50</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>St_Base</name>
+      <pv_name>$(P):Store:Basename</pv_name>
+      <x>58</x>
+      <y>58</y>
+      <width>190</width>
+      <height>22</height>
+      <format>6</format>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_LblN</name>
+      <text>NumAcq</text>
+      <x>6</x>
+      <y>86</y>
+      <width>50</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>St_NumAcq</name>
+      <pv_name>$(P):Store:NumAcq</pv_name>
+      <x>58</x>
+      <y>84</y>
+      <width>80</width>
+      <height>22</height>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>St_Start</name>
+      <actions>
+        <action type="write_pv">
+          <description>Start</description>
+          <pv_name>$(pv_name)</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <pv_name>$(P):Store:Start</pv_name>
+      <text>Start</text>
+      <x>6</x>
+      <y>116</y>
+      <width>110</width>
+      <height>28</height>
+      <background_color>
+        <color red="200" green="240" blue="200">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>St_Stop</name>
+      <actions>
+        <action type="write_pv">
+          <description>Stop</description>
+          <pv_name>$(pv_name)</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <pv_name>$(P):Store:Stop</pv_name>
+      <text>Stop</text>
+      <x>138</x>
+      <y>116</y>
+      <width>110</width>
+      <height>28</height>
+      <background_color>
+        <color red="240" green="210" blue="200">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrChan</name>
+      <text>Per-channel</text>
+      <x>6</x>
+      <y>152</y>
+      <width>120</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrCh</name>
+      <text>CH</text>
+      <x>6</x>
+      <y>172</y>
+      <width>22</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrEn</name>
+      <text>En</text>
+      <x>32</x>
+      <y>172</y>
+      <width>22</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrAct</name>
+      <text>Active</text>
+      <x>58</x>
+      <y>172</y>
+      <width>40</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrCnt</name>
+      <text>Count</text>
+      <x>104</x>
+      <y>172</y>
+      <width>40</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_HdrFile</name>
+      <text>File</text>
+      <x>150</x>
+      <y>172</y>
+      <width>98</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="9.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch1</name>
+      <text>1</text>
+      <x>6</x>
+      <y>192</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En1</name>
+      <pv_name>$(P):CH1:Store:Enable</pv_name>
+      <x>30</x>
+      <y>192</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A1</name>
+      <pv_name>$(P):CH1:Store:Active</pv_name>
+      <x>62</x>
+      <y>192</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt1</name>
+      <pv_name>$(P):CH1:Store:Count</pv_name>
+      <x>92</x>
+      <y>192</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File1</name>
+      <pv_name>$(P):CH1:Store:File</pv_name>
+      <x>148</x>
+      <y>192</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch2</name>
+      <text>2</text>
+      <x>6</x>
+      <y>208</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En2</name>
+      <pv_name>$(P):CH2:Store:Enable</pv_name>
+      <x>30</x>
+      <y>208</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A2</name>
+      <pv_name>$(P):CH2:Store:Active</pv_name>
+      <x>62</x>
+      <y>208</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt2</name>
+      <pv_name>$(P):CH2:Store:Count</pv_name>
+      <x>92</x>
+      <y>208</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File2</name>
+      <pv_name>$(P):CH2:Store:File</pv_name>
+      <x>148</x>
+      <y>208</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch3</name>
+      <text>3</text>
+      <x>6</x>
+      <y>227</y>
+      <width>22</width>
+      <height>16</height>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En3</name>
+      <pv_name>$(P):CH3:Store:Enable</pv_name>
+      <x>30</x>
+      <y>224</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A3</name>
+      <pv_name>$(P):CH3:Store:Active</pv_name>
+      <x>62</x>
+      <y>224</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt3</name>
+      <pv_name>$(P):CH3:Store:Count</pv_name>
+      <x>92</x>
+      <y>224</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File3</name>
+      <pv_name>$(P):CH3:Store:File</pv_name>
+      <x>148</x>
+      <y>224</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch4</name>
+      <text>4</text>
+      <x>6</x>
+      <y>240</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En4</name>
+      <pv_name>$(P):CH4:Store:Enable</pv_name>
+      <x>30</x>
+      <y>240</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A4</name>
+      <pv_name>$(P):CH4:Store:Active</pv_name>
+      <x>62</x>
+      <y>240</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt4</name>
+      <pv_name>$(P):CH4:Store:Count</pv_name>
+      <x>92</x>
+      <y>240</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File4</name>
+      <pv_name>$(P):CH4:Store:File</pv_name>
+      <x>148</x>
+      <y>240</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch5</name>
+      <text>5</text>
+      <x>6</x>
+      <y>256</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En5</name>
+      <pv_name>$(P):CH5:Store:Enable</pv_name>
+      <x>30</x>
+      <y>256</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A5</name>
+      <pv_name>$(P):CH5:Store:Active</pv_name>
+      <x>62</x>
+      <y>256</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt5</name>
+      <pv_name>$(P):CH5:Store:Count</pv_name>
+      <x>92</x>
+      <y>256</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File5</name>
+      <pv_name>$(P):CH5:Store:File</pv_name>
+      <x>148</x>
+      <y>256</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch6</name>
+      <text>6</text>
+      <x>6</x>
+      <y>272</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En6</name>
+      <pv_name>$(P):CH6:Store:Enable</pv_name>
+      <x>30</x>
+      <y>272</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A6</name>
+      <pv_name>$(P):CH6:Store:Active</pv_name>
+      <x>62</x>
+      <y>272</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt6</name>
+      <pv_name>$(P):CH6:Store:Count</pv_name>
+      <x>92</x>
+      <y>272</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File6</name>
+      <pv_name>$(P):CH6:Store:File</pv_name>
+      <x>148</x>
+      <y>272</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch7</name>
+      <text>7</text>
+      <x>6</x>
+      <y>288</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En7</name>
+      <pv_name>$(P):CH7:Store:Enable</pv_name>
+      <x>30</x>
+      <y>288</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A7</name>
+      <pv_name>$(P):CH7:Store:Active</pv_name>
+      <x>62</x>
+      <y>288</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt7</name>
+      <pv_name>$(P):CH7:Store:Count</pv_name>
+      <x>92</x>
+      <y>288</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File7</name>
+      <pv_name>$(P):CH7:Store:File</pv_name>
+      <x>148</x>
+      <y>288</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>St_Ch8</name>
+      <text>8</text>
+      <x>6</x>
+      <y>304</y>
+      <width>22</width>
+    </widget>
+    <widget type="bool_button" version="2.0.0">
+      <name>St_En8</name>
+      <pv_name>$(P):CH8:Store:Enable</pv_name>
+      <x>30</x>
+      <y>304</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="led" version="2.0.0">
+      <name>St_A8</name>
+      <pv_name>$(P):CH8:Store:Active</pv_name>
+      <x>62</x>
+      <y>304</y>
+      <width>22</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_Cnt8</name>
+      <pv_name>$(P):CH8:Store:Count</pv_name>
+      <x>92</x>
+      <y>304</y>
+      <width>50</width>
+      <height>14</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>St_File8</name>
+      <pv_name>$(P):CH8:Store:File</pv_name>
+      <x>148</x>
+      <y>304</y>
+      <height>14</height>
+      <horizontal_alignment>2</horizontal_alignment>
     </widget>
   </widget>
 </display>

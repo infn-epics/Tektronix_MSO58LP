@@ -56,6 +56,7 @@ $(APPNAME)_DBD += drvVxi11.dbd
 
 $(APPNAME)_DBD += wavestats.dbd
 $(APPNAME)_DBD += autoDetectSignal.dbd
+$(APPNAME)_DBD += tekStoreWaveform.dbd
 #$(APPNAME)_DBD += asubFunctions.dbd
 
 # ASYN driver for high-speed acquisition (>10Hz)
@@ -98,6 +99,7 @@ endif
 $(APPNAME)_LIBS += $(APPNAME)iocSupport
 $(APPNAME)iocSupport_SRCS += wavestats.c
 $(APPNAME)iocSupport_SRCS += autoDetectSignal.c
+$(APPNAME)iocSupport_SRCS += tekStoreWaveform.c
 
 # ASYN driver for high-speed acquisition
 $(APPNAME)iocSupport_SRCS += drvTekMSO58LP.cpp

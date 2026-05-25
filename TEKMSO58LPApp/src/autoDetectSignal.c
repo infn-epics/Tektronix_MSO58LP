@@ -29,7 +29,9 @@ static long autoDetectSignal(aSubRecord *prec)
     double *start_time = (double *)prec->vala;
     double *end_time = (double *)prec->valb;
     long *found = (long *)prec->valc;
-    
+    long *start_idx_out = (prec->novd > 0 && prec->vald) ? (long *)prec->vald : NULL;
+    long *end_idx_out   = (prec->nove > 0 && prec->vale) ? (long *)prec->vale : NULL;
+
     long i;
     long start_idx = -1;
     long end_idx = -1;
@@ -39,6 +41,8 @@ static long autoDetectSignal(aSubRecord *prec)
     *start_time = 0.0;
     *end_time = 0.0;
     *found = 0;
+    if (start_idx_out) *start_idx_out = 0;
+    if (end_idx_out)   *end_idx_out = 0;
     
     /* Validate inputs */
     if (nsamples <= 0 || nsamples > (long)prec->nec) {
@@ -100,6 +104,8 @@ static long autoDetectSignal(aSubRecord *prec)
         *start_time = start_idx * xinc;
         *end_time = end_idx * xinc;
         *found = 1;
+        if (start_idx_out) *start_idx_out = start_idx;
+        if (end_idx_out)   *end_idx_out   = end_idx;
         
         printf("autoDetectSignal: Signal found from sample %ld to %ld (%.6e s to %.6e s)\n",
                start_idx, end_idx, *start_time, *end_time);
