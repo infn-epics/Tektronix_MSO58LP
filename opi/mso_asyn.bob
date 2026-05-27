@@ -60,6 +60,21 @@
     <y>12</y>
     <width>80</width>
   </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Refresh_Button</name>
+    <actions>
+      <action type="write_pv">
+        <description>Refresh</description>
+        <pv_name>$(pv_name)</pv_name>
+        <value>1</value>
+      </action>
+    </actions>
+    <pv_name>$(P):Refresh</pv_name>
+    <x>940</x>
+    <y>8</y>
+    <width>90</width>
+    <tooltip>$(actions)</tooltip>
+  </widget>
   <widget type="xyplot" version="3.0.0">
     <name>Waveform_Plot</name>
     <x>6</x>
