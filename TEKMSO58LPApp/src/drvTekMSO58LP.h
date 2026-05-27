@@ -38,6 +38,7 @@
 #define TEK_RECORD_LENGTH_STRING    "TEK_RECORD_LENGTH"
 #define TEK_ACQUIRE_STRING          "TEK_ACQUIRE"
 #define TEK_RUN_STOP_STRING         "TEK_RUN_STOP"
+#define TEK_REFRESH_STRING          "TEK_REFRESH"
 
 /* Per-channel parameters (suffix with channel number) */
 #define TEK_CH_ENABLE_STRING        "TEK_CH_ENABLE"
@@ -154,6 +155,7 @@ protected:
     int P_RecordLength;
     int P_Acquire;
     int P_RunStop;
+    int P_Refresh;
     
     /* Per-channel parameters - arrays indexed by channel */
     int P_ChEnable[TEK_MAX_CHANNELS];
@@ -279,6 +281,7 @@ private:
     epicsTimeStamp lastAcqTime_[TEK_MAX_CHANNELS];
     int firstAcq_[TEK_MAX_CHANNELS];  /* 1 = first acquisition pending */
     int configRead_[TEK_MAX_CHANNELS]; /* 0 = config not yet read */
+    int configGood_[TEK_MAX_CHANNELS]; /* 0 = no valid (non-zero) config obtained yet */
     
     /* Statistics */
     unsigned long pollCount_;

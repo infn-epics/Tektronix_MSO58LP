@@ -115,6 +115,7 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
     createParam(TEK_RECORD_LENGTH_STRING, asynParamInt32,   &P_RecordLength);
     createParam(TEK_ACQUIRE_STRING,       asynParamInt32,   &P_Acquire);
     createParam(TEK_RUN_STOP_STRING,      asynParamInt32,   &P_RunStop);
+    createParam(TEK_REFRESH_STRING,       asynParamInt32,   &P_Refresh);
     
     /* Diagnostic parameters */
     createParam(TEK_POLL_COUNT_STRING,    asynParamInt32,   &P_PollCount);
@@ -241,6 +242,7 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
         yzero_[i] = 0.0;
         firstAcq_[i] = 1;
         configRead_[i] = 0;
+        configGood_[i] = 0;
         lastDataWidth_[i] = 0;  /* 0 = not yet sent */
         memset(&lastAcqTime_[i], 0, sizeof(epicsTimeStamp));
         
@@ -450,9 +452,12 @@ void drvTekMSO58LP::pollerThread()
 
                 if (enabledCh) {
                     debugPrint(TEK_DEBUG_TRACE, "DEBUG: Reading channel %d (enabled)\n", i+1);
-                    /* Read channel configuration on first enable or periodically */
-                    if (!configRead_[i] || (pollCount_ % 100) == 0) {
-                        debugPrint(TEK_DEBUG_INFO, "DEBUG: Reading channel %d config (first=%d)\n", i+1, !configRead_[i]);
+                    /* Read channel configuration:
+                     * - on first enable (!configRead_)
+                     * - repeatedly every poll until a good (non-zero) config is obtained (!configGood_)
+                     * - periodically every 100 polls as a fallback */
+                    if (!configRead_[i] || !configGood_[i] || (pollCount_ % 100) == 0) {
+                        debugPrint(TEK_DEBUG_INFO, "DEBUG: Reading channel %d config (first=%d, good=%d)\n", i+1, !configRead_[i], configGood_[i]);
                         readChannelConfig(i);
                         configRead_[i] = 1;
                     }
@@ -565,6 +570,7 @@ asynStatus drvTekMSO58LP::connectToScope()
         for (int j = 0; j < numChannels_; j++) {
             lastDataWidth_[j] = 0;
             configRead_[j] = 0;
+            configGood_[j] = 0;
         }
         
         return asynSuccess;
@@ -771,12 +777,13 @@ asynStatus drvTekMSO58LP::readChannelConfig(int channel)
         yzero = atof(val ? val + 1 : response);
     }
     
-    /* Warn if critical values are zero */
+    /* Warn if critical values are zero; keep last valid cached value rather than
+     * overwriting with zero (e.g. during timebase switching or a failed query). */
     if (xinc == 0.0) {
-        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d xinc=0! Time array will be all zeros\n", ch);
+        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d xinc=0! Keeping last cached value (%e)\n", ch, xinc_[channel]);
     }
     if (ymult == 0.0) {
-        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d ymult=0! Waveform will be all zeros\n", ch);
+        debugPrint(TEK_DEBUG_ERROR, "WARNING: readChannelConfig ch%d ymult=0! Keeping last cached value (%e)\n", ch, ymult_[channel]);
     }
 
     status = query("WFMOutpre:YUNit?", response, sizeof(response));
@@ -789,15 +796,25 @@ asynStatus drvTekMSO58LP::readChannelConfig(int channel)
         strncpy(yunit, p, sizeof(yunit) - 1);
     }
 
-    /* Update cache and parameters */
-    xinc_[channel] = xinc;
-    ymult_[channel] = ymult;
+    /* Update cache and parameters — only store non-zero values for xinc/ymult.
+     * yoff and yzero may legitimately be 0, so always store those. */
+    if (xinc != 0.0) {
+        xinc_[channel] = xinc;
+    }
+    if (ymult != 0.0) {
+        ymult_[channel] = ymult;
+    }
     yoff_[channel] = yoff;
     yzero_[channel] = yzero;
 
+    /* Mark config as good only when both critical values are non-zero */
+    if (xinc_[channel] != 0.0 && ymult_[channel] != 0.0) {
+        configGood_[channel] = 1;
+    }
+
     lock();
-    setDoubleParam(P_ChXinc[channel], xinc);
-    setDoubleParam(P_ChYmult[channel], ymult);
+    if (xinc != 0.0) setDoubleParam(P_ChXinc[channel], xinc_[channel]);
+    if (ymult != 0.0) setDoubleParam(P_ChYmult[channel], ymult_[channel]);
     setDoubleParam(P_ChYoff[channel], yoff);
     setDoubleParam(P_ChYzero[channel], yzero);
     setIntegerParam(P_ChNrPt[channel], nrPt);
@@ -1235,6 +1252,14 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             writeCmd("ACQuire:STATE STOP");
         }
     }
+    else if (function == P_Refresh) {
+        /* Force re-read of channel config on next poll for all channels */
+        debugPrint(TEK_DEBUG_INFO, "DEBUG: Refresh requested — resetting configGood for all channels\n");
+        for (i = 0; i < numChannels_; i++) {
+            configRead_[i] = 0;
+            configGood_[i] = 0;
+        }
+    }
 
     /* Channel enable parameters */
     for (i = 0; i < numChannels_; i++) {
@@ -1251,6 +1276,7 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             /* Width changed - force config re-read to get updated YMUlt */
             debugPrint(TEK_DEBUG_INFO, "DEBUG: DataWidth changed for channel %d to %d\n", i+1, value);
             configRead_[i] = 0;
+            configGood_[i] = 0;
             break;
         }
         if (function == P_ChResetStats[i]) {
