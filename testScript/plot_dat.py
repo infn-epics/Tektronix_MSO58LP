@@ -2,14 +2,21 @@
 """
 plot_dat.py - Plot waveforms saved by the MSO58LP IOC store subsystem.
 
-File format (produced by tekStoreWaveform.c):
-    Line 1 : "# key=value key=value ..." metadata header
-             keys: channel, xinc, ymult, yzero, yoff, npts, data_start,
-                   first_sample_time_s, num_acq, timestamp
-    Lines 2..N : one acquisition per line, comma-separated voltage samples.
+Supported file formats (produced by tekStoreWaveform.c):
+    1) Legacy DAT:
+       Line 1 : "# key=value key=value ..." metadata header
+       Lines 2..N : one acquisition per line, comma-separated voltage samples.
+
+    2) Tek-style CSV:
+       Metadata preamble (Model/Label/Sample Interval/...)
+       Followed by one or more acquisition blocks:
+           Labels,<channel>
+           TIME,<channel>
+           <time_s>,<voltage_v>
+           ...
 
 Usage:
-    python3 plot_dat.py FILE.dat [--max N] [--mean] [--save out.png]
+    python3 plot_dat.py FILE [--max N] [--mean] [--save out.png]
                        [--no-show] [--time]
 
 Options:
@@ -52,8 +59,105 @@ def load_dat(path: str):
     return meta, data
 
 
+def _to_float(s: str, default=0.0) -> float:
+    try:
+        return float(s)
+    except Exception:
+        return default
+
+
+def load_tek_csv(path: str):
+    with open(path, "r") as f:
+        lines = [ln.rstrip("\n") for ln in f]
+
+    if not lines or not lines[0].startswith("Model,"):
+        raise ValueError(f"{path}: not a Tek-style CSV file")
+
+    meta = {}
+    idx = 0
+    while idx < len(lines):
+        raw = lines[idx].strip()
+        if raw == "":
+            idx += 1
+            break
+        parts = [p.strip() for p in lines[idx].split(",", 1)]
+        key = parts[0]
+        val = parts[1] if len(parts) > 1 else ""
+        meta[key] = val
+        idx += 1
+
+    channel = meta.get("Label", "?")
+    xinc = _to_float(meta.get("Sample Interval", "1.0"), 1.0)
+    zero_index = _to_float(meta.get("Zero Index", "0"), 0.0)
+    first_sample_time_s = -zero_index * xinc
+
+    # Normalize metadata keys so plotting code can stay shared.
+    norm_meta = {
+        "channel": channel,
+        "xinc": xinc,
+        "first_sample_time_s": first_sample_time_s,
+        "record_length": int(_to_float(meta.get("Record Length", "0"), 0.0)),
+        "source_format": "tek_csv",
+    }
+
+    # Parse acquisition blocks: Labels,<ch> + TIME,<ch> + numeric rows.
+    acquisitions = []
+    while idx < len(lines):
+        if lines[idx].strip() == "":
+            idx += 1
+            continue
+        if not lines[idx].startswith("Labels,"):
+            idx += 1
+            continue
+
+        # Skip "Labels,<ch>" and "TIME,<ch>" lines if present.
+        idx += 1
+        if idx < len(lines) and lines[idx].startswith("TIME,"):
+            idx += 1
+
+        yvals = []
+        while idx < len(lines):
+            raw = lines[idx].strip()
+            if raw == "":
+                break
+            if raw.startswith("Labels,"):
+                break
+            parts = [p.strip() for p in lines[idx].split(",")]
+            if len(parts) >= 2:
+                yvals.append(_to_float(parts[1], np.nan))
+            idx += 1
+
+        if yvals:
+            acquisitions.append(np.array(yvals, dtype=float))
+
+    if not acquisitions:
+        raise ValueError(f"{path}: no waveform acquisition blocks found")
+
+    n_pts = min(arr.size for arr in acquisitions)
+    if n_pts <= 0:
+        raise ValueError(f"{path}: empty acquisition data")
+
+    data = np.vstack([arr[:n_pts] for arr in acquisitions])
+    return norm_meta, data
+
+
+def load_waveform_file(path: str):
+    with open(path, "r") as f:
+        first = f.readline()
+
+    if first.startswith("#"):
+        meta, data = load_dat(path)
+        meta = dict(meta)
+        meta["source_format"] = "legacy_dat"
+        return meta, data
+    if first.startswith("Model,"):
+        return load_tek_csv(path)
+
+    raise ValueError(f"{path}: unknown format (expected legacy DAT or Tek CSV)")
+
+
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Plot MSO58LP .dat waveform file")
+    ap = argparse.ArgumentParser(description="Plot MSO58LP waveform file (.dat or Tek CSV)")
     ap.add_argument("file")
     ap.add_argument("--max", type=int, default=0, help="max acquisitions to draw")
     ap.add_argument("--mean", action="store_true", help="overlay mean trace")
@@ -69,7 +173,7 @@ def main(argv=None):
         matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    meta, data = load_dat(args.file)
+    meta, data = load_waveform_file(args.file)
     n_acq, n_pts = data.shape
 
     show = data if args.max <= 0 else data[: args.max]
@@ -104,6 +208,7 @@ def main(argv=None):
     print("metadata:")
     for k, v in meta.items():
         print(f"  {k} = {v}")
+    print(f"format: {meta.get('source_format', 'unknown')}")
     print(f"data shape: {data.shape}  (acquisitions × samples)")
 
     if args.save:

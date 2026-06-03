@@ -2,7 +2,7 @@
 
 EPICS IOC for Tektronix MSO58LP waveform acquisition with ASYN-based polling,
 8 channel support, per-channel processing, OPI controls, and waveform session
-storage to `.dat` files.
+storage to Tek-style `.csv` files.
 
 ## Latest Updates
 
@@ -12,10 +12,7 @@ storage to `.dat` files.
 - Driver now pads trailing waveform/time buffers with `NaN` after each read,
 	preventing stale samples from previous larger acquisitions.
 - Added per-channel file storage engine via `tekStoreWaveform` aSub.
-- Storage metadata header simplified: `rate_Hz` removed because it was just
-	derived as `1/xinc` and could be misleading.
-- Added Python utility [testScript/plot_dat.py](testScript/plot_dat.py) to parse
-	and plot stored `.dat` captures.
+- Storage files now use Tek-style CSV layout (metadata + `TIME,<CH>` table).
 
 ## Build
 
@@ -86,28 +83,32 @@ Per-channel controls/status:
 Filename format:
 
 ```text
-<Path>/<Basename>-<ChannelName>-<YYYYMMDDTHHMMSS>.dat
+<Path>/<Basename>-<ChannelName>-<YYYYMMDDTHHMMSS>.csv
 ```
 
-### 5. Stored .dat format
+### 5. Stored CSV format
 
-- Line 1: metadata header beginning with `#`
-- Lines 2..N: CSV waveform rows, one acquisition per line
+- Tek-compatible metadata block:
+	- `Model,MSO58LP`
+	- `Label,<channel>`
+	- `Waveform Type,ANALOG`
+	- `Horizontal Units,s`
+	- `Sample Interval,<xinc>`
+	- `Record Length,<npt>`
+	- `Zero Index,<data_start-1>`
+	- `Vertical Units,V`
+	- `ANALOG_Thumbnail,`
+	- `yOffset,<yzero>`
+	- `yPosition,<yoff>`
+- Then for each acquisition:
+	- `Labels,<channel>`
+	- `TIME,<channel>`
+	- one row per sample: `<time_s>,<value_V>`
 
-Header fields currently written:
+## Plot CSV Files in Python
 
-```text
-# channel=<name> xinc=<s> ymult=<v> yzero=<v> yoff=<raw> npts=<N> data_start=<idx> first_sample_time_s=<s> num_acq=<N> timestamp=<YYYYMMDDTHHMMSS>
-```
-
-Notes:
-
-- `first_sample_time_s` is computed as `(data_start - 1) * xinc`.
-- `rate_Hz` is intentionally not written anymore.
-
-## Plot .dat Files in Python
-
-Script: [testScript/plot_dat.py](testScript/plot_dat.py)
+Any standard CSV reader can be used. The file has a metadata preamble,
+followed by a `TIME,<channel>` two-column table for each acquisition.
 
 Requirements:
 
@@ -118,10 +119,10 @@ python3 -m pip install numpy matplotlib
 Examples:
 
 ```bash
-python3 testScript/plot_dat.py saved.dat
-python3 testScript/plot_dat.py saved.dat --max 20 --mean
-python3 testScript/plot_dat.py saved.dat --time
-python3 testScript/plot_dat.py saved.dat --save out.png --no-show
+python3 testScript/plot_dat.py saved.csv
+python3 testScript/plot_dat.py saved.csv --max 20 --mean
+python3 testScript/plot_dat.py saved.csv --time
+python3 testScript/plot_dat.py saved.csv --save out.png --no-show
 ```
 
 ## Key Files

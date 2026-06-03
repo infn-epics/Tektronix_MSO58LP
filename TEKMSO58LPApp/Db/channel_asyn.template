@@ -1166,10 +1166,10 @@ record(calcout, "$(P):CH$(CHANNEL):autoEdgeDone_")
 # `tekStoreWaveform` handles open/header/append/close; the records
 # below sequence the control word for that aSub:
 #     1 = INIT (open file, write metadata header)
-#     2 = APPEND (write one CSV row of Waveform)
+#     2 = APPEND (write one Tek-style CSV waveform block)
 #     3 = CLOSE (force close)
 # After each APPEND the engine reports status == 2 when the requested
-# NumAcq has been written; Store:Active is then cleared automatically.
+# NumAcq blocks have been written; Store:Active is then cleared automatically.
 # ======================================================================
 
 # Per-channel name (provided to the file name builder).
@@ -1212,7 +1212,7 @@ record(stringin, "$(P):CH$(CHANNEL):Store:File")
     field(DESC, "Open dump filename (truncated)")
 }
 
-# Rows written so far in current session.
+# Acquisitions written so far in current session.
 record(longin, "$(P):CH$(CHANNEL):Store:Count")
 {
     field(DESC, "Rows written in session")

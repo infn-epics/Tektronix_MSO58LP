@@ -7,13 +7,31 @@
  * prec->dpvt across processings.  A control word (INPA) selects the
  * phase:
  *     1  INIT   open file, write metadata header, reset counter
- *     2  APPEND append one CSV row of the current waveform
+ *     2  APPEND append one Tek-style CSV waveform block
  *     3  CLOSE  flush and close the file
  *
  * All other inputs supply waveform metadata and the sample array.  The
  * aSub outputs status, current filename and acquisition counter so the
  * database can react (e.g. clear the per-channel Active flag when
  * counter reaches NumAcq).
+ *
+ * Output file format (compatible with Tek CSV layout):
+ *   Model,MSO58LP
+ *   Label,<channel>
+ *   Waveform Type,ANALOG
+ *   Horizontal Units,s
+ *   Sample Interval,<xinc>
+ *   Record Length,<npt>
+ *   Zero Index,<data_start-1>
+ *   Vertical Units,V
+ *   ANALOG_Thumbnail,
+ *   yOffset,<yzero>
+ *   yPosition,<yoff>
+ *
+ *   Labels,<channel>
+ *   TIME,<channel>
+ *   <t0>,<v0>
+ *   ...
  */
 
 #include <stdio.h>
@@ -38,6 +56,12 @@ typedef struct {
     FILE   *fp;
     long    counter;
     long    numAcq;
+    long    npt;
+    long    dstart;
+    double  xinc;
+    double  yoff;
+    double  yzero;
+    char    chname[128];
     char    filename[1024];
 } tekStoreState;
 
@@ -84,6 +108,8 @@ static long tekStoreWaveform(aSubRecord *prec)
     long   npt    = *(long   *) prec->k;
     long   dstart = *(long   *) prec->l;
 
+    (void)ymult; /* retained as input for compatibility with existing DB wiring */
+
     long  *status = (long *) prec->vala;
     char  *fnOut  = (char *) prec->valb;
     long  *cnt    = (long *) prec->valc;
@@ -122,7 +148,7 @@ static long tekStoreWaveform(aSubRecord *prec)
         }
 
         snprintf(st->filename, sizeof(st->filename),
-                 "%s/%s-%s-%s.dat", path, base, chname, ts);
+             "%s/%s-%s-%s.csv", path, base, chname, ts);
 
         st->fp = fopen(st->filename, "w");
         if (!st->fp) {
@@ -134,14 +160,26 @@ static long tekStoreWaveform(aSubRecord *prec)
             return 0;
         }
 
-        double first_sample_time = (dstart > 0 ? (dstart - 1) : 0) * xinc;
+        st->xinc = xinc;
+        st->yoff = yoff;
+        st->yzero = yzero;
+        st->npt = npt;
+        st->dstart = dstart;
+        strncpy(st->chname, chname, sizeof(st->chname) - 1);
+        st->chname[sizeof(st->chname) - 1] = '\0';
 
-        fprintf(st->fp,
-                "# channel=%s xinc=%.12g ymult=%.12g yzero=%.12g "
-                "yoff=%.12g npts=%ld data_start=%ld first_sample_time_s=%.12g "
-                "num_acq=%ld timestamp=%s\n",
-                chname, xinc, ymult, yzero, yoff, npt, dstart,
-                first_sample_time, st->numAcq, ts);
+        fprintf(st->fp, "Model,MSO58LP\n");
+        fprintf(st->fp, "Label,%s\n", st->chname);
+        fprintf(st->fp, "Waveform Type,ANALOG\n");
+        fprintf(st->fp, "Horizontal Units,s\n");
+        fprintf(st->fp, "Sample Interval,%.8e\n", st->xinc);
+        fprintf(st->fp, "Record Length,%ld\n", st->npt > 0 ? st->npt : 0);
+        fprintf(st->fp, "Zero Index,%.8f\n", (double)((st->dstart > 0) ? (st->dstart - 1) : 0));
+        fprintf(st->fp, "Vertical Units,V\n");
+        fprintf(st->fp, "ANALOG_Thumbnail,\n");
+        fprintf(st->fp, "yOffset,%.8e\n", st->yzero);
+        fprintf(st->fp, "yPosition,%.8e\n", st->yoff);
+        fprintf(st->fp, "\n");
         fflush(st->fp);
 
         /* Filename truncated to MAX_STRING_SIZE for the stringout PV. */
@@ -163,11 +201,20 @@ static long tekStoreWaveform(aSubRecord *prec)
             *cnt = st->counter;
             return 0;
         }
-        for (long i = 0; i < n; i++) {
-            if (i) fputc(',', st->fp);
-            fprintf(st->fp, "%.9g", wf[i]);
+
+        if (st->counter > 0) {
+            fputc('\n', st->fp);
         }
-        fputc('\n', st->fp);
+        fprintf(st->fp, "Labels,%s\n", st->chname[0] ? st->chname : "CH");
+        fprintf(st->fp, "TIME,%s\n", st->chname[0] ? st->chname : "CH");
+
+        {
+            double t0 = -((double)((st->dstart > 0) ? (st->dstart - 1) : 0)) * st->xinc;
+            for (long i = 0; i < n; i++) {
+                double t = t0 + ((double)i * st->xinc);
+                fprintf(st->fp, "%.8e,%.8e\n", t, wf[i]);
+            }
+        }
         fflush(st->fp);
         st->counter++;
         *cnt = st->counter;

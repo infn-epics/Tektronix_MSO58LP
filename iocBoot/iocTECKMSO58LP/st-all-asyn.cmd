@@ -37,7 +37,7 @@ epicsEnvSet "TEK_PORT" "4004"
 # Acquisition settings
 # POLL_TIME in seconds: 0.01 = 100Hz, 0.02 = 50Hz, 0.1 = 10Hz
 epicsEnvSet "POLL_TIME" "0.1"
-epicsEnvSet "NELM"      "10000"
+epicsEnvSet "NELM"      "30000"
 epicsEnvSet "START"     "30000"
 epicsEnvSet "NUM_CH"    "8"
 epicsEnvSet "NUM_MEAS"  "0"
