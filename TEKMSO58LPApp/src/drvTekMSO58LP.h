@@ -39,6 +39,15 @@
 #define TEK_ACQUIRE_STRING          "TEK_ACQUIRE"
 #define TEK_RUN_STOP_STRING         "TEK_RUN_STOP"
 #define TEK_REFRESH_STRING          "TEK_REFRESH"
+#define TEK_SCOPE_SAVE_SOURCE_STRING "TEK_SCOPE_SAVE_SOURCE"
+#define TEK_SCOPE_SAVE_FORMAT_STRING "TEK_SCOPE_SAVE_FORMAT"
+#define TEK_SCOPE_SAVE_DEST_STRING   "TEK_SCOPE_SAVE_DEST"
+#define TEK_SCOPE_SAVE_TRIGGER_STRING "TEK_SCOPE_SAVE_TRIGGER"
+#define TEK_SCOPE_SAVE_STATUS_STRING "TEK_SCOPE_SAVE_STATUS"
+#define TEK_SCOPE_SAVE_FILE_STRING   "TEK_SCOPE_SAVE_FILE"
+#define TEK_SCOPE_SAVE_NUM_ACQ_STRING "TEK_SCOPE_SAVE_NUM_ACQ"
+#define TEK_SCOPE_SAVE_INTERVAL_STRING "TEK_SCOPE_SAVE_INTERVAL"
+#define TEK_SCOPE_SAVE_COUNT_STRING   "TEK_SCOPE_SAVE_COUNT"
 
 /* Per-channel parameters (suffix with channel number) */
 #define TEK_CH_ENABLE_STRING        "TEK_CH_ENABLE"
@@ -156,6 +165,15 @@ protected:
     int P_Acquire;
     int P_RunStop;
     int P_Refresh;
+    int P_ScopeSaveSource;
+    int P_ScopeSaveFormat;
+    int P_ScopeSaveDest;
+    int P_ScopeSaveTrigger;
+    int P_ScopeSaveStatus;
+    int P_ScopeSaveFile;
+    int P_ScopeSaveNumAcq;
+    int P_ScopeSaveInterval;
+    int P_ScopeSaveCount;
     
     /* Per-channel parameters - arrays indexed by channel */
     int P_ChEnable[TEK_MAX_CHANNELS];
@@ -234,6 +252,7 @@ private:
     asynStatus setMeasurementSource(int meas, int channel);
     asynStatus setMeasurementType(int meas, const char *type);
     asynStatus setMeasurementState(int meas, int state);
+    asynStatus saveWaveformOnScope(int acquisitionNumber);
     
     /* Helper methods */
     void parseWaveformData(const char *data, int channel);
@@ -260,6 +279,16 @@ private:
     epicsEventId pollerEvent_;
     int pollerRunning_;
     int pollerExitRequest_;
+
+    /* Scope-side consecutive save state (executed by the poller thread). */
+    int scopeSaveRunning_;
+    int scopeSaveTarget_;
+    int scopeSaveCount_;
+    int scopeSaveSource_;
+    int scopeSaveFormat_;
+    double scopeSaveInterval_;
+    char scopeSaveDestination_[TEK_MAX_STRING_SIZE];
+    epicsTimeStamp scopeSaveNextTime_;
     
     /* Waveform buffers - pre-allocated for speed */
     epicsInt32 *rawWaveform_[TEK_MAX_CHANNELS];

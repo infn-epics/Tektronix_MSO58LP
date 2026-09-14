@@ -15,9 +15,11 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <stdio.h>
 #include <errno.h>
 #include <math.h>
+#include <time.h>
 #include <algorithm>
 #include <stdarg.h>
 
@@ -38,6 +40,7 @@
 #define TEK_WRITE_TIMEOUT   1.0
 #define TEK_READ_TIMEOUT    2.0
 #define TEK_WAVEFORM_TIMEOUT 5.0
+#define TEK_SAVE_TIMEOUT    30.0
 
 /* Communication buffer sizes */
 #define TEK_CMD_BUFFER_SIZE     256
@@ -81,6 +84,12 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
       pollerEvent_(NULL),
       pollerRunning_(0),
       pollerExitRequest_(0),
+      scopeSaveRunning_(0),
+      scopeSaveTarget_(1),
+      scopeSaveCount_(0),
+      scopeSaveSource_(1),
+      scopeSaveFormat_(0),
+      scopeSaveInterval_(1.0),
       pollCount_(0),
       errorCount_(0),
       debugLevel_(TEK_DEBUG_ERROR)  /* Default: only errors */
@@ -116,6 +125,27 @@ drvTekMSO58LP::drvTekMSO58LP(const char *portName, const char *ipAddress,
     createParam(TEK_ACQUIRE_STRING,       asynParamInt32,   &P_Acquire);
     createParam(TEK_RUN_STOP_STRING,      asynParamInt32,   &P_RunStop);
     createParam(TEK_REFRESH_STRING,       asynParamInt32,   &P_Refresh);
+    createParam(TEK_SCOPE_SAVE_SOURCE_STRING, asynParamInt32, &P_ScopeSaveSource);
+    createParam(TEK_SCOPE_SAVE_FORMAT_STRING, asynParamInt32, &P_ScopeSaveFormat);
+    createParam(TEK_SCOPE_SAVE_DEST_STRING, asynParamOctet, &P_ScopeSaveDest);
+    createParam(TEK_SCOPE_SAVE_TRIGGER_STRING, asynParamInt32, &P_ScopeSaveTrigger);
+    createParam(TEK_SCOPE_SAVE_STATUS_STRING, asynParamInt32, &P_ScopeSaveStatus);
+    createParam(TEK_SCOPE_SAVE_FILE_STRING, asynParamOctet, &P_ScopeSaveFile);
+    createParam(TEK_SCOPE_SAVE_NUM_ACQ_STRING, asynParamInt32, &P_ScopeSaveNumAcq);
+    createParam(TEK_SCOPE_SAVE_INTERVAL_STRING, asynParamFloat64, &P_ScopeSaveInterval);
+    createParam(TEK_SCOPE_SAVE_COUNT_STRING, asynParamInt32, &P_ScopeSaveCount);
+
+    /* Scope-side SAVe:WAVEform defaults: CH1, spreadsheet CSV. */
+    setIntegerParam(P_ScopeSaveSource, 1);
+    setIntegerParam(P_ScopeSaveFormat, 0);
+    setIntegerParam(P_ScopeSaveTrigger, 0);
+    setIntegerParam(P_ScopeSaveStatus, 0);
+    setIntegerParam(P_ScopeSaveNumAcq, 1);
+    setDoubleParam(P_ScopeSaveInterval, 1.0);
+    setIntegerParam(P_ScopeSaveCount, 0);
+    setStringParam(P_ScopeSaveDest, "TekWaveform");
+    setStringParam(P_ScopeSaveFile, "");
+    strcpy(scopeSaveDestination_, "TekWaveform");
     
     /* Diagnostic parameters */
     createParam(TEK_POLL_COUNT_STRING,    asynParamInt32,   &P_PollCount);
@@ -424,6 +454,7 @@ void drvTekMSO58LP::pollerThread()
     int i;
     int enabledCh;
     int enabledMeas;
+    double waitTime;
 
     debugPrint(TEK_DEBUG_INFO, "DEBUG: %s:%s: Poller thread started\n", driverName, functionName);
 
@@ -460,6 +491,12 @@ void drvTekMSO58LP::pollerThread()
                         debugPrint(TEK_DEBUG_INFO, "DEBUG: Reading channel %d config (first=%d, good=%d)\n", i+1, !configRead_[i], configGood_[i]);
                         readChannelConfig(i);
                         configRead_[i] = 1;
+                    }
+                    if (!configGood_[i]) {
+                        debugPrint(TEK_DEBUG_WARNING,
+                                   "DEBUG: Skipping channel %d waveform read: config not valid yet\n",
+                                   i + 1);
+                        continue;
                     }
                     /* Read waveform data */
                     debugPrint(TEK_DEBUG_TRACE, "DEBUG: Reading channel %d waveform\n", i+1);
@@ -511,8 +548,56 @@ void drvTekMSO58LP::pollerThread()
             }
         }
 
-        /* Sleep for poll interval */
-        epicsEventWaitWithTimeout(pollerEvent_, pollTime_);
+        /* Run scope-side save sequences here so all SCPI traffic remains on
+         * the same worker thread as waveform acquisition. */
+        if (connected) {
+            int saveNow = 0;
+            int acquisitionNumber = 0;
+            epicsTimeStamp now;
+            epicsTimeGetCurrent(&now);
+
+            lock();
+            if (scopeSaveRunning_ &&
+                epicsTimeDiffInSeconds(&now, &scopeSaveNextTime_) >= 0.0) {
+                saveNow = 1;
+                acquisitionNumber = scopeSaveCount_ + 1;
+            }
+            unlock();
+
+            if (saveNow) {
+                asynStatus saveStatus = saveWaveformOnScope(acquisitionNumber);
+                lock();
+                if (saveStatus == asynSuccess) {
+                    scopeSaveCount_ = acquisitionNumber;
+                    setIntegerParam(P_ScopeSaveCount, scopeSaveCount_);
+                    if (scopeSaveCount_ >= scopeSaveTarget_) {
+                        scopeSaveRunning_ = 0;
+                        setIntegerParam(P_ScopeSaveStatus, 4); /* complete */
+                    } else {
+                        epicsTimeGetCurrent(&scopeSaveNextTime_);
+                        epicsTimeAddSeconds(&scopeSaveNextTime_, scopeSaveInterval_);
+                    }
+                } else {
+                    scopeSaveRunning_ = 0;
+                    /* saveWaveformOnScope set Invalid or CommError. */
+                }
+                callParamCallbacks();
+                unlock();
+            }
+        }
+
+        /* Wake for either the normal poll or the next scheduled scope save. */
+        waitTime = pollTime_;
+        lock();
+        if (scopeSaveRunning_) {
+            epicsTimeStamp now;
+            epicsTimeGetCurrent(&now);
+            double untilSave = epicsTimeDiffInSeconds(&scopeSaveNextTime_, &now);
+            if (untilSave <= 0.0) waitTime = 0.0;
+            else if (untilSave < waitTime) waitTime = untilSave;
+        }
+        unlock();
+        epicsEventWaitWithTimeout(pollerEvent_, waitTime);
     }
 
     pollerRunning_ = 0;
@@ -864,6 +949,18 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
     if (dataStop < dataStart) dataStop = dataStart;
     
     int windowSize = dataStop - dataStart + 1;
+
+    /* Ensure valid scale config before applying voltage/time conversion. */
+    if (!configGood_[channel]) {
+        readChannelConfig(channel);
+        configRead_[channel] = 1;
+    }
+    if (!configGood_[channel]) {
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readWaveformBinary CH%d skipped: channel config still invalid\n",
+                   ch);
+        return asynError;
+    }
     
     /* Window size must not exceed buffer (maxPoints_ = NELM) */
     if (windowSize > maxPoints_) {
@@ -896,6 +993,16 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
         lastDataWidth_[channel] = dataWidth;
         /* Width changed: must re-read config for updated YMUlt */
         configRead_[channel] = 0;
+        configGood_[channel] = 0;
+        readChannelConfig(channel);
+        configRead_[channel] = 1;
+        if (!configGood_[channel]) {
+            debugPrint(TEK_DEBUG_WARNING,
+                       "DEBUG: readWaveformBinary CH%d skipped after width change: config invalid\n",
+                       ch);
+            free(response);
+            return asynError;
+        }
     }
     
     /* DATa:STARt and DATa:STOP - always set (cheap, values may change) */
@@ -967,6 +1074,9 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
                     rawWaveform_[channel][i] = value;
                 }
             }
+            for (i = numPoints; i < windowSize; i++) {
+                rawWaveform_[channel][i] = 0;
+            }
         } else {
             debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: invalid binary header numDigits=%d\n", numDigits);
         }
@@ -987,6 +1097,7 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
     /* Time array starts from dataStart offset */
     for (i = 0; i < numPoints; i++) {
         scaledWaveform_[channel][i] = (rawWaveform_[channel][i] - yoff) * ymult + yzero;
+        //scaledWaveform_[channel][i] = (rawWaveform_[channel][i]) * ymult + yzero;  /* Apply only YMUlt scaling to preserve raw values for stats */
         timeArray_[channel][i] = (dataStart - 1 + i) * xinc;  /* Account for start offset */
     }
     /* Mark trailing (unused) buffer slots as NaN so plot widgets / clients
@@ -997,7 +1108,7 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
         double nanv = (double)NAN;
         for (i = numPoints; i < maxPoints_; i++) {
             scaledWaveform_[channel][i] = nanv;
-            timeArray_[channel][i]      = nanv;
+            timeArray_[channel][i] = (dataStart - 1 + i) * xinc;  /* Account for start offset */
         }
     }
 
@@ -1220,6 +1331,121 @@ asynStatus drvTekMSO58LP::setMeasurementState(int meas, int state)
 }
 
 /**
+ * Save an active waveform to the oscilloscope filesystem.
+ *
+ * The 5 Series programmer manual specifies .csv (spreadsheet) and .wfm
+ * (Tektronix internal) as the supported SAVe:WAVEform extensions.  The
+ * destination is interpreted by the scope, relative to FILESystem:CWD unless
+ * it includes an absolute scope-side path.
+ */
+asynStatus drvTekMSO58LP::saveWaveformOnScope(int acquisitionNumber)
+{
+    int source = 1;
+    int format = 0;
+    char destination[TEK_MAX_STRING_SIZE];
+    char filename[TEK_MAX_STRING_SIZE];
+    char command[TEK_MAX_STRING_SIZE + 64];
+    char channelName[16];
+    char timestamp[32];
+    char base[TEK_MAX_STRING_SIZE];
+    char response[32];
+    const char *extension;
+    const char *sourceName;
+    size_t length;
+    size_t nRead = 0;
+
+    lock();
+    source = scopeSaveSource_;
+    format = scopeSaveFormat_;
+    strncpy(destination, scopeSaveDestination_, sizeof(destination) - 1);
+    destination[sizeof(destination) - 1] = '\0';
+    unlock();
+
+    if (source == 0) {
+        sourceName = "ALL";
+    } else if (source >= 1 && source <= numChannels_) {
+        snprintf(channelName, sizeof(channelName), "CH%d", source);
+        sourceName = channelName;
+    } else {
+        lock();
+        setIntegerParam(P_ScopeSaveStatus, 2); /* invalid configuration */
+        setStringParam(P_LastError, "Invalid scope-save source");
+        unlock();
+        return asynError;
+    }
+
+    if (format == 0) {
+        extension = ".csv";
+    } else if (format == 1) {
+        extension = ".wfm";
+    } else {
+        lock();
+        setIntegerParam(P_ScopeSaveStatus, 2);
+        setStringParam(P_LastError, "Invalid scope-save format");
+        unlock();
+        return asynError;
+    }
+
+    if (destination[0] == '\0' || strpbrk(destination, "\"\r\n") != NULL) {
+        lock();
+        setIntegerParam(P_ScopeSaveStatus, 2);
+        setStringParam(P_LastError, "Invalid scope-save destination");
+        unlock();
+        return asynError;
+    }
+
+    strncpy(base, destination, sizeof(base) - 1);
+    base[sizeof(base) - 1] = '\0';
+    length = strlen(base);
+
+    /* Replace a known waveform extension so Format always controls the type. */
+    if (length >= 4 &&
+        (strcasecmp(base + length - 4, ".csv") == 0 ||
+         strcasecmp(base + length - 4, ".wfm") == 0)) {
+        base[length - 4] = '\0';
+    }
+    if (base[0] == '\0') {
+        lock();
+        setIntegerParam(P_ScopeSaveStatus, 2);
+        setStringParam(P_LastError, "Scope-save name is empty");
+        unlock();
+        return asynError;
+    }
+
+    time_t wallClock = time(NULL);
+    struct tm localTime;
+    localtime_r(&wallClock, &localTime);
+    strftime(timestamp, sizeof(timestamp), "%Y%m%dT%H%M%S", &localTime);
+
+    if (snprintf(filename, sizeof(filename), "%s_%d_%s%s", base,
+                 acquisitionNumber, timestamp, extension) >= (int)sizeof(filename)) {
+        lock();
+        setIntegerParam(P_ScopeSaveStatus, 2);
+        setStringParam(P_LastError, "Scope-save destination is too long");
+        unlock();
+        return asynError;
+    }
+
+    snprintf(command, sizeof(command), "SAVe:WAVEform %s,\"%s\";*OPC?",
+             sourceName, filename);
+    asynStatus status = writeRead(command, response, sizeof(response),
+                                  &nRead, TEK_SAVE_TIMEOUT);
+    if (status == asynSuccess) {
+        size_t first = strspn(response, " \t\r\n");
+        if (first >= nRead || response[first] != '1') status = asynError;
+    }
+    lock();
+    if (status == asynSuccess) {
+        setStringParam(P_ScopeSaveFile, filename);
+    } else {
+        setIntegerParam(P_ScopeSaveStatus, 3); /* communication failure */
+        setStringParam(P_LastError, command);
+    }
+    unlock();
+    return status;
+}
+
+/**
  * Write Int32 - handle control parameters
  */
 asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
@@ -1260,6 +1486,50 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             configGood_[i] = 0;
         }
     }
+    else if (function == P_ScopeSaveTrigger && value != 0) {
+        int numAcq = 1;
+        int connected = 0;
+        int source = 1;
+        int format = 0;
+        double interval = 1.0;
+        char destination[TEK_MAX_STRING_SIZE];
+        getIntegerParam(P_ScopeSaveNumAcq, &numAcq);
+        getIntegerParam(P_Connected, &connected);
+        getIntegerParam(P_ScopeSaveSource, &source);
+        getIntegerParam(P_ScopeSaveFormat, &format);
+        getDoubleParam(P_ScopeSaveInterval, &interval);
+        getStringParam(P_ScopeSaveDest, sizeof(destination), destination);
+
+        if (scopeSaveRunning_) {
+            setStringParam(P_LastError, "Scope-save sequence already running");
+            status = asynError;
+        } else if (!connected) {
+            setIntegerParam(P_ScopeSaveStatus, 3);
+            setStringParam(P_LastError, "Cannot save: scope is disconnected");
+            status = asynDisconnected;
+        } else if (numAcq < 1 || interval < 0.0) {
+            setIntegerParam(P_ScopeSaveStatus, 2);
+            setStringParam(P_LastError, "Invalid scope-save count or interval");
+            status = asynError;
+        } else {
+            scopeSaveRunning_ = 1;
+            scopeSaveTarget_ = numAcq;
+            scopeSaveCount_ = 0;
+            scopeSaveSource_ = source;
+            scopeSaveFormat_ = format;
+            scopeSaveInterval_ = interval;
+            strncpy(scopeSaveDestination_, destination,
+                    sizeof(scopeSaveDestination_) - 1);
+            scopeSaveDestination_[sizeof(scopeSaveDestination_) - 1] = '\0';
+            epicsTimeGetCurrent(&scopeSaveNextTime_);
+            setIntegerParam(P_ScopeSaveCount, 0);
+            setIntegerParam(P_ScopeSaveStatus, 1); /* running */
+            epicsEventSignal(pollerEvent_);
+        }
+        setIntegerParam(P_ScopeSaveTrigger, 0); /* momentary command */
+        callParamCallbacks();
+        return status;
+    }
 
     /* Channel enable parameters */
     for (i = 0; i < numChannels_; i++) {
@@ -1267,8 +1537,13 @@ asynStatus drvTekMSO58LP::writeInt32(asynUser *pasynUser, epicsInt32 value)
             /* Reset config read flag so config is re-read on next enable */
             if (value == 0) {
                 configRead_[i] = 0;
+                configGood_[i] = 0;
                 firstAcq_[i] = 1;
                 setDoubleParam(P_ChRefreshRate[i], 0.0);
+            } else {
+                configRead_[i] = 0;
+                configGood_[i] = 0;
+                lastDataWidth_[i] = 0;
             }
             break;
         }
@@ -1443,6 +1718,7 @@ asynStatus drvTekMSO58LP::readInt32Array(asynUser *pasynUser, epicsInt32 *value,
         if (function == P_ChWaveform[i]) {
             size_t n = std::min(nElements, (size_t)waveformLength_[i]);
             memcpy(value, rawWaveform_[i], n * sizeof(epicsInt32));
+
             *nIn = n;
             epicsMutexUnlock(dataLock_);
             return asynSuccess;

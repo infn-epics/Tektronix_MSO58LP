@@ -105,6 +105,33 @@ Filename format:
 	- `TIME,<channel>`
 	- one row per sample: `<time_s>,<value_V>`
 
+### 6. Save in the oscilloscope's native formats
+
+The 5 Series `SAVe:WAVEform` command supports spreadsheet CSV and Tektronix
+internal WFM files. Unlike `Store:*`, these files are created on the
+oscilloscope filesystem:
+
+- `$(P):ScopeSave:Source` -> `ALL` or `CH1` through `CH8`
+- `$(P):ScopeSave:Format` -> `CSV` or `WFM`
+- `$(P):ScopeSave:Destination` -> scope-side path/name; `.csv` or `.wfm` is
+  added (or replaced) from the selected format
+- `$(P):ScopeSave:NumAcq` -> number of consecutive waveform saves
+- `$(P):ScopeSave:Interval` -> interval in seconds between save commands
+- `$(P):ScopeSave` -> execute the save
+- `$(P):ScopeSave:Status`, `$(P):ScopeSave:Count`, and
+  `$(P):ScopeSave:File_RBV` -> progress and result
+
+The source must be displayed on the scope. Relative destinations use the
+scope's current `FILESystem:CWD`. When `ALL` is selected, the scope appends
+the source name to each generated filename as described by the programmer
+manual.
+
+Each command uses an IOC-local timestamp and acquisition number:
+
+```text
+<Destination>_<acquisition-number>_<YYYYMMDDTHHMMSS>.<csv|wfm>
+```
+
 ## Plot CSV Files in Python
 
 Any standard CSV reader can be used. The file has a metadata preamble,

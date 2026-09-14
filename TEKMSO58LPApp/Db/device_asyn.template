@@ -283,7 +283,7 @@ record(mbbi, "$(P):DebugLevel_RBV")
 # Path/Basename are CHAR-waveform "long string" PVs (use caput
 # -S or the OPI long-string widget to write).  Each enabled
 # channel that participates in a session dumps to a file:
-#    <Path>/<Basename>-<ChannelName>-<YYYYMMDDTHHMMSS>.dat
+#    <Path>/<Basename>-<ChannelName>-<YYYYMMDDTHHMMSS>.csv
 # ============================================================
 record(waveform, "$(P):Store:Path")
 {
@@ -326,6 +326,159 @@ record(bo, "$(P):Store:Stop")
     field(ZNAM, "Idle")
     field(ONAM, "Stop")
     field(HIGH, "0.1")
+}
+
+# One-shot command: save one CSV waveform block for each enabled channel.
+# Uses the existing storage engine and current Store:Path/Store:Basename.
+record(longout, "$(P):SaveWaveforms:NumAcq")
+{
+    field(DESC, "Acqs/channel for one-shot save")
+    field(VAL,  "1")
+    field(DRVL, "1")
+    field(DRVH, "10000000")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P):SaveWaveforms")
+{
+    field(DESC, "Save CHs to CSV in Store:Path")
+    field(PINI, "NO")
+    field(ZNAM, "Idle")
+    field(ONAM, "Save")
+    field(VAL, "0")
+    field(HIGH, "1")
+    field(FLNK, "$(P):saveWaveformsSetNum_")
+    field(DOL, "1")
+    field(OMSL, "supervisory")
+    field(OUT, "$(P):SaveWaveforms.PROC")
+}
+
+record(calcout, "$(P):saveWaveformsSetNum_")
+{
+    field(DESC, "Apply one-shot NumAcq to Store session")
+    field(INPA, "$(P):SaveWaveforms NPP NMS")
+    field(INPB, "$(P):SaveWaveforms:NumAcq NPP NMS")
+    field(CALC, "A=1?B:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):Store:NumAcq PP")
+    field(FLNK, "$(P):saveWaveformsStart_")
+}
+
+record(calcout, "$(P):saveWaveformsStart_")
+{
+    field(DESC, "Start one-shot Store session")
+    field(INPA, "$(P):SaveWaveforms NPP NMS")
+    field(CALC, "A=1?1:0")
+    field(OOPT, "When Non-zero")
+    field(DOPT, "Use CALC")
+    field(OUT,  "$(P):Store:Start PP")
+}
+
+# Scope-side save using the manual's SAVe:WAVEform command.  These files are
+# written on the oscilloscope (not on the IOC host).  A relative destination
+# is resolved against the scope's FILESystem:CWD.
+record(mbbo, "$(P):ScopeSave:Source")
+{
+    field(DESC, "Waveform source saved by scope")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_SOURCE")
+    field(ZRST, "ALL") field(ZRVL, "0")
+    field(ONST, "CH1") field(ONVL, "1")
+    field(TWST, "CH2") field(TWVL, "2")
+    field(THST, "CH3") field(THVL, "3")
+    field(FRST, "CH4") field(FRVL, "4")
+    field(FVST, "CH5") field(FVVL, "5")
+    field(SXST, "CH6") field(SXVL, "6")
+    field(SVST, "CH7") field(SVVL, "7")
+    field(EIST, "CH8") field(EIVL, "8")
+    field(PINI, "YES")
+    field(VAL,  "1")
+}
+
+record(mbbo, "$(P):ScopeSave:Format")
+{
+    field(DESC, "Scope waveform file format")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_FORMAT")
+    field(ZRST, "CSV") field(ZRVL, "0")
+    field(ONST, "WFM") field(ONVL, "1")
+    field(PINI, "YES")
+    field(VAL,  "0")
+}
+
+record(stringout, "$(P):ScopeSave:Destination")
+{
+    field(DESC, "Scope-side path without extension")
+    field(DTYP, "asynOctetWrite")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_DEST")
+    field(PINI, "YES")
+    field(VAL,  "TekWaveform")
+}
+
+record(longout, "$(P):ScopeSave:NumAcq")
+{
+    field(DESC, "Consecutive scope saves")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_NUM_ACQ")
+    field(DRVL, "1")
+    field(DRVH, "1000000")
+    field(PINI, "YES")
+    field(VAL,  "1")
+}
+
+record(ao, "$(P):ScopeSave:Interval")
+{
+    field(DESC, "Seconds between scope saves")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_INTERVAL")
+    field(DRVL, "0")
+    field(DRVH, "86400")
+    field(PREC, "3")
+    field(EGU,  "s")
+    field(PINI, "YES")
+    field(VAL,  "1.0")
+}
+
+record(bo, "$(P):ScopeSave")
+{
+    field(DESC, "Run SAVe:WAVEform on scope")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_TRIGGER")
+    field(ZNAM, "Idle")
+    field(ONAM, "Save")
+    field(HIGH, "0.1")
+}
+
+record(mbbi, "$(P):ScopeSave:Status")
+{
+    field(DESC, "Last scope-save command status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_STATUS")
+    field(SCAN, "I/O Intr")
+    field(ZRST, "Idle") field(ZRVL, "0")
+    field(ONST, "Running") field(ONVL, "1")
+    field(TWST, "Invalid") field(TWVL, "2")
+    field(THST, "CommError") field(THVL, "3")
+    field(FRST, "Complete") field(FRVL, "4")
+    field(TWSV, "MAJOR")
+    field(THSV, "MAJOR")
+}
+
+record(longin, "$(P):ScopeSave:Count")
+{
+    field(DESC, "Completed saves in sequence")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_COUNT")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P):ScopeSave:File_RBV")
+{
+    field(DESC, "Last scope-side save filename")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),0)TEK_SCOPE_SAVE_FILE")
+    field(SCAN, "I/O Intr")
 }
 
 # Aggregate status (max of channel statuses; informational)

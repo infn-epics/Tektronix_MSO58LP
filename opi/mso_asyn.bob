@@ -3727,7 +3727,7 @@
     <x>1308</x>
     <y>42</y>
     <width>254</width>
-    <height>336</height>
+    <height>534</height>
     <style>1</style>
     <background_color>
       <color red="240" green="230" blue="225">
@@ -4209,6 +4209,153 @@
       <y>304</y>
       <height>14</height>
       <horizontal_alignment>2</horizontal_alignment>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_Title</name>
+      <text>Save on oscilloscope</text>
+      <x>6</x>
+      <y>332</y>
+      <width>240</width>
+      <font>
+        <font family="Liberation Sans" style="BOLD" size="10.0">
+        </font>
+      </font>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblSource</name>
+      <text>Source</text>
+      <x>6</x>
+      <y>356</y>
+      <width>50</width>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <name>ScopeSave_Source</name>
+      <pv_name>$(P):ScopeSave:Source</pv_name>
+      <x>58</x>
+      <y>352</y>
+      <width>76</width>
+      <height>24</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblFormat</name>
+      <text>Format</text>
+      <x>140</x>
+      <y>356</y>
+      <width>48</width>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <name>ScopeSave_Format</name>
+      <pv_name>$(P):ScopeSave:Format</pv_name>
+      <x>188</x>
+      <y>352</y>
+      <width>60</width>
+      <height>24</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblDestination</name>
+      <text>File</text>
+      <x>6</x>
+      <y>416</y>
+      <width>50</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>ScopeSave_Destination</name>
+      <pv_name>$(P):ScopeSave:Destination</pv_name>
+      <x>58</x>
+      <y>412</y>
+      <width>190</width>
+      <height>24</height>
+      <tooltip>Scope path/base; IOC adds _number_timestamp and extension</tooltip>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>ScopeSave_Save</name>
+      <actions>
+        <action type="write_pv">
+          <description>Save waveform on oscilloscope</description>
+          <pv_name>$(pv_name)</pv_name>
+          <value>1</value>
+        </action>
+      </actions>
+      <pv_name>$(P):ScopeSave</pv_name>
+      <text>Save on scope</text>
+      <x>6</x>
+      <y>444</y>
+      <width>112</width>
+      <height>28</height>
+      <background_color>
+        <color red="200" green="225" blue="245">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>ScopeSave_Status</name>
+      <pv_name>$(P):ScopeSave:Status</pv_name>
+      <x>124</x>
+      <y>446</y>
+      <width>124</width>
+      <height>24</height>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>ScopeSave_File</name>
+      <pv_name>$(P):ScopeSave:File_RBV</pv_name>
+      <x>6</x>
+      <y>500</y>
+      <width>242</width>
+      <height>22</height>
+      <tooltip>Last scope-side filename sent to SAVe:WAVEform</tooltip>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblNumAcq</name>
+      <text>Number</text>
+      <x>6</x>
+      <y>384</y>
+      <width>50</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>ScopeSave_NumAcq</name>
+      <pv_name>$(P):ScopeSave:NumAcq</pv_name>
+      <x>58</x>
+      <y>380</y>
+      <width>62</width>
+      <height>24</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblInterval</name>
+      <text>Interval</text>
+      <x>126</x>
+      <y>384</y>
+      <width>48</width>
+    </widget>
+    <widget type="textentry" version="3.0.0">
+      <name>ScopeSave_Interval</name>
+      <pv_name>$(P):ScopeSave:Interval</pv_name>
+      <x>174</x>
+      <y>380</y>
+      <width>54</width>
+      <height>24</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_IntervalUnit</name>
+      <text>s</text>
+      <x>232</x>
+      <y>384</y>
+      <width>16</width>
+    </widget>
+    <widget type="textupdate" version="2.0.0">
+      <name>ScopeSave_Count</name>
+      <pv_name>$(P):ScopeSave:Count</pv_name>
+      <x>58</x>
+      <y>474</y>
+      <width>62</width>
+      <height>18</height>
+      <tooltip>Completed saves in the current sequence</tooltip>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>ScopeSave_LblCount</name>
+      <text>Count</text>
+      <x>6</x>
+      <y>476</y>
+      <width>50</width>
     </widget>
   </widget>
 </display>

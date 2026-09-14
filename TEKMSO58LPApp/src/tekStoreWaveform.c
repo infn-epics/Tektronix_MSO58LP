@@ -177,6 +177,7 @@ static long tekStoreWaveform(aSubRecord *prec)
         fprintf(st->fp, "Zero Index,%.8f\n", (double)((st->dstart > 0) ? (st->dstart - 1) : 0));
         fprintf(st->fp, "Vertical Units,V\n");
         fprintf(st->fp, "ANALOG_Thumbnail,\n");
+        /* yOffset in CSV header should be the voltage reference (YZERO), not the screen position */
         fprintf(st->fp, "yOffset,%.8e\n", st->yzero);
         fprintf(st->fp, "yPosition,%.8e\n", st->yoff);
         fprintf(st->fp, "\n");
