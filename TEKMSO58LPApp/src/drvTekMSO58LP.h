@@ -240,6 +240,10 @@ private:
                          size_t readBufferSize, size_t *nRead, double timeout);
     asynStatus writeCmd(const char *cmd);
     asynStatus query(const char *cmd, char *response, size_t maxLen);
+    asynStatus readExact(char *buffer, size_t bytesToRead, double timeout);
+    asynStatus readBinaryBlock(const char *command, char *payload,
+                               size_t payloadCapacity, size_t *payloadBytes,
+                               double timeout);
     
     /* Acquisition methods */
     asynStatus readIdentification();

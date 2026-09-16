@@ -734,6 +734,156 @@ asynStatus drvTekMSO58LP::writeCmd(const char *cmd)
 }
 
 /**
+ * Read exactly the requested number of bytes with one overall timeout.
+ * The caller must disable input EOS when reading arbitrary binary data.
+ */
+asynStatus drvTekMSO58LP::readExact(char *buffer, size_t bytesToRead,
+                                    double timeout)
+{
+    size_t totalRead = 0;
+    epicsTimeStamp start, now;
+
+    epicsTimeGetCurrent(&start);
+    while (totalRead < bytesToRead) {
+        size_t nRead = 0;
+        int eomReason = 0;
+
+        epicsTimeGetCurrent(&now);
+        double remaining = timeout - epicsTimeDiffInSeconds(&now, &start);
+        if (remaining <= 0.0) return asynTimeout;
+
+        asynStatus status = pasynOctetSyncIO->read(
+            pasynUserOctet_, buffer + totalRead, bytesToRead - totalRead,
+            remaining, &nRead, &eomReason);
+        if (status != asynSuccess) return status;
+        if (nRead == 0) return asynError;
+        totalRead += nRead;
+    }
+
+    return asynSuccess;
+}
+
+/**
+ * Read a Tektronix/IEEE 488.2 definite-length binary block:
+ *   #<number-of-length-digits><payload-length><payload>\n
+ * Input EOS is disabled for the header and payload because every byte value,
+ * including '\n', is valid waveform data.
+ */
+asynStatus drvTekMSO58LP::readBinaryBlock(const char *command, char *payload,
+                                          size_t payloadCapacity,
+                                          size_t *payloadBytes,
+                                          double timeout)
+{
+    char header[2];
+    char lengthField[16];
+    char trailer[2];
+    size_t nWrite = 0;
+    size_t nRead = 0;
+    size_t byteCount = 0;
+    int eomReason = 0;
+    int numDigits = 0;
+    asynStatus status;
+
+    *payloadBytes = 0;
+
+    /* Start each transaction with an empty receive queue. */
+    pasynOctetSyncIO->flush(pasynUserOctet_);
+
+    status = pasynOctetSyncIO->setInputEos(pasynUserOctet_, "", 0);
+    if (status != asynSuccess) return status;
+
+    status = pasynOctetSyncIO->write(pasynUserOctet_, command,
+                                      strlen(command), timeout, &nWrite);
+    if (status != asynSuccess || nWrite != strlen(command)) {
+        status = (status == asynSuccess) ? asynError : status;
+        goto restore_eos;
+    }
+
+    status = readExact(header, sizeof(header), timeout);
+    if (status != asynSuccess) goto restore_eos;
+    if (header[0] != '#') {
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readBinaryBlock: expected '#', got 0x%02X\n",
+                   (unsigned char)header[0]);
+        status = asynError;
+        goto restore_eos;
+    }
+
+    if (header[1] >= '1' && header[1] <= '9') {
+        numDigits = header[1] - '0';
+    } else if (header[1] >= 'A' && header[1] <= 'F') {
+        numDigits = header[1] - 'A' + 10;
+    } else if (header[1] >= 'a' && header[1] <= 'f') {
+        numDigits = header[1] - 'a' + 10;
+    } else {
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readBinaryBlock: invalid length digit 0x%02X\n",
+                   (unsigned char)header[1]);
+        status = asynError;
+        goto restore_eos;
+    }
+
+    status = readExact(lengthField, (size_t)numDigits, timeout);
+    if (status != asynSuccess) goto restore_eos;
+    for (int i = 0; i < numDigits; i++) {
+        if (lengthField[i] < '0' || lengthField[i] > '9') {
+            debugPrint(TEK_DEBUG_WARNING,
+                       "DEBUG: readBinaryBlock: non-decimal payload length\n");
+            status = asynError;
+            goto restore_eos;
+        }
+        size_t digit = (size_t)(lengthField[i] - '0');
+        if (digit > payloadCapacity ||
+            byteCount > (payloadCapacity - digit) / 10) {
+            debugPrint(TEK_DEBUG_WARNING,
+                       "DEBUG: readBinaryBlock: payload exceeds buffer capacity\n");
+            status = asynError;
+            goto restore_eos;
+        }
+        byteCount = byteCount * 10 + digit;
+    }
+    if (byteCount == 0 || byteCount > payloadCapacity) {
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readBinaryBlock: invalid payload size %zu (capacity %zu)\n",
+                   byteCount, payloadCapacity);
+        status = asynError;
+        goto restore_eos;
+    }
+
+    status = readExact(payload, byteCount, timeout);
+    if (status != asynSuccess) goto restore_eos;
+    *payloadBytes = byteCount;
+
+restore_eos:
+    {
+        asynStatus eosStatus =
+            pasynOctetSyncIO->setInputEos(pasynUserOctet_, "\n", 1);
+        if (status == asynSuccess && eosStatus != asynSuccess) status = eosStatus;
+    }
+
+    if (status == asynSuccess) {
+        asynStatus trailerStatus = pasynOctetSyncIO->read(
+            pasynUserOctet_, trailer, sizeof(trailer), timeout,
+            &nRead, &eomReason);
+        if (trailerStatus != asynSuccess || !(eomReason & ASYN_EOM_EOS) ||
+            (nRead != 0 && !(nRead == 1 && trailer[0] == '\r'))) {
+            debugPrint(TEK_DEBUG_WARNING,
+                       "DEBUG: readBinaryBlock: missing waveform terminator "
+                       "(status=%d, nRead=%zu, eom=0x%x)\n",
+                       trailerStatus, nRead, eomReason);
+            status = (trailerStatus == asynSuccess) ? asynError : trailerStatus;
+        }
+    }
+
+    if (status != asynSuccess) {
+        *payloadBytes = 0;
+        pasynOctetSyncIO->flush(pasynUserOctet_);
+    }
+
+    return status;
+}
+
+/**
  * Query (write and read response)
  */
 asynStatus drvTekMSO58LP::query(const char *cmd, char *response, size_t maxLen)
@@ -925,8 +1075,7 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
     char cmd[128];
     char *response;
     asynStatus status;
-    size_t nWrite, nRead;
-    int eomReason;
+    size_t payloadBytes;
     int ch = channel + 1;
     int numPoints;
     int i;
@@ -1013,77 +1162,58 @@ asynStatus drvTekMSO58LP::readWaveformBinary(int channel)
 
     /* Query the curve data */
     debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: querying CURVe?, window=%d-%d (%d points)\n", dataStart, dataStop, windowSize);
-    status = pasynOctetSyncIO->writeRead(pasynUserOctet_,
-                                         ":CURVe?", 7,
-                                         response, TEK_WAVEFORM_BUFFER_SIZE - 1,
-                                         TEK_WAVEFORM_TIMEOUT, &nWrite, &nRead, &eomReason);
-    debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: CURVe returned status=%d, nRead=%zu\n", status, nRead);
+    status = readBinaryBlock(":CURVe?", response,
+                             TEK_WAVEFORM_BUFFER_SIZE,
+                             &payloadBytes, TEK_WAVEFORM_TIMEOUT);
+    debugPrint(TEK_DEBUG_INFO,
+               "DEBUG: readWaveformBinary: CURVe returned status=%d, payloadBytes=%zu\n",
+               status, payloadBytes);
 
-    if (status != asynSuccess || nRead == 0) {
+    if (status != asynSuccess || payloadBytes == 0) {
         debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: CURVe failed, freeing buffer\n");
         free(response);
         return status;
     }
 
-    debugPrint(TEK_DEBUG_TRACE, "DEBUG: readWaveformBinary: parsing binary data, nRead=%zu\n", nRead);
+    debugPrint(TEK_DEBUG_TRACE,
+               "DEBUG: readWaveformBinary: parsing %zu payload bytes\n",
+               payloadBytes);
 
-    /* Parse IEEE 488.2 definite length binary block
-     * Format: #<n><length><binary_data>
-     * <n> = number of digits in length field
-     * <length> = byte count of binary data
-     * SRIbinary encoding: signed integer, little-endian (native x86 byte order)
-     */
     epicsMutexLock(dataLock_);
-    
-    numPoints = 0;
-    char *dataPtr = response;
-    
-    /* Check for # header */
-    if (*dataPtr == '#') {
-        dataPtr++;
-        int numDigits = *dataPtr - '0';  /* Number of digits in length field */
-        dataPtr++;
-        
-        if (numDigits > 0 && numDigits < 10) {
-            /* Parse the length field */
-            char lenStr[16];
-            strncpy(lenStr, dataPtr, numDigits);
-            lenStr[numDigits] = '\0';
-            int byteCount = atoi(lenStr);
-            dataPtr += numDigits;
-            
-            debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: binary header: #%d, byteCount=%d, width=%d\n", numDigits, byteCount, dataWidth);
-            
-            /* Each sample is dataWidth bytes */
-            int expectedPoints = byteCount / dataWidth;
-            numPoints = (expectedPoints < windowSize) ? expectedPoints : windowSize;
-            if (numPoints > maxPoints_) numPoints = maxPoints_;
-            
-            /* Parse little-endian signed integers (SRIbinary = native x86) */
-            unsigned char *binData = (unsigned char *)dataPtr;
-            if (dataWidth == 2) {
-                /* 16-bit signed little-endian: can memcpy directly on x86 */
-                int16_t *srcData = (int16_t *)binData;
-                for (i = 0; i < numPoints; i++) {
-                    rawWaveform_[channel][i] = srcData[i];
-                }
-            } else {
-                /* 8-bit signed */
-                for (i = 0; i < numPoints; i++) {
-                    int8_t value = (int8_t)binData[i];
-                    rawWaveform_[channel][i] = value;
-                }
-            }
-            for (i = numPoints; i < windowSize; i++) {
-                rawWaveform_[channel][i] = 0;
-            }
-        } else {
-            debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: invalid binary header numDigits=%d\n", numDigits);
+
+    if ((payloadBytes % (size_t)dataWidth) != 0) {
+        epicsMutexUnlock(dataLock_);
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readWaveformBinary: payload size %zu is not divisible by width %d\n",
+                   payloadBytes, dataWidth);
+        free(response);
+        return asynError;
+    }
+
+    numPoints = (int)(payloadBytes / (size_t)dataWidth);
+    if (numPoints > windowSize || numPoints > maxPoints_) {
+        epicsMutexUnlock(dataLock_);
+        debugPrint(TEK_DEBUG_WARNING,
+                   "DEBUG: readWaveformBinary: scope returned %d points, expected at most %d\n",
+                   numPoints, windowSize);
+        free(response);
+        return asynError;
+    }
+
+    /* Decode explicitly instead of casting an unaligned byte buffer. */
+    unsigned char *binData = (unsigned char *)response;
+    if (dataWidth == 2) {
+        for (i = 0; i < numPoints; i++) {
+            rawWaveform_[channel][i] =
+                (epicsInt16)((epicsUInt16)binData[2 * i] |
+                             ((epicsUInt16)binData[2 * i + 1] << 8));
         }
     } else {
-        debugPrint(TEK_DEBUG_WARNING, "DEBUG: readWaveformBinary: expected # header, got 0x%02X\n", (unsigned char)*dataPtr);
+        for (i = 0; i < numPoints; i++) {
+            rawWaveform_[channel][i] = (epicsInt8)binData[i];
+        }
     }
-    
+
     waveformLength_[channel] = numPoints;
     debugPrint(TEK_DEBUG_INFO, "DEBUG: readWaveformBinary: parsed %d points\n", numPoints);
 
