@@ -9,7 +9,7 @@
   </background_color>
   <widget type="choice" version="2.0.0">
     <name>Enable_Choice</name>
-    <pv_name>$(P):MEAS$(MEAS):Enable</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Enable</pv_name>
     <x>8</x>
     <y>8</y>
     <width>60</width>
@@ -43,7 +43,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Device_Name</name>
-    <pv_name>$(P):MEAS$(MEAS):Name</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Name</pv_name>
     <x>120</x>
     <y>12</y>
     <width>105</width>
@@ -64,7 +64,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Source</name>
-    <pv_name>$(P):MEAS$(MEAS):Source_RBV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Source_RBV</pv_name>
     <x>230</x>
     <y>10</y>
     <width>55</width>
@@ -81,7 +81,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Type</name>
-    <pv_name>$(P):MEAS$(MEAS):Type_RBV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Type_RBV</pv_name>
     <x>290</x>
     <y>10</y>
     <width>75</width>
@@ -98,7 +98,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Value</name>
-    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):VALUE</pv_name>
     <x>370</x>
     <y>8</y>
     <width>130</width>
@@ -118,7 +118,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Mean</name>
-    <pv_name>$(P):MEAS$(MEAS):Mean</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Mean</pv_name>
     <x>510</x>
     <y>10</y>
     <height>22</height>
@@ -136,7 +136,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Min</name>
-    <pv_name>$(P):MEAS$(MEAS):Min</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Min</pv_name>
     <x>620</x>
     <y>10</y>
     <width>80</width>
@@ -155,7 +155,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Max</name>
-    <pv_name>$(P):MEAS$(MEAS):Max</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Max</pv_name>
     <x>710</x>
     <y>10</y>
     <width>80</width>
@@ -174,7 +174,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>StdDev</name>
-    <pv_name>$(P):MEAS$(MEAS):Stddev</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Stddev</pv_name>
     <x>800</x>
     <y>10</y>
     <width>70</width>

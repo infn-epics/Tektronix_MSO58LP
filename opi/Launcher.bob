@@ -66,7 +66,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Connected_LED</name>
-      <pv_name>$(P):Connected</pv_name>
+      <pv_name>pva://$(P):Connected</pv_name>
       <x>115</x>
       <y>8</y>
       <width>25</width>
@@ -82,7 +82,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Connected_Text</name>
-      <pv_name>$(P):Connected</pv_name>
+      <pv_name>pva://$(P):Connected</pv_name>
       <x>145</x>
       <y>10</y>
       <width>120</width>
@@ -104,7 +104,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Poll_Rate</name>
-      <pv_name>$(P):PollRate</pv_name>
+      <pv_name>pva://$(P):PollRate</pv_name>
       <x>360</x>
       <y>8</y>
       <width>80</width>
@@ -140,7 +140,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Error_Count</name>
-      <pv_name>$(P):ErrorCount</pv_name>
+      <pv_name>pva://$(P):ErrorCount</pv_name>
       <x>70</x>
       <y>38</y>
       <width>60</width>
@@ -163,7 +163,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Poll_Count</name>
-      <pv_name>$(P):PollCount</pv_name>
+      <pv_name>pva://$(P):PollCount</pv_name>
       <x>200</x>
       <y>38</y>
       <height>22</height>
@@ -262,7 +262,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH1:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH1:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -284,7 +284,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH2:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH2:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -306,7 +306,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH3:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH3:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -328,7 +328,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH4:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH4:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -350,7 +350,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH5:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH5:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -372,7 +372,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH6:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH6:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -394,7 +394,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH7:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH7:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -416,7 +416,7 @@
           <exp bool_exp="pv0==1">
             <value>true</value>
           </exp>
-          <pv_name>$(P):CH8:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH8:Enable_RBV</pv_name>
         </rule>
       </rules>
     </widget>
@@ -445,7 +445,7 @@
     </widget>
     <widget type="choice" version="2.0.0">
       <name>Acquire_Choice</name>
-      <pv_name>$(P):Acquire</pv_name>
+      <pv_name>pva://$(P):Acquire</pv_name>
       <x>100</x>
       <y>5</y>
       <width>150</width>
@@ -468,7 +468,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>PollTime_Entry</name>
-      <pv_name>$(P):PollTime</pv_name>
+      <pv_name>pva://$(P):PollTime</pv_name>
       <x>340</x>
       <y>5</y>
       <width>80</width>

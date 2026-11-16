@@ -60,42 +60,42 @@
       <actions>
         <action type="write_pv">
           <description>Reset MEAS1 Stats</description>
-          <pv_name>$(P):MEAS1:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS1:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS2 Stats</description>
-          <pv_name>$(P):MEAS2:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS2:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS3 Stats</description>
-          <pv_name>$(P):MEAS3:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS3:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS4 Stats</description>
-          <pv_name>$(P):MEAS4:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS4:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS5 Stats</description>
-          <pv_name>$(P):MEAS5:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS5:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS6 Stats</description>
-          <pv_name>$(P):MEAS6:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS6:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS7 Stats</description>
-          <pv_name>$(P):MEAS7:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS7:RESET_STATS</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset MEAS8 Stats</description>
-          <pv_name>$(P):MEAS8:RESET_STATS</pv_name>
+          <pv_name>pva://$(P):MEAS8:RESET_STATS</pv_name>
           <value>1</value>
         </action>
       </actions>

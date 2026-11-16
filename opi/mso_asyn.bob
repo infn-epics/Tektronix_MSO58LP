@@ -43,7 +43,7 @@
   </widget>
   <widget type="led" version="2.0.0">
     <name>LED_Connected</name>
-    <pv_name>$(P):Connected</pv_name>
+    <pv_name>pva://$(P):Connected</pv_name>
     <x>820</x>
     <y>10</y>
     <width>24</width>
@@ -55,7 +55,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Txt_Connected</name>
-    <pv_name>$(P):Connected</pv_name>
+    <pv_name>pva://$(P):Connected</pv_name>
     <x>850</x>
     <y>12</y>
     <width>80</width>
@@ -69,7 +69,7 @@
         <value>1</value>
       </action>
     </actions>
-    <pv_name>$(P):Refresh</pv_name>
+    <pv_name>pva://$(P):Refresh</pv_name>
     <x>940</x>
     <y>8</y>
     <width>90</width>
@@ -99,7 +99,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH1:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH1:Enable_RBV</pv_name>
       </rule>
       <rule name="ch2_vis" prop_id="traces[1].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -108,7 +108,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH2:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH2:Enable_RBV</pv_name>
       </rule>
       <rule name="ch3_vis" prop_id="traces[2].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -117,7 +117,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH3:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH3:Enable_RBV</pv_name>
       </rule>
       <rule name="ch4_vis" prop_id="traces[3].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -126,7 +126,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH4:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH4:Enable_RBV</pv_name>
       </rule>
       <rule name="ch5_vis" prop_id="traces[4].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -135,7 +135,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH5:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH5:Enable_RBV</pv_name>
       </rule>
       <rule name="ch6_vis" prop_id="traces[5].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -144,7 +144,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH6:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH6:Enable_RBV</pv_name>
       </rule>
       <rule name="ch7_vis" prop_id="traces[6].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -153,7 +153,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH7:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH7:Enable_RBV</pv_name>
       </rule>
       <rule name="ch8_vis" prop_id="traces[7].visible" out_exp="false">
         <exp bool_exp="pv0==1">
@@ -162,7 +162,7 @@
         <exp bool_exp="true">
           <value>false</value>
         </exp>
-        <pv_name>$(P):CH8:Enable_RBV</pv_name>
+        <pv_name>pva://$(P):CH8:Enable_RBV</pv_name>
       </rule>
     </rules>
     <x_axis>
@@ -210,7 +210,7 @@
       <trace>
         <name>CH1</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH1:Waveform</y_pv>
+        <y_pv>pva://$(P):CH1:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -227,7 +227,7 @@
       <trace>
         <name>CH2</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH2:Waveform</y_pv>
+        <y_pv>pva://$(P):CH2:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -244,7 +244,7 @@
       <trace>
         <name>CH3</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH3:Waveform</y_pv>
+        <y_pv>pva://$(P):CH3:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -261,7 +261,7 @@
       <trace>
         <name>CH4</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH4:Waveform</y_pv>
+        <y_pv>pva://$(P):CH4:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -278,7 +278,7 @@
       <trace>
         <name>CH5</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH5:Waveform</y_pv>
+        <y_pv>pva://$(P):CH5:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -295,7 +295,7 @@
       <trace>
         <name>CH6</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH6:Waveform</y_pv>
+        <y_pv>pva://$(P):CH6:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -312,7 +312,7 @@
       <trace>
         <name>CH7</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH7:Waveform</y_pv>
+        <y_pv>pva://$(P):CH7:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -329,7 +329,7 @@
       <trace>
         <name>CH8</name>
         <x_pv></x_pv>
-        <y_pv>$(P):CH8:Waveform</y_pv>
+        <y_pv>pva://$(P):CH8:Waveform</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -350,7 +350,7 @@
           <color red="0" green="100" blue="255">
           </color>
         </color>
-        <pv_name>$(P):CH1:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH1:MarkerStart</pv_name>
         <interactive>true</interactive>
         <visible>true</visible>
       </marker>
@@ -359,7 +359,7 @@
           <color red="255" green="50" blue="50">
           </color>
         </color>
-        <pv_name>$(P):CH1:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH1:MarkerEnd</pv_name>
         <interactive>true</interactive>
         <visible>true</visible>
       </marker>
@@ -455,7 +455,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH1</name>
-      <pv_name>$(P):CH1:Enable</pv_name>
+      <pv_name>pva://$(P):CH1:Enable</pv_name>
       <x>6</x>
       <y>50</y>
       <width>30</width>
@@ -478,7 +478,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH1</name>
-      <pv_name>$(P):CH1:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH1:Label_RBV</pv_name>
       <x>70</x>
       <y>52</y>
       <width>80</width>
@@ -486,7 +486,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH1</name>
-      <pv_name>$(P):CH1:NrPt</pv_name>
+      <pv_name>pva://$(P):CH1:NrPt</pv_name>
       <x>155</x>
       <y>52</y>
       <width>50</width>
@@ -494,7 +494,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH1</name>
-      <pv_name>$(P):CH1:DataReady</pv_name>
+      <pv_name>pva://$(P):CH1:DataReady</pv_name>
       <x>215</x>
       <y>52</y>
       <width>18</width>
@@ -502,7 +502,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH1</name>
-      <pv_name>$(P):CH1:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH1:RefreshRate</pv_name>
       <x>240</x>
       <y>52</y>
       <width>50</width>
@@ -512,7 +512,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH2</name>
-      <pv_name>$(P):CH2:Enable</pv_name>
+      <pv_name>pva://$(P):CH2:Enable</pv_name>
       <x>6</x>
       <y>75</y>
       <width>30</width>
@@ -535,7 +535,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH2</name>
-      <pv_name>$(P):CH2:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH2:Label_RBV</pv_name>
       <x>70</x>
       <y>77</y>
       <width>80</width>
@@ -543,7 +543,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH2</name>
-      <pv_name>$(P):CH2:NrPt</pv_name>
+      <pv_name>pva://$(P):CH2:NrPt</pv_name>
       <x>155</x>
       <y>77</y>
       <width>50</width>
@@ -551,7 +551,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH2</name>
-      <pv_name>$(P):CH2:DataReady</pv_name>
+      <pv_name>pva://$(P):CH2:DataReady</pv_name>
       <x>215</x>
       <y>77</y>
       <width>18</width>
@@ -559,7 +559,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH2</name>
-      <pv_name>$(P):CH2:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH2:RefreshRate</pv_name>
       <x>240</x>
       <y>77</y>
       <width>50</width>
@@ -569,7 +569,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH3</name>
-      <pv_name>$(P):CH3:Enable</pv_name>
+      <pv_name>pva://$(P):CH3:Enable</pv_name>
       <x>6</x>
       <y>100</y>
       <width>30</width>
@@ -592,7 +592,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH3</name>
-      <pv_name>$(P):CH3:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH3:Label_RBV</pv_name>
       <x>70</x>
       <y>102</y>
       <width>80</width>
@@ -600,7 +600,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH3</name>
-      <pv_name>$(P):CH3:NrPt</pv_name>
+      <pv_name>pva://$(P):CH3:NrPt</pv_name>
       <x>155</x>
       <y>102</y>
       <width>50</width>
@@ -608,7 +608,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH3</name>
-      <pv_name>$(P):CH3:DataReady</pv_name>
+      <pv_name>pva://$(P):CH3:DataReady</pv_name>
       <x>215</x>
       <y>102</y>
       <width>18</width>
@@ -616,7 +616,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH3</name>
-      <pv_name>$(P):CH3:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH3:RefreshRate</pv_name>
       <x>240</x>
       <y>102</y>
       <width>50</width>
@@ -626,7 +626,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH4</name>
-      <pv_name>$(P):CH4:Enable</pv_name>
+      <pv_name>pva://$(P):CH4:Enable</pv_name>
       <x>6</x>
       <y>125</y>
       <width>30</width>
@@ -649,7 +649,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH4</name>
-      <pv_name>$(P):CH4:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH4:Label_RBV</pv_name>
       <x>70</x>
       <y>127</y>
       <width>80</width>
@@ -657,7 +657,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH4</name>
-      <pv_name>$(P):CH4:NrPt</pv_name>
+      <pv_name>pva://$(P):CH4:NrPt</pv_name>
       <x>155</x>
       <y>127</y>
       <width>50</width>
@@ -665,7 +665,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH4</name>
-      <pv_name>$(P):CH4:DataReady</pv_name>
+      <pv_name>pva://$(P):CH4:DataReady</pv_name>
       <x>215</x>
       <y>127</y>
       <width>18</width>
@@ -673,7 +673,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH4</name>
-      <pv_name>$(P):CH4:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH4:RefreshRate</pv_name>
       <x>240</x>
       <y>127</y>
       <width>50</width>
@@ -683,7 +683,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH5</name>
-      <pv_name>$(P):CH5:Enable</pv_name>
+      <pv_name>pva://$(P):CH5:Enable</pv_name>
       <x>6</x>
       <y>150</y>
       <width>30</width>
@@ -706,7 +706,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH5</name>
-      <pv_name>$(P):CH5:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH5:Label_RBV</pv_name>
       <x>70</x>
       <y>152</y>
       <width>80</width>
@@ -714,7 +714,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH5</name>
-      <pv_name>$(P):CH5:NrPt</pv_name>
+      <pv_name>pva://$(P):CH5:NrPt</pv_name>
       <x>155</x>
       <y>152</y>
       <width>50</width>
@@ -722,7 +722,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH5</name>
-      <pv_name>$(P):CH5:DataReady</pv_name>
+      <pv_name>pva://$(P):CH5:DataReady</pv_name>
       <x>215</x>
       <y>152</y>
       <width>18</width>
@@ -730,7 +730,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH5</name>
-      <pv_name>$(P):CH5:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH5:RefreshRate</pv_name>
       <x>240</x>
       <y>152</y>
       <width>50</width>
@@ -740,7 +740,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH6</name>
-      <pv_name>$(P):CH6:Enable</pv_name>
+      <pv_name>pva://$(P):CH6:Enable</pv_name>
       <x>6</x>
       <y>175</y>
       <width>30</width>
@@ -763,7 +763,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH6</name>
-      <pv_name>$(P):CH6:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH6:Label_RBV</pv_name>
       <x>70</x>
       <y>177</y>
       <width>80</width>
@@ -771,7 +771,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH6</name>
-      <pv_name>$(P):CH6:NrPt</pv_name>
+      <pv_name>pva://$(P):CH6:NrPt</pv_name>
       <x>155</x>
       <y>177</y>
       <width>50</width>
@@ -779,7 +779,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH6</name>
-      <pv_name>$(P):CH6:DataReady</pv_name>
+      <pv_name>pva://$(P):CH6:DataReady</pv_name>
       <x>215</x>
       <y>177</y>
       <width>18</width>
@@ -787,7 +787,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH6</name>
-      <pv_name>$(P):CH6:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH6:RefreshRate</pv_name>
       <x>240</x>
       <y>177</y>
       <width>50</width>
@@ -797,7 +797,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH7</name>
-      <pv_name>$(P):CH7:Enable</pv_name>
+      <pv_name>pva://$(P):CH7:Enable</pv_name>
       <x>6</x>
       <y>200</y>
       <width>30</width>
@@ -820,7 +820,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH7</name>
-      <pv_name>$(P):CH7:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH7:Label_RBV</pv_name>
       <x>70</x>
       <y>202</y>
       <width>80</width>
@@ -828,7 +828,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH7</name>
-      <pv_name>$(P):CH7:NrPt</pv_name>
+      <pv_name>pva://$(P):CH7:NrPt</pv_name>
       <x>155</x>
       <y>202</y>
       <width>50</width>
@@ -836,7 +836,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH7</name>
-      <pv_name>$(P):CH7:DataReady</pv_name>
+      <pv_name>pva://$(P):CH7:DataReady</pv_name>
       <x>215</x>
       <y>202</y>
       <width>18</width>
@@ -844,7 +844,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH7</name>
-      <pv_name>$(P):CH7:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH7:RefreshRate</pv_name>
       <x>240</x>
       <y>202</y>
       <width>50</width>
@@ -854,7 +854,7 @@
     </widget>
     <widget type="checkbox" version="2.0.0">
       <name>En_CH8</name>
-      <pv_name>$(P):CH8:Enable</pv_name>
+      <pv_name>pva://$(P):CH8:Enable</pv_name>
       <x>6</x>
       <y>225</y>
       <width>30</width>
@@ -877,7 +877,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>LabelCH8</name>
-      <pv_name>$(P):CH8:Label_RBV</pv_name>
+      <pv_name>pva://$(P):CH8:Label_RBV</pv_name>
       <x>70</x>
       <y>227</y>
       <width>80</width>
@@ -885,7 +885,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>PtsCH8</name>
-      <pv_name>$(P):CH8:NrPt</pv_name>
+      <pv_name>pva://$(P):CH8:NrPt</pv_name>
       <x>155</x>
       <y>227</y>
       <width>50</width>
@@ -893,7 +893,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Rdy_CH8</name>
-      <pv_name>$(P):CH8:DataReady</pv_name>
+      <pv_name>pva://$(P):CH8:DataReady</pv_name>
       <x>215</x>
       <y>227</y>
       <width>18</width>
@@ -901,7 +901,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Rate_CH8</name>
-      <pv_name>$(P):CH8:RefreshRate</pv_name>
+      <pv_name>pva://$(P):CH8:RefreshRate</pv_name>
       <x>240</x>
       <y>227</y>
       <width>50</width>
@@ -1085,22 +1085,22 @@
       <actions>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH1:Enable</pv_name>
+          <pv_name>pva://$(P):CH1:Enable</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH2:Enable</pv_name>
+          <pv_name>pva://$(P):CH2:Enable</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH3:Enable</pv_name>
+          <pv_name>pva://$(P):CH3:Enable</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH4:Enable</pv_name>
+          <pv_name>pva://$(P):CH4:Enable</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -1116,42 +1116,42 @@
       <actions>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH1:Enable</pv_name>
+          <pv_name>pva://$(P):CH1:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH2:Enable</pv_name>
+          <pv_name>pva://$(P):CH2:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH3:Enable</pv_name>
+          <pv_name>pva://$(P):CH3:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH4:Enable</pv_name>
+          <pv_name>pva://$(P):CH4:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH5:Enable</pv_name>
+          <pv_name>pva://$(P):CH5:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH6:Enable</pv_name>
+          <pv_name>pva://$(P):CH6:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH7:Enable</pv_name>
+          <pv_name>pva://$(P):CH7:Enable</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Write PV</description>
-          <pv_name>$(P):CH8:Enable</pv_name>
+          <pv_name>pva://$(P):CH8:Enable</pv_name>
           <value>0</value>
         </action>
       </actions>
@@ -1194,7 +1194,7 @@
     </widget>
     <widget type="choice" version="2.0.0">
       <name>Ctrl_Acquire</name>
-      <pv_name>$(P):Acquire</pv_name>
+      <pv_name>pva://$(P):Acquire</pv_name>
       <x>70</x>
       <y>30</y>
       <width>170</width>
@@ -1213,7 +1213,7 @@
     </widget>
     <widget type="choice" version="2.0.0">
       <name>Ctrl_RunStop</name>
-      <pv_name>$(P):RunStop</pv_name>
+      <pv_name>pva://$(P):RunStop</pv_name>
       <x>70</x>
       <y>60</y>
       <width>170</width>
@@ -1232,7 +1232,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Ctrl_PollTime</name>
-      <pv_name>$(P):PollTime</pv_name>
+      <pv_name>pva://$(P):PollTime</pv_name>
       <x>70</x>
       <y>92</y>
       <width>80</width>
@@ -1247,7 +1247,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Val_PollRate</name>
-      <pv_name>$(P):PollRate</pv_name>
+      <pv_name>pva://$(P):PollRate</pv_name>
       <x>180</x>
       <y>95</y>
       <width>40</width>
@@ -1280,7 +1280,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>Ctrl_DebugLevel</name>
-      <pv_name>$(P):DebugLevel</pv_name>
+      <pv_name>pva://$(P):DebugLevel</pv_name>
       <x>54</x>
       <y>14</y>
       <width>62</width>
@@ -1359,7 +1359,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start1</name>
-      <pv_name>$(P):CH1:DataStart</pv_name>
+      <pv_name>pva://$(P):CH1:DataStart</pv_name>
       <x>45</x>
       <y>44</y>
       <width>55</width>
@@ -1367,7 +1367,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop1</name>
-      <pv_name>$(P):CH1:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH1:WindowSize</pv_name>
       <x>105</x>
       <y>44</y>
       <width>55</width>
@@ -1390,7 +1390,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start2</name>
-      <pv_name>$(P):CH2:DataStart</pv_name>
+      <pv_name>pva://$(P):CH2:DataStart</pv_name>
       <x>45</x>
       <y>68</y>
       <width>55</width>
@@ -1398,7 +1398,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop2</name>
-      <pv_name>$(P):CH2:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH2:WindowSize</pv_name>
       <x>105</x>
       <y>68</y>
       <width>55</width>
@@ -1421,7 +1421,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start3</name>
-      <pv_name>$(P):CH3:DataStart</pv_name>
+      <pv_name>pva://$(P):CH3:DataStart</pv_name>
       <x>45</x>
       <y>92</y>
       <width>55</width>
@@ -1429,7 +1429,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop3</name>
-      <pv_name>$(P):CH3:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH3:WindowSize</pv_name>
       <x>105</x>
       <y>92</y>
       <width>55</width>
@@ -1452,7 +1452,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start4</name>
-      <pv_name>$(P):CH4:DataStart</pv_name>
+      <pv_name>pva://$(P):CH4:DataStart</pv_name>
       <x>45</x>
       <y>116</y>
       <width>55</width>
@@ -1460,7 +1460,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop4</name>
-      <pv_name>$(P):CH4:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH4:WindowSize</pv_name>
       <x>105</x>
       <y>116</y>
       <width>55</width>
@@ -1483,7 +1483,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start5</name>
-      <pv_name>$(P):CH5:DataStart</pv_name>
+      <pv_name>pva://$(P):CH5:DataStart</pv_name>
       <x>45</x>
       <y>140</y>
       <width>55</width>
@@ -1491,7 +1491,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop5</name>
-      <pv_name>$(P):CH5:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH5:WindowSize</pv_name>
       <x>105</x>
       <y>140</y>
       <width>55</width>
@@ -1514,7 +1514,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start6</name>
-      <pv_name>$(P):CH6:DataStart</pv_name>
+      <pv_name>pva://$(P):CH6:DataStart</pv_name>
       <x>45</x>
       <y>164</y>
       <width>55</width>
@@ -1522,7 +1522,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop6</name>
-      <pv_name>$(P):CH6:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH6:WindowSize</pv_name>
       <x>105</x>
       <y>164</y>
       <width>55</width>
@@ -1545,7 +1545,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start7</name>
-      <pv_name>$(P):CH7:DataStart</pv_name>
+      <pv_name>pva://$(P):CH7:DataStart</pv_name>
       <x>45</x>
       <y>188</y>
       <width>55</width>
@@ -1553,7 +1553,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop7</name>
-      <pv_name>$(P):CH7:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH7:WindowSize</pv_name>
       <x>105</x>
       <y>188</y>
       <width>55</width>
@@ -1576,7 +1576,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Start8</name>
-      <pv_name>$(P):CH8:DataStart</pv_name>
+      <pv_name>pva://$(P):CH8:DataStart</pv_name>
       <x>45</x>
       <y>212</y>
       <width>55</width>
@@ -1584,7 +1584,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>DW_Stop8</name>
-      <pv_name>$(P):CH8:WindowSize</pv_name>
+      <pv_name>pva://$(P):CH8:WindowSize</pv_name>
       <x>105</x>
       <y>212</y>
       <width>55</width>
@@ -1592,7 +1592,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width1</name>
-      <pv_name>$(P):CH1:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH1:DataWidth</pv_name>
       <x>171</x>
       <y>42</y>
       <width>75</width>
@@ -1600,7 +1600,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width2</name>
-      <pv_name>$(P):CH2:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH2:DataWidth</pv_name>
       <x>171</x>
       <y>66</y>
       <width>75</width>
@@ -1608,7 +1608,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width3</name>
-      <pv_name>$(P):CH3:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH3:DataWidth</pv_name>
       <x>171</x>
       <y>90</y>
       <width>75</width>
@@ -1616,7 +1616,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width4</name>
-      <pv_name>$(P):CH4:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH4:DataWidth</pv_name>
       <x>171</x>
       <y>114</y>
       <width>75</width>
@@ -1624,7 +1624,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width5</name>
-      <pv_name>$(P):CH5:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH5:DataWidth</pv_name>
       <x>171</x>
       <y>138</y>
       <width>75</width>
@@ -1632,7 +1632,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width6</name>
-      <pv_name>$(P):CH6:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH6:DataWidth</pv_name>
       <x>171</x>
       <y>162</y>
       <width>75</width>
@@ -1640,7 +1640,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width7</name>
-      <pv_name>$(P):CH7:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH7:DataWidth</pv_name>
       <x>171</x>
       <y>186</y>
       <width>75</width>
@@ -1648,7 +1648,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>DW_Width8</name>
-      <pv_name>$(P):CH8:DataWidth</pv_name>
+      <pv_name>pva://$(P):CH8:DataWidth</pv_name>
       <x>171</x>
       <y>210</y>
       <width>75</width>
@@ -1742,7 +1742,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start1</name>
-      <pv_name>$(P):CH1:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerStart</pv_name>
       <x>45</x>
       <y>56</y>
       <width>75</width>
@@ -1751,7 +1751,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End1</name>
-      <pv_name>$(P):CH1:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerEnd</pv_name>
       <x>125</x>
       <y>56</y>
       <width>75</width>
@@ -1760,7 +1760,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples1_S</name>
-      <pv_name>$(P):CH1:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerStartSample</pv_name>
       <x>210</x>
       <y>58</y>
       <width>45</width>
@@ -1779,7 +1779,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples1_E</name>
-      <pv_name>$(P):CH1:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerEndSample</pv_name>
       <x>267</x>
       <y>58</y>
       <width>45</width>
@@ -1806,7 +1806,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start2</name>
-      <pv_name>$(P):CH2:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH2:MarkerStart</pv_name>
       <x>45</x>
       <y>78</y>
       <width>75</width>
@@ -1815,7 +1815,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End2</name>
-      <pv_name>$(P):CH2:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH2:MarkerEnd</pv_name>
       <x>125</x>
       <y>78</y>
       <width>75</width>
@@ -1824,7 +1824,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples2_S</name>
-      <pv_name>$(P):CH2:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH2:MarkerStartSample</pv_name>
       <x>210</x>
       <y>80</y>
       <width>45</width>
@@ -1843,7 +1843,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples2_E</name>
-      <pv_name>$(P):CH2:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH2:MarkerEndSample</pv_name>
       <x>267</x>
       <y>80</y>
       <width>45</width>
@@ -1870,7 +1870,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start3</name>
-      <pv_name>$(P):CH3:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH3:MarkerStart</pv_name>
       <x>45</x>
       <y>100</y>
       <width>75</width>
@@ -1879,7 +1879,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End3</name>
-      <pv_name>$(P):CH3:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH3:MarkerEnd</pv_name>
       <x>125</x>
       <y>100</y>
       <width>75</width>
@@ -1888,7 +1888,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples3_S</name>
-      <pv_name>$(P):CH3:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH3:MarkerStartSample</pv_name>
       <x>210</x>
       <y>102</y>
       <width>45</width>
@@ -1907,7 +1907,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples3_E</name>
-      <pv_name>$(P):CH3:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH3:MarkerEndSample</pv_name>
       <x>267</x>
       <y>102</y>
       <width>45</width>
@@ -1934,7 +1934,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start4</name>
-      <pv_name>$(P):CH4:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH4:MarkerStart</pv_name>
       <x>45</x>
       <y>122</y>
       <width>75</width>
@@ -1943,7 +1943,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End4</name>
-      <pv_name>$(P):CH4:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH4:MarkerEnd</pv_name>
       <x>125</x>
       <y>122</y>
       <width>75</width>
@@ -1952,7 +1952,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples4_S</name>
-      <pv_name>$(P):CH4:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH4:MarkerStartSample</pv_name>
       <x>210</x>
       <y>124</y>
       <width>45</width>
@@ -1971,7 +1971,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples4_E</name>
-      <pv_name>$(P):CH4:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH4:MarkerEndSample</pv_name>
       <x>267</x>
       <y>124</y>
       <width>45</width>
@@ -1998,7 +1998,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start5</name>
-      <pv_name>$(P):CH5:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH5:MarkerStart</pv_name>
       <x>45</x>
       <y>148</y>
       <width>75</width>
@@ -2007,7 +2007,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End5</name>
-      <pv_name>$(P):CH5:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH5:MarkerEnd</pv_name>
       <x>125</x>
       <y>148</y>
       <width>75</width>
@@ -2016,7 +2016,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples5_S</name>
-      <pv_name>$(P):CH5:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH5:MarkerStartSample</pv_name>
       <x>210</x>
       <y>150</y>
       <width>45</width>
@@ -2035,7 +2035,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples5_E</name>
-      <pv_name>$(P):CH5:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH5:MarkerEndSample</pv_name>
       <x>267</x>
       <y>150</y>
       <width>45</width>
@@ -2062,7 +2062,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start6</name>
-      <pv_name>$(P):CH6:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH6:MarkerStart</pv_name>
       <x>45</x>
       <y>170</y>
       <width>75</width>
@@ -2071,7 +2071,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End6</name>
-      <pv_name>$(P):CH6:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH6:MarkerEnd</pv_name>
       <x>125</x>
       <y>170</y>
       <width>75</width>
@@ -2080,7 +2080,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples6_S</name>
-      <pv_name>$(P):CH6:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH6:MarkerStartSample</pv_name>
       <x>210</x>
       <y>172</y>
       <width>45</width>
@@ -2099,7 +2099,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples6_E</name>
-      <pv_name>$(P):CH6:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH6:MarkerEndSample</pv_name>
       <x>267</x>
       <y>172</y>
       <width>45</width>
@@ -2126,7 +2126,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start7</name>
-      <pv_name>$(P):CH7:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH7:MarkerStart</pv_name>
       <x>45</x>
       <y>192</y>
       <width>75</width>
@@ -2135,7 +2135,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End7</name>
-      <pv_name>$(P):CH7:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH7:MarkerEnd</pv_name>
       <x>125</x>
       <y>192</y>
       <width>75</width>
@@ -2144,7 +2144,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples7_S</name>
-      <pv_name>$(P):CH7:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH7:MarkerStartSample</pv_name>
       <x>210</x>
       <y>194</y>
       <width>45</width>
@@ -2163,7 +2163,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples7_E</name>
-      <pv_name>$(P):CH7:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH7:MarkerEndSample</pv_name>
       <x>267</x>
       <y>194</y>
       <width>45</width>
@@ -2190,7 +2190,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_Start8</name>
-      <pv_name>$(P):CH8:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH8:MarkerStart</pv_name>
       <x>45</x>
       <y>214</y>
       <width>75</width>
@@ -2199,7 +2199,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Entry_End8</name>
-      <pv_name>$(P):CH8:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH8:MarkerEnd</pv_name>
       <x>125</x>
       <y>214</y>
       <width>75</width>
@@ -2208,7 +2208,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples8_S</name>
-      <pv_name>$(P):CH8:MarkerStartSample</pv_name>
+      <pv_name>pva://$(P):CH8:MarkerStartSample</pv_name>
       <x>210</x>
       <y>216</y>
       <width>45</width>
@@ -2227,7 +2227,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples8_E</name>
-      <pv_name>$(P):CH8:MarkerEndSample</pv_name>
+      <pv_name>pva://$(P):CH8:MarkerEndSample</pv_name>
       <x>267</x>
       <y>216</y>
       <width>45</width>
@@ -2257,41 +2257,41 @@
       <actions>
         <action type="write_pv">
           <description>Copy to CH2 Start</description>
-          <pv_name>$(P):CH2:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH2:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH3 Start</description>
-          <pv_name>$(P):CH3:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH3:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH4 Start</description>
-          <pv_name>$(P):CH4:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH4:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH5 Start</description>
-          <pv_name>$(P):CH5:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH5:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH6 Start</description>
-          <pv_name>$(P):CH6:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH6:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH7 Start</description>
-          <pv_name>$(P):CH7:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH7:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH8 Start</description>
-          <pv_name>$(P):CH8:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH8:MarkerStart</pv_name>
           <value>$(pv_value)</value>
         </action>
       </actions>
-      <pv_name>$(P):CH1:MarkerStart</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerStart</pv_name>
       <text>Copy CH1 Start→All</text>
       <x>6</x>
       <y>258</y>
@@ -2304,41 +2304,41 @@
       <actions>
         <action type="write_pv">
           <description>Copy to CH2 End</description>
-          <pv_name>$(P):CH2:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH2:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH3 End</description>
-          <pv_name>$(P):CH3:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH3:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH4 End</description>
-          <pv_name>$(P):CH4:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH4:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH5 End</description>
-          <pv_name>$(P):CH5:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH5:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH6 End</description>
-          <pv_name>$(P):CH6:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH6:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH7 End</description>
-          <pv_name>$(P):CH7:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH7:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
         <action type="write_pv">
           <description>Copy to CH8 End</description>
-          <pv_name>$(P):CH8:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH8:MarkerEnd</pv_name>
           <value>$(pv_value)</value>
         </action>
       </actions>
-      <pv_name>$(P):CH1:MarkerEnd</pv_name>
+      <pv_name>pva://$(P):CH1:MarkerEnd</pv_name>
       <text>Copy CH1 End→All</text>
       <x>165</x>
       <y>258</y>
@@ -2351,82 +2351,82 @@
       <actions>
         <action type="write_pv">
           <description>Reset CH1 Start</description>
-          <pv_name>$(P):CH1:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH1:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH1 End</description>
-          <pv_name>$(P):CH1:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH1:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH2 Start</description>
-          <pv_name>$(P):CH2:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH2:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH2 End</description>
-          <pv_name>$(P):CH2:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH2:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH3 Start</description>
-          <pv_name>$(P):CH3:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH3:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH3 End</description>
-          <pv_name>$(P):CH3:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH3:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH4 Start</description>
-          <pv_name>$(P):CH4:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH4:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH4 End</description>
-          <pv_name>$(P):CH4:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH4:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH5 Start</description>
-          <pv_name>$(P):CH5:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH5:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH5 End</description>
-          <pv_name>$(P):CH5:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH5:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH6 Start</description>
-          <pv_name>$(P):CH6:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH6:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH6 End</description>
-          <pv_name>$(P):CH6:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH6:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH7 Start</description>
-          <pv_name>$(P):CH7:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH7:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH7 End</description>
-          <pv_name>$(P):CH7:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH7:MarkerEnd</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH8 Start</description>
-          <pv_name>$(P):CH8:MarkerStart</pv_name>
+          <pv_name>pva://$(P):CH8:MarkerStart</pv_name>
           <value>0</value>
         </action>
         <action type="write_pv">
           <description>Reset CH8 End</description>
-          <pv_name>$(P):CH8:MarkerEnd</pv_name>
+          <pv_name>pva://$(P):CH8:MarkerEnd</pv_name>
           <value>0</value>
         </action>
       </actions>
@@ -2468,7 +2468,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Val_PollCount</name>
-      <pv_name>$(P):PollCount</pv_name>
+      <pv_name>pva://$(P):PollCount</pv_name>
       <x>80</x>
       <y>30</y>
       <width>70</width>
@@ -2482,7 +2482,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Val_ErrorCount</name>
-      <pv_name>$(P):ErrorCount</pv_name>
+      <pv_name>pva://$(P):ErrorCount</pv_name>
       <x>200</x>
       <y>30</y>
       <width>40</width>
@@ -2496,7 +2496,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Val_CommTime</name>
-      <pv_name>$(P):CommTime</pv_name>
+      <pv_name>pva://$(P):CommTime</pv_name>
       <x>80</x>
       <y>55</y>
       <width>60</width>
@@ -2537,42 +2537,42 @@
       <actions>
         <action type="write_pv">
           <description>Reset CH1</description>
-          <pv_name>$(P):CH1:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH1:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH2</description>
-          <pv_name>$(P):CH2:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH2:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH3</description>
-          <pv_name>$(P):CH3:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH3:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH4</description>
-          <pv_name>$(P):CH4:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH4:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH5</description>
-          <pv_name>$(P):CH5:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH5:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH6</description>
-          <pv_name>$(P):CH6:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH6:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH7</description>
-          <pv_name>$(P):CH7:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH7:ResetStats</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset CH8</description>
-          <pv_name>$(P):CH8:ResetStats</pv_name>
+          <pv_name>pva://$(P):CH8:ResetStats</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -2704,12 +2704,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH1:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH1:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Label</name>
-        <pv_name>$(P):CH1:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH1:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -2724,7 +2724,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Mean</name>
-        <pv_name>$(P):CH1:Mean</pv_name>
+        <pv_name>pva://$(P):CH1:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -2733,7 +2733,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Min</name>
-        <pv_name>$(P):CH1:Min</pv_name>
+        <pv_name>pva://$(P):CH1:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -2742,7 +2742,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Max</name>
-        <pv_name>$(P):CH1:Max</pv_name>
+        <pv_name>pva://$(P):CH1:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -2751,7 +2751,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_PkPk</name>
-        <pv_name>$(P):CH1:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH1:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -2760,7 +2760,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_RMS</name>
-        <pv_name>$(P):CH1:RMS</pv_name>
+        <pv_name>pva://$(P):CH1:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -2769,7 +2769,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_StdDev</name>
-        <pv_name>$(P):CH1:StdDev</pv_name>
+        <pv_name>pva://$(P):CH1:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -2778,7 +2778,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Integral</name>
-        <pv_name>$(P):CH1:Integral</pv_name>
+        <pv_name>pva://$(P):CH1:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -2787,7 +2787,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_Charge</name>
-        <pv_name>$(P):CH1:Charge</pv_name>
+        <pv_name>pva://$(P):CH1:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -2796,7 +2796,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_WinStart</name>
-        <pv_name>$(P):CH1:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH1:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -2809,7 +2809,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH1_WinEnd</name>
-        <pv_name>$(P):CH1:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH1:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -2827,12 +2827,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH2:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH2:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Label</name>
-        <pv_name>$(P):CH2:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH2:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -2847,7 +2847,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Mean</name>
-        <pv_name>$(P):CH2:Mean</pv_name>
+        <pv_name>pva://$(P):CH2:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -2856,7 +2856,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Min</name>
-        <pv_name>$(P):CH2:Min</pv_name>
+        <pv_name>pva://$(P):CH2:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -2865,7 +2865,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Max</name>
-        <pv_name>$(P):CH2:Max</pv_name>
+        <pv_name>pva://$(P):CH2:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -2874,7 +2874,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_PkPk</name>
-        <pv_name>$(P):CH2:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH2:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -2883,7 +2883,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_RMS</name>
-        <pv_name>$(P):CH2:RMS</pv_name>
+        <pv_name>pva://$(P):CH2:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -2892,7 +2892,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_StdDev</name>
-        <pv_name>$(P):CH2:StdDev</pv_name>
+        <pv_name>pva://$(P):CH2:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -2901,7 +2901,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Integral</name>
-        <pv_name>$(P):CH2:Integral</pv_name>
+        <pv_name>pva://$(P):CH2:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -2910,7 +2910,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_Charge</name>
-        <pv_name>$(P):CH2:Charge</pv_name>
+        <pv_name>pva://$(P):CH2:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -2919,7 +2919,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_WinStart</name>
-        <pv_name>$(P):CH2:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH2:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -2932,7 +2932,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH2_WinEnd</name>
-        <pv_name>$(P):CH2:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH2:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -2950,12 +2950,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH3:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH3:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Label</name>
-        <pv_name>$(P):CH3:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH3:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -2970,7 +2970,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Mean</name>
-        <pv_name>$(P):CH3:Mean</pv_name>
+        <pv_name>pva://$(P):CH3:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -2979,7 +2979,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Min</name>
-        <pv_name>$(P):CH3:Min</pv_name>
+        <pv_name>pva://$(P):CH3:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -2988,7 +2988,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Max</name>
-        <pv_name>$(P):CH3:Max</pv_name>
+        <pv_name>pva://$(P):CH3:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -2997,7 +2997,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_PkPk</name>
-        <pv_name>$(P):CH3:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH3:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3006,7 +3006,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_RMS</name>
-        <pv_name>$(P):CH3:RMS</pv_name>
+        <pv_name>pva://$(P):CH3:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3015,7 +3015,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_StdDev</name>
-        <pv_name>$(P):CH3:StdDev</pv_name>
+        <pv_name>pva://$(P):CH3:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3024,7 +3024,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Integral</name>
-        <pv_name>$(P):CH3:Integral</pv_name>
+        <pv_name>pva://$(P):CH3:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3033,7 +3033,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_Charge</name>
-        <pv_name>$(P):CH3:Charge</pv_name>
+        <pv_name>pva://$(P):CH3:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3042,7 +3042,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_WinStart</name>
-        <pv_name>$(P):CH3:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH3:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3055,7 +3055,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH3_WinEnd</name>
-        <pv_name>$(P):CH3:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH3:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3073,12 +3073,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH4:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH4:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Label</name>
-        <pv_name>$(P):CH4:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH4:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -3093,7 +3093,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Mean</name>
-        <pv_name>$(P):CH4:Mean</pv_name>
+        <pv_name>pva://$(P):CH4:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -3102,7 +3102,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Min</name>
-        <pv_name>$(P):CH4:Min</pv_name>
+        <pv_name>pva://$(P):CH4:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -3111,7 +3111,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Max</name>
-        <pv_name>$(P):CH4:Max</pv_name>
+        <pv_name>pva://$(P):CH4:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -3120,7 +3120,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_PkPk</name>
-        <pv_name>$(P):CH4:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH4:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3129,7 +3129,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_RMS</name>
-        <pv_name>$(P):CH4:RMS</pv_name>
+        <pv_name>pva://$(P):CH4:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3138,7 +3138,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_StdDev</name>
-        <pv_name>$(P):CH4:StdDev</pv_name>
+        <pv_name>pva://$(P):CH4:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3147,7 +3147,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Integral</name>
-        <pv_name>$(P):CH4:Integral</pv_name>
+        <pv_name>pva://$(P):CH4:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3156,7 +3156,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_Charge</name>
-        <pv_name>$(P):CH4:Charge</pv_name>
+        <pv_name>pva://$(P):CH4:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3165,7 +3165,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_WinStart</name>
-        <pv_name>$(P):CH4:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH4:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3178,7 +3178,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH4_WinEnd</name>
-        <pv_name>$(P):CH4:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH4:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3226,12 +3226,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH5:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH5:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Label</name>
-        <pv_name>$(P):CH5:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH5:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -3246,7 +3246,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Mean</name>
-        <pv_name>$(P):CH5:Mean</pv_name>
+        <pv_name>pva://$(P):CH5:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -3255,7 +3255,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Min</name>
-        <pv_name>$(P):CH5:Min</pv_name>
+        <pv_name>pva://$(P):CH5:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -3264,7 +3264,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Max</name>
-        <pv_name>$(P):CH5:Max</pv_name>
+        <pv_name>pva://$(P):CH5:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -3273,7 +3273,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_PkPk</name>
-        <pv_name>$(P):CH5:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH5:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3282,7 +3282,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_RMS</name>
-        <pv_name>$(P):CH5:RMS</pv_name>
+        <pv_name>pva://$(P):CH5:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3291,7 +3291,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_StdDev</name>
-        <pv_name>$(P):CH5:StdDev</pv_name>
+        <pv_name>pva://$(P):CH5:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3300,7 +3300,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Integral</name>
-        <pv_name>$(P):CH5:Integral</pv_name>
+        <pv_name>pva://$(P):CH5:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3309,7 +3309,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_Charge</name>
-        <pv_name>$(P):CH5:Charge</pv_name>
+        <pv_name>pva://$(P):CH5:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3318,7 +3318,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_WinStart</name>
-        <pv_name>$(P):CH5:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH5:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3331,7 +3331,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH5_WinEnd</name>
-        <pv_name>$(P):CH5:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH5:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3349,12 +3349,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH6:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH6:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Label</name>
-        <pv_name>$(P):CH6:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH6:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -3369,7 +3369,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Mean</name>
-        <pv_name>$(P):CH6:Mean</pv_name>
+        <pv_name>pva://$(P):CH6:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -3378,7 +3378,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Min</name>
-        <pv_name>$(P):CH6:Min</pv_name>
+        <pv_name>pva://$(P):CH6:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -3387,7 +3387,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Max</name>
-        <pv_name>$(P):CH6:Max</pv_name>
+        <pv_name>pva://$(P):CH6:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -3396,7 +3396,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_PkPk</name>
-        <pv_name>$(P):CH6:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH6:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3405,7 +3405,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_RMS</name>
-        <pv_name>$(P):CH6:RMS</pv_name>
+        <pv_name>pva://$(P):CH6:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3414,7 +3414,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_StdDev</name>
-        <pv_name>$(P):CH6:StdDev</pv_name>
+        <pv_name>pva://$(P):CH6:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3423,7 +3423,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Integral</name>
-        <pv_name>$(P):CH6:Integral</pv_name>
+        <pv_name>pva://$(P):CH6:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3432,7 +3432,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_Charge</name>
-        <pv_name>$(P):CH6:Charge</pv_name>
+        <pv_name>pva://$(P):CH6:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3441,7 +3441,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_WinStart</name>
-        <pv_name>$(P):CH6:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH6:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3454,7 +3454,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH6_WinEnd</name>
-        <pv_name>$(P):CH6:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH6:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3472,12 +3472,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH7:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH7:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Label</name>
-        <pv_name>$(P):CH7:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH7:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -3492,7 +3492,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Mean</name>
-        <pv_name>$(P):CH7:Mean</pv_name>
+        <pv_name>pva://$(P):CH7:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -3501,7 +3501,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Min</name>
-        <pv_name>$(P):CH7:Min</pv_name>
+        <pv_name>pva://$(P):CH7:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -3510,7 +3510,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Max</name>
-        <pv_name>$(P):CH7:Max</pv_name>
+        <pv_name>pva://$(P):CH7:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -3519,7 +3519,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_PkPk</name>
-        <pv_name>$(P):CH7:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH7:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3528,7 +3528,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_RMS</name>
-        <pv_name>$(P):CH7:RMS</pv_name>
+        <pv_name>pva://$(P):CH7:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3537,7 +3537,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_StdDev</name>
-        <pv_name>$(P):CH7:StdDev</pv_name>
+        <pv_name>pva://$(P):CH7:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3546,7 +3546,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Integral</name>
-        <pv_name>$(P):CH7:Integral</pv_name>
+        <pv_name>pva://$(P):CH7:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3555,7 +3555,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_Charge</name>
-        <pv_name>$(P):CH7:Charge</pv_name>
+        <pv_name>pva://$(P):CH7:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3564,7 +3564,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_WinStart</name>
-        <pv_name>$(P):CH7:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH7:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3577,7 +3577,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH7_WinEnd</name>
-        <pv_name>$(P):CH7:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH7:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3595,12 +3595,12 @@
           <exp bool_exp="pv0==0">
             <value>false</value>
           </exp>
-          <pv_name>$(P):CH8:Enable_RBV</pv_name>
+          <pv_name>pva://$(P):CH8:Enable_RBV</pv_name>
         </rule>
       </rules>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Label</name>
-        <pv_name>$(P):CH8:Label_RBV</pv_name>
+        <pv_name>pva://$(P):CH8:Label_RBV</pv_name>
         <x>6</x>
         <width>80</width>
         <height>18</height>
@@ -3615,7 +3615,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Mean</name>
-        <pv_name>$(P):CH8:Mean</pv_name>
+        <pv_name>pva://$(P):CH8:Mean</pv_name>
         <x>90</x>
         <width>80</width>
         <height>18</height>
@@ -3624,7 +3624,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Min</name>
-        <pv_name>$(P):CH8:Min</pv_name>
+        <pv_name>pva://$(P):CH8:Min</pv_name>
         <x>175</x>
         <width>80</width>
         <height>18</height>
@@ -3633,7 +3633,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Max</name>
-        <pv_name>$(P):CH8:Max</pv_name>
+        <pv_name>pva://$(P):CH8:Max</pv_name>
         <x>260</x>
         <width>80</width>
         <height>18</height>
@@ -3642,7 +3642,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_PkPk</name>
-        <pv_name>$(P):CH8:PeakToPeak</pv_name>
+        <pv_name>pva://$(P):CH8:PeakToPeak</pv_name>
         <x>345</x>
         <width>80</width>
         <height>18</height>
@@ -3651,7 +3651,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_RMS</name>
-        <pv_name>$(P):CH8:RMS</pv_name>
+        <pv_name>pva://$(P):CH8:RMS</pv_name>
         <x>430</x>
         <width>80</width>
         <height>18</height>
@@ -3660,7 +3660,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_StdDev</name>
-        <pv_name>$(P):CH8:StdDev</pv_name>
+        <pv_name>pva://$(P):CH8:StdDev</pv_name>
         <x>515</x>
         <width>80</width>
         <height>18</height>
@@ -3669,7 +3669,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Integral</name>
-        <pv_name>$(P):CH8:Integral</pv_name>
+        <pv_name>pva://$(P):CH8:Integral</pv_name>
         <x>600</x>
         <width>95</width>
         <height>18</height>
@@ -3678,7 +3678,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_Charge</name>
-        <pv_name>$(P):CH8:Charge</pv_name>
+        <pv_name>pva://$(P):CH8:Charge</pv_name>
         <x>700</x>
         <width>95</width>
         <height>18</height>
@@ -3687,7 +3687,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_WinStart</name>
-        <pv_name>$(P):CH8:MarkerStart</pv_name>
+        <pv_name>pva://$(P):CH8:MarkerStart</pv_name>
         <x>800</x>
         <width>35</width>
         <height>18</height>
@@ -3700,7 +3700,7 @@
       </widget>
       <widget type="textupdate" version="2.0.0">
         <name>CH8_WinEnd</name>
-        <pv_name>$(P):CH8:MarkerEnd</pv_name>
+        <pv_name>pva://$(P):CH8:MarkerEnd</pv_name>
         <x>850</x>
         <width>35</width>
         <height>18</height>
@@ -3753,7 +3753,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>St_Path</name>
-      <pv_name>$(P):Store:Path</pv_name>
+      <pv_name>pva://$(P):Store:Path</pv_name>
       <x>58</x>
       <y>32</y>
       <width>190</width>
@@ -3769,7 +3769,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>St_Base</name>
-      <pv_name>$(P):Store:Basename</pv_name>
+      <pv_name>pva://$(P):Store:Basename</pv_name>
       <x>58</x>
       <y>58</y>
       <width>190</width>
@@ -3785,7 +3785,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>St_NumAcq</name>
-      <pv_name>$(P):Store:NumAcq</pv_name>
+      <pv_name>pva://$(P):Store:NumAcq</pv_name>
       <x>58</x>
       <y>84</y>
       <width>80</width>
@@ -3800,7 +3800,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):Store:Start</pv_name>
+      <pv_name>pva://$(P):Store:Start</pv_name>
       <text>Start</text>
       <x>6</x>
       <y>116</y>
@@ -3820,7 +3820,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):Store:Stop</pv_name>
+      <pv_name>pva://$(P):Store:Stop</pv_name>
       <text>Stop</text>
       <x>138</x>
       <y>116</y>
@@ -3906,7 +3906,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En1</name>
-      <pv_name>$(P):CH1:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH1:Store:Enable</pv_name>
       <x>30</x>
       <y>192</y>
       <width>22</width>
@@ -3914,7 +3914,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A1</name>
-      <pv_name>$(P):CH1:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH1:Store:Active</pv_name>
       <x>62</x>
       <y>192</y>
       <width>22</width>
@@ -3922,7 +3922,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt1</name>
-      <pv_name>$(P):CH1:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH1:Store:Count</pv_name>
       <x>92</x>
       <y>192</y>
       <width>50</width>
@@ -3930,7 +3930,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File1</name>
-      <pv_name>$(P):CH1:Store:File</pv_name>
+      <pv_name>pva://$(P):CH1:Store:File</pv_name>
       <x>148</x>
       <y>192</y>
       <height>14</height>
@@ -3945,7 +3945,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En2</name>
-      <pv_name>$(P):CH2:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH2:Store:Enable</pv_name>
       <x>30</x>
       <y>208</y>
       <width>22</width>
@@ -3953,7 +3953,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A2</name>
-      <pv_name>$(P):CH2:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH2:Store:Active</pv_name>
       <x>62</x>
       <y>208</y>
       <width>22</width>
@@ -3961,7 +3961,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt2</name>
-      <pv_name>$(P):CH2:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH2:Store:Count</pv_name>
       <x>92</x>
       <y>208</y>
       <width>50</width>
@@ -3969,7 +3969,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File2</name>
-      <pv_name>$(P):CH2:Store:File</pv_name>
+      <pv_name>pva://$(P):CH2:Store:File</pv_name>
       <x>148</x>
       <y>208</y>
       <height>14</height>
@@ -3985,7 +3985,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En3</name>
-      <pv_name>$(P):CH3:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH3:Store:Enable</pv_name>
       <x>30</x>
       <y>224</y>
       <width>22</width>
@@ -3993,7 +3993,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A3</name>
-      <pv_name>$(P):CH3:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH3:Store:Active</pv_name>
       <x>62</x>
       <y>224</y>
       <width>22</width>
@@ -4001,7 +4001,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt3</name>
-      <pv_name>$(P):CH3:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH3:Store:Count</pv_name>
       <x>92</x>
       <y>224</y>
       <width>50</width>
@@ -4009,7 +4009,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File3</name>
-      <pv_name>$(P):CH3:Store:File</pv_name>
+      <pv_name>pva://$(P):CH3:Store:File</pv_name>
       <x>148</x>
       <y>224</y>
       <height>14</height>
@@ -4024,7 +4024,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En4</name>
-      <pv_name>$(P):CH4:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH4:Store:Enable</pv_name>
       <x>30</x>
       <y>240</y>
       <width>22</width>
@@ -4032,7 +4032,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A4</name>
-      <pv_name>$(P):CH4:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH4:Store:Active</pv_name>
       <x>62</x>
       <y>240</y>
       <width>22</width>
@@ -4040,7 +4040,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt4</name>
-      <pv_name>$(P):CH4:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH4:Store:Count</pv_name>
       <x>92</x>
       <y>240</y>
       <width>50</width>
@@ -4048,7 +4048,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File4</name>
-      <pv_name>$(P):CH4:Store:File</pv_name>
+      <pv_name>pva://$(P):CH4:Store:File</pv_name>
       <x>148</x>
       <y>240</y>
       <height>14</height>
@@ -4063,7 +4063,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En5</name>
-      <pv_name>$(P):CH5:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH5:Store:Enable</pv_name>
       <x>30</x>
       <y>256</y>
       <width>22</width>
@@ -4071,7 +4071,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A5</name>
-      <pv_name>$(P):CH5:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH5:Store:Active</pv_name>
       <x>62</x>
       <y>256</y>
       <width>22</width>
@@ -4079,7 +4079,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt5</name>
-      <pv_name>$(P):CH5:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH5:Store:Count</pv_name>
       <x>92</x>
       <y>256</y>
       <width>50</width>
@@ -4087,7 +4087,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File5</name>
-      <pv_name>$(P):CH5:Store:File</pv_name>
+      <pv_name>pva://$(P):CH5:Store:File</pv_name>
       <x>148</x>
       <y>256</y>
       <height>14</height>
@@ -4102,7 +4102,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En6</name>
-      <pv_name>$(P):CH6:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH6:Store:Enable</pv_name>
       <x>30</x>
       <y>272</y>
       <width>22</width>
@@ -4110,7 +4110,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A6</name>
-      <pv_name>$(P):CH6:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH6:Store:Active</pv_name>
       <x>62</x>
       <y>272</y>
       <width>22</width>
@@ -4118,7 +4118,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt6</name>
-      <pv_name>$(P):CH6:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH6:Store:Count</pv_name>
       <x>92</x>
       <y>272</y>
       <width>50</width>
@@ -4126,7 +4126,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File6</name>
-      <pv_name>$(P):CH6:Store:File</pv_name>
+      <pv_name>pva://$(P):CH6:Store:File</pv_name>
       <x>148</x>
       <y>272</y>
       <height>14</height>
@@ -4141,7 +4141,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En7</name>
-      <pv_name>$(P):CH7:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH7:Store:Enable</pv_name>
       <x>30</x>
       <y>288</y>
       <width>22</width>
@@ -4149,7 +4149,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A7</name>
-      <pv_name>$(P):CH7:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH7:Store:Active</pv_name>
       <x>62</x>
       <y>288</y>
       <width>22</width>
@@ -4157,7 +4157,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt7</name>
-      <pv_name>$(P):CH7:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH7:Store:Count</pv_name>
       <x>92</x>
       <y>288</y>
       <width>50</width>
@@ -4165,7 +4165,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File7</name>
-      <pv_name>$(P):CH7:Store:File</pv_name>
+      <pv_name>pva://$(P):CH7:Store:File</pv_name>
       <x>148</x>
       <y>288</y>
       <height>14</height>
@@ -4180,7 +4180,7 @@
     </widget>
     <widget type="bool_button" version="2.0.0">
       <name>St_En8</name>
-      <pv_name>$(P):CH8:Store:Enable</pv_name>
+      <pv_name>pva://$(P):CH8:Store:Enable</pv_name>
       <x>30</x>
       <y>304</y>
       <width>22</width>
@@ -4188,7 +4188,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>St_A8</name>
-      <pv_name>$(P):CH8:Store:Active</pv_name>
+      <pv_name>pva://$(P):CH8:Store:Active</pv_name>
       <x>62</x>
       <y>304</y>
       <width>22</width>
@@ -4196,7 +4196,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_Cnt8</name>
-      <pv_name>$(P):CH8:Store:Count</pv_name>
+      <pv_name>pva://$(P):CH8:Store:Count</pv_name>
       <x>92</x>
       <y>304</y>
       <width>50</width>
@@ -4204,7 +4204,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>St_File8</name>
-      <pv_name>$(P):CH8:Store:File</pv_name>
+      <pv_name>pva://$(P):CH8:Store:File</pv_name>
       <x>148</x>
       <y>304</y>
       <height>14</height>
@@ -4230,7 +4230,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>ScopeSave_Source</name>
-      <pv_name>$(P):ScopeSave:Source</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Source</pv_name>
       <x>58</x>
       <y>352</y>
       <width>76</width>
@@ -4245,7 +4245,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>ScopeSave_Format</name>
-      <pv_name>$(P):ScopeSave:Format</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Format</pv_name>
       <x>188</x>
       <y>352</y>
       <width>60</width>
@@ -4260,7 +4260,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>ScopeSave_Destination</name>
-      <pv_name>$(P):ScopeSave:Destination</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Destination</pv_name>
       <x>58</x>
       <y>412</y>
       <width>190</width>
@@ -4276,7 +4276,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):ScopeSave</pv_name>
+      <pv_name>pva://$(P):ScopeSave</pv_name>
       <text>Save on scope</text>
       <x>6</x>
       <y>444</y>
@@ -4289,7 +4289,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>ScopeSave_Status</name>
-      <pv_name>$(P):ScopeSave:Status</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Status</pv_name>
       <x>124</x>
       <y>446</y>
       <width>124</width>
@@ -4297,7 +4297,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>ScopeSave_File</name>
-      <pv_name>$(P):ScopeSave:File_RBV</pv_name>
+      <pv_name>pva://$(P):ScopeSave:File_RBV</pv_name>
       <x>6</x>
       <y>500</y>
       <width>242</width>
@@ -4313,7 +4313,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>ScopeSave_NumAcq</name>
-      <pv_name>$(P):ScopeSave:NumAcq</pv_name>
+      <pv_name>pva://$(P):ScopeSave:NumAcq</pv_name>
       <x>58</x>
       <y>380</y>
       <width>62</width>
@@ -4328,7 +4328,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>ScopeSave_Interval</name>
-      <pv_name>$(P):ScopeSave:Interval</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Interval</pv_name>
       <x>174</x>
       <y>380</y>
       <width>54</width>
@@ -4343,7 +4343,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>ScopeSave_Count</name>
-      <pv_name>$(P):ScopeSave:Count</pv_name>
+      <pv_name>pva://$(P):ScopeSave:Count</pv_name>
       <x>58</x>
       <y>474</y>
       <width>62</width>

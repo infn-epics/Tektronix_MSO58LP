@@ -71,8 +71,8 @@
     <traces>
       <trace>
         <name>Channel $(CHAN)</name>
-        <x_pv>$(P):XDATA_CH$(CHAN)</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH$(CHAN).AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH$(CHAN)</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH$(CHAN).AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -93,7 +93,7 @@
           <color red="0" green="0" blue="255">
           </color>
         </color>
-        <pv_name>$(P):CH$(CHAN):MARKER_START</pv_name>
+        <pv_name>pva://$(P):CH$(CHAN):MARKER_START</pv_name>
         <interactive>true</interactive>
       </marker>
       <marker>
@@ -101,7 +101,7 @@
           <color name="MAJOR" red="255" green="0" blue="0">
           </color>
         </color>
-        <pv_name>$(P):CH$(CHAN):MARKER_END</pv_name>
+        <pv_name>pva://$(P):CH$(CHAN):MARKER_END</pv_name>
         <interactive>true</interactive>
       </marker>
     </marker>
@@ -126,7 +126,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Marker_Start_Entry</name>
-      <pv_name>$(P):CH$(CHAN):MARKER_START</pv_name>
+      <pv_name>pva://$(P):CH$(CHAN):MARKER_START</pv_name>
       <x>50</x>
       <y>29</y>
       <width>80</width>
@@ -142,7 +142,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Marker_Start_Value</name>
-      <pv_name>$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
       <x>145</x>
       <y>29</y>
       <width>80</width>
@@ -166,7 +166,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Marker_End_Entry</name>
-      <pv_name>$(P):CH$(CHAN):MARKER_END</pv_name>
+      <pv_name>pva://$(P):CH$(CHAN):MARKER_END</pv_name>
       <x>289</x>
       <y>29</y>
       <width>80</width>
@@ -182,7 +182,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Marker_End_Value</name>
-      <pv_name>$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
       <x>385</x>
       <y>29</y>
       <width>80</width>
@@ -202,7 +202,7 @@
       <actions>
         <action type="write_pv">
           <description>Acquire Window</description>
-          <pv_name>$(P):AcquireWindow_$(CHAN)</pv_name>
+          <pv_name>pva://$(P):AcquireWindow_$(CHAN)</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -222,7 +222,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Channel_Label_1</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>10</x>
       <y>9</y>
       <width>60</width>
@@ -240,7 +240,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Marker_Start_Value_1</name>
-      <pv_name>$(P):START_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):START_SAMPLE_CH$(CHAN)</pv_name>
       <x>145</x>
       <y>54</y>
       <width>80</width>
@@ -257,7 +257,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Marker_End_Value_2</name>
-      <pv_name>$(P):END_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):END_SAMPLE_CH$(CHAN)</pv_name>
       <x>385</x>
       <y>54</y>
       <width>80</width>
@@ -281,7 +281,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):ResetAcquire_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):ResetAcquire_$(CHAN)</pv_name>
       <x>580</x>
       <y>27</y>
       <height>20</height>
@@ -300,12 +300,12 @@
       <actions>
         <action type="write_pv">
           <description>Reset Start Marker</description>
-          <pv_name>$(P):CH$(CHAN):reset_start_marker_.PROC</pv_name>
+          <pv_name>pva://$(P):CH$(CHAN):reset_start_marker_.PROC</pv_name>
           <value>1</value>
         </action>
         <action type="write_pv">
           <description>Reset End Marker</description>
-          <pv_name>$(P):CH$(CHAN):reset_end_marker_.PROC</pv_name>
+          <pv_name>pva://$(P):CH$(CHAN):reset_end_marker_.PROC</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -336,7 +336,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Auto_Threshold_Entry</name>
-      <pv_name>$(P):CH$(CHAN):AUTO_THRESHOLD</pv_name>
+      <pv_name>pva://$(P):CH$(CHAN):AUTO_THRESHOLD</pv_name>
       <x>300</x>
       <y>2</y>
       <width>80</width>
@@ -352,7 +352,7 @@
       <actions>
         <action type="write_pv">
           <description>Auto Detect Signal</description>
-          <pv_name>$(P):CH$(CHAN):AUTO_MARKER</pv_name>
+          <pv_name>pva://$(P):CH$(CHAN):AUTO_MARKER</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -372,7 +372,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Auto_Found_LED</name>
-      <pv_name>$(P):CH$(CHAN):AUTO_FOUND</pv_name>
+      <pv_name>pva://$(P):CH$(CHAN):AUTO_FOUND</pv_name>
       <x>514</x>
       <y>2</y>
       <off_color>
@@ -415,7 +415,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>Y_Scale_CH8_3</name>
-      <pv_name>$(P):ReadbackPoll_$(CHAN).SCAN</pv_name>
+      <pv_name>pva://$(P):ReadbackPoll_$(CHAN).SCAN</pv_name>
       <x>479</x>
       <y>54</y>
       <width>89</width>
@@ -441,7 +441,7 @@
     </background_color>
     <widget type="textupdate" version="2.0.0">
       <name>Channel_Label_2</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>10</x>
       <width>60</width>
       <font>
@@ -458,7 +458,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Marker_End_Entry_1</name>
-      <pv_name>$(P):COEFF_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):COEFF_CH$(CHAN)</pv_name>
       <x>225</x>
       <width>114</width>
       <height>25</height>
@@ -491,7 +491,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value_2</name>
-      <pv_name>$(P):CHARGE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):CHARGE_CH$(CHAN)</pv_name>
       <x>414</x>
       <background_color>
         <color red="255" green="255" blue="255">
@@ -513,7 +513,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value_5</name>
-      <pv_name>$(P):CHARGE_DAY_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):CHARGE_DAY_CH$(CHAN)</pv_name>
       <x>559</x>
       <width>121</width>
       <background_color>
@@ -549,7 +549,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Channel_Label</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>5</x>
       <y>25</y>
       <width>60</width>
@@ -570,7 +570,7 @@
     </widget>
     <widget type="led" version="2.0.0">
       <name>Comm_Status</name>
-      <pv_name>$(P):CH$(CHAN):COMM_OK</pv_name>
+      <pv_name>pva://$(P):CH$(CHAN):COMM_OK</pv_name>
       <x>45</x>
       <y>50</y>
       <off_color>
@@ -605,7 +605,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>X_Unit</name>
-      <pv_name>$(P):XUNIT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):XUNIT_CH$(CHAN)</pv_name>
       <x>5</x>
       <y>95</y>
       <width>30</width>
@@ -619,7 +619,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Unit</name>
-      <pv_name>$(P):YUNIT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):YUNIT_CH$(CHAN)</pv_name>
       <x>5</x>
       <y>135</y>
       <width>30</width>
@@ -633,7 +633,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Samples_Count</name>
-      <pv_name>$(P):SAMPLES_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):SAMPLES_CH$(CHAN)</pv_name>
       <x>5</x>
       <y>175</y>
       <width>60</width>
@@ -659,7 +659,7 @@
     </background_color>
     <widget type="textupdate" version="2.0.0">
       <name>WFID_Value</name>
-      <pv_name>$(P):WFID_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):WFID_CH$(CHAN)</pv_name>
       <x>10</x>
       <y>9</y>
       <width>479</width>
@@ -681,7 +681,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>NR_PT_Value</name>
-      <pv_name>$(P):NR_PT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):NR_PT_CH$(CHAN)</pv_name>
       <x>599</x>
       <y>29</y>
       <width>70</width>
@@ -718,7 +718,7 @@
     <traces>
       <trace>
         <name>$(traces[0].y_pv)</name>
-        <y_pv>$(P):CHARGE_CH$(CHAN)</y_pv>
+        <y_pv>pva://$(P):CHARGE_CH$(CHAN)</y_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>
@@ -753,7 +753,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Mean_Value_2</name>
-      <pv_name>$(P):MATH_MEAN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_MEAN_CH$(CHAN)</pv_name>
       <x>55</x>
       <y>39</y>
       <width>80</width>
@@ -774,7 +774,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Min_Value_2</name>
-      <pv_name>$(P):MATH_MIN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_MIN_CH$(CHAN)</pv_name>
       <x>180</x>
       <y>39</y>
       <width>80</width>
@@ -795,7 +795,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Max_Value_2</name>
-      <pv_name>$(P):MATH_MAX_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_MAX_CH$(CHAN)</pv_name>
       <x>305</x>
       <y>39</y>
       <width>80</width>
@@ -816,7 +816,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>RMS_Value_2</name>
-      <pv_name>$(P):MATH_RMS_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_RMS_CH$(CHAN)</pv_name>
       <x>435</x>
       <y>39</y>
       <width>80</width>
@@ -837,7 +837,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value_3</name>
-      <pv_name>$(P):MATH_INTEGRAL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_INTEGRAL_CH$(CHAN)</pv_name>
       <x>580</x>
       <y>39</y>
       <background_color>
@@ -850,7 +850,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Channel_Label_4</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>10</x>
       <width>60</width>
       <font>
@@ -867,7 +867,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Marker_End_Entry_2</name>
-      <pv_name>$(P):COEFF_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):COEFF_CH$(CHAN)</pv_name>
       <x>435</x>
       <width>80</width>
       <height>25</height>
@@ -901,7 +901,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value_4</name>
-      <pv_name>$(P):MATH_CHARGE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MATH_CHARGE_CH$(CHAN)</pv_name>
       <x>580</x>
       <y>4</y>
       <background_color>
@@ -942,7 +942,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Mean_Value</name>
-      <pv_name>$(P):MEAN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MEAN_CH$(CHAN)</pv_name>
       <x>38</x>
       <y>11</y>
       <width>80</width>
@@ -963,7 +963,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Min_Value</name>
-      <pv_name>$(P):MIN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MIN_CH$(CHAN)</pv_name>
       <x>163</x>
       <y>11</y>
       <width>80</width>
@@ -984,7 +984,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Max_Value</name>
-      <pv_name>$(P):MAX_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MAX_CH$(CHAN)</pv_name>
       <x>288</x>
       <y>11</y>
       <width>80</width>
@@ -1005,7 +1005,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>RMS_Value</name>
-      <pv_name>$(P):RMS_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):RMS_CH$(CHAN)</pv_name>
       <x>418</x>
       <y>11</y>
       <width>80</width>
@@ -1026,7 +1026,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Integral_Value</name>
-      <pv_name>$(P):INTEGRAL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):INTEGRAL_CH$(CHAN)</pv_name>
       <x>563</x>
       <y>11</y>
       <background_color>

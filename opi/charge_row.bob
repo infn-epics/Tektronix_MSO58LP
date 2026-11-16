@@ -27,7 +27,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>MeasValue</name>
-    <pv_name>$(P):MEAS$(CHANNEL):VALUE</pv_name>
+    <pv_name>pva://$(P):MEAS$(CHANNEL):VALUE</pv_name>
     <x>100</x>
     <y>25</y>
     <width>200</width>
@@ -47,7 +47,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Label</name>
-    <pv_name>$(P):LABEL_CH$(CHANNEL)</pv_name>
+    <pv_name>pva://$(P):LABEL_CH$(CHANNEL)</pv_name>
     <x>310</x>
     <y>25</y>
     <height>30</height>
@@ -61,7 +61,7 @@
   </widget>
   <widget type="textentry" version="3.0.0">
     <name>Coefficient</name>
-    <pv_name>$(P):COEFF_CH$(CHANNEL)</pv_name>
+    <pv_name>pva://$(P):COEFF_CH$(CHANNEL)</pv_name>
     <x>420</x>
     <y>25</y>
     <width>120</width>
@@ -80,7 +80,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Charge</name>
-    <pv_name>$(P):CHARGE_CH$(CHANNEL)</pv_name>
+    <pv_name>pva://$(P):CHARGE_CH$(CHANNEL)</pv_name>
     <x>550</x>
     <y>25</y>
     <width>180</width>
@@ -100,7 +100,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>DailyCharge</name>
-    <pv_name>$(P):CHARGE_DAY_CH$(CHANNEL)</pv_name>
+    <pv_name>pva://$(P):CHARGE_DAY_CH$(CHANNEL)</pv_name>
     <x>740</x>
     <y>20</y>
     <width>200</width>
@@ -127,7 +127,7 @@
     <actions>
       <action type="write_pv">
         <description>Reset Daily Charge</description>
-        <pv_name>$(P):RESET_CHARGE_DAY_CH$(CHANNEL)</pv_name>
+        <pv_name>pva://$(P):RESET_CHARGE_DAY_CH$(CHANNEL)</pv_name>
         <value>1</value>
       </action>
     </actions>
@@ -201,7 +201,7 @@
     <traces>
       <trace>
         <name>Daily</name>
-        <y_pv>$(P):CHARGE_DAY_CH$(CHANNEL)</y_pv>
+        <y_pv>pva://$(P):CHARGE_DAY_CH$(CHANNEL)</y_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>

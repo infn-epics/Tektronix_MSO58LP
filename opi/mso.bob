@@ -56,49 +56,49 @@
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH7</pv_name>
+        <pv_name>pva://$(P):LABEL_CH7</pv_name>
       </rule>
       <rule name="name8" prop_id="traces[7].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH8</pv_name>
+        <pv_name>pva://$(P):LABEL_CH8</pv_name>
       </rule>
       <rule name="name6" prop_id="traces[5].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH6</pv_name>
+        <pv_name>pva://$(P):LABEL_CH6</pv_name>
       </rule>
       <rule name="name5" prop_id="traces[4].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH5</pv_name>
+        <pv_name>pva://$(P):LABEL_CH5</pv_name>
       </rule>
       <rule name="name4" prop_id="traces[3].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH4</pv_name>
+        <pv_name>pva://$(P):LABEL_CH4</pv_name>
       </rule>
       <rule name="name3" prop_id="traces[2].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH3</pv_name>
+        <pv_name>pva://$(P):LABEL_CH3</pv_name>
       </rule>
       <rule name="name2" prop_id="traces[1].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH2</pv_name>
+        <pv_name>pva://$(P):LABEL_CH2</pv_name>
       </rule>
       <rule name="name1" prop_id="traces[0].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH1</pv_name>
+        <pv_name>pva://$(P):LABEL_CH1</pv_name>
       </rule>
     </rules>
     <tooltip></tooltip>
@@ -146,8 +146,8 @@
     <traces>
       <trace>
         <name>Channel 1</name>
-        <x_pv>$(P):XDATA_CH1</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH1.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH1</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH1.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -163,8 +163,8 @@
       </trace>
       <trace>
         <name>Channel 2</name>
-        <x_pv>$(P):XDATA_CH2</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH2.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH2</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH2.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -180,8 +180,8 @@
       </trace>
       <trace>
         <name>Channel 3</name>
-        <x_pv>$(P):XDATA_CH3</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH3.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH3</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH3.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -197,8 +197,8 @@
       </trace>
       <trace>
         <name>Channel 4</name>
-        <x_pv>$(P):XDATA_CH4</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH4.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH4</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH4.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -214,8 +214,8 @@
       </trace>
       <trace>
         <name>Channel 5</name>
-        <x_pv>$(P):XDATA_CH5</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH5.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH5</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH5.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -231,8 +231,8 @@
       </trace>
       <trace>
         <name>Channel 6</name>
-        <x_pv>$(P):XDATA_CH6</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH6.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH6</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH6.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -248,8 +248,8 @@
       </trace>
       <trace>
         <name>Channel 7</name>
-        <x_pv>$(P):XDATA_CH7</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH7.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH7</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH7.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -265,8 +265,8 @@
       </trace>
       <trace>
         <name>Channel 8</name>
-        <x_pv>$(P):XDATA_CH8</x_pv>
-        <y_pv>$(P):SCALEDYDATA_CH8.AVAL</y_pv>
+        <x_pv>pva://$(P):XDATA_CH8</x_pv>
+        <y_pv>pva://$(P):SCALEDYDATA_CH8.AVAL</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -719,7 +719,7 @@ $(pv_value)</tooltip>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Vendor_1</name>
-      <pv_name>$(P):Model</pv_name>
+      <pv_name>pva://$(P):Model</pv_name>
       <x>60</x>
       <y>32</y>
     </widget>
@@ -732,7 +732,7 @@ $(pv_value)</tooltip>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Vendor_2</name>
-      <pv_name>$(P):Serial</pv_name>
+      <pv_name>pva://$(P):Serial</pv_name>
       <x>60</x>
       <y>52</y>
     </widget>
@@ -745,7 +745,7 @@ $(pv_value)</tooltip>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Vendor_3</name>
-      <pv_name>$(P):CF</pv_name>
+      <pv_name>pva://$(P):CF</pv_name>
       <x>60</x>
       <y>72</y>
     </widget>
@@ -758,7 +758,7 @@ $(pv_value)</tooltip>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Vendor_4</name>
-      <pv_name>$(P):Firmware</pv_name>
+      <pv_name>pva://$(P):Firmware</pv_name>
       <x>60</x>
       <y>92</y>
     </widget>
@@ -771,7 +771,7 @@ $(pv_value)</tooltip>
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Vendor_5</name>
-      <pv_name>$(P):Vendor</pv_name>
+      <pv_name>pva://$(P):Vendor</pv_name>
       <x>60</x>
       <y>11</y>
     </widget>
@@ -785,7 +785,7 @@ $(pv_value)</tooltip>
         <value>1</value>
       </action>
     </actions>
-    <pv_name>$(P):Refresh</pv_name>
+    <pv_name>pva://$(P):Refresh</pv_name>
     <x>558</x>
     <y>606</y>
     <width>83</width>
@@ -833,49 +833,49 @@ Click ⊞ to open channel display</text>
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH7</pv_name>
+        <pv_name>pva://$(P):LABEL_CH7</pv_name>
       </rule>
       <rule name="name8" prop_id="traces[7].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH8</pv_name>
+        <pv_name>pva://$(P):LABEL_CH8</pv_name>
       </rule>
       <rule name="name6" prop_id="traces[5].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH6</pv_name>
+        <pv_name>pva://$(P):LABEL_CH6</pv_name>
       </rule>
       <rule name="name5" prop_id="traces[4].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH5</pv_name>
+        <pv_name>pva://$(P):LABEL_CH5</pv_name>
       </rule>
       <rule name="name4" prop_id="traces[3].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH4</pv_name>
+        <pv_name>pva://$(P):LABEL_CH4</pv_name>
       </rule>
       <rule name="name3" prop_id="traces[2].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH3</pv_name>
+        <pv_name>pva://$(P):LABEL_CH3</pv_name>
       </rule>
       <rule name="name2" prop_id="traces[1].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH2</pv_name>
+        <pv_name>pva://$(P):LABEL_CH2</pv_name>
       </rule>
       <rule name="name1" prop_id="traces[0].name" out_exp="true">
         <exp bool_exp="True">
           <expression>pvStr0</expression>
         </exp>
-        <pv_name>$(P):LABEL_CH1</pv_name>
+        <pv_name>pva://$(P):LABEL_CH1</pv_name>
       </rule>
     </rules>
     <tooltip></tooltip>
@@ -923,8 +923,8 @@ Click ⊞ to open channel display</text>
     <traces>
       <trace>
         <name>Channel 1</name>
-        <x_pv>$(P):XDATA_CH1</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH1</y_pv>
+        <x_pv>pva://$(P):XDATA_CH1</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH1</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -940,8 +940,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 2</name>
-        <x_pv>$(P):XDATA_CH2</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH2</y_pv>
+        <x_pv>pva://$(P):XDATA_CH2</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH2</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -957,8 +957,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 3</name>
-        <x_pv>$(P):XDATA_CH3</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH3</y_pv>
+        <x_pv>pva://$(P):XDATA_CH3</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH3</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -974,8 +974,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 4</name>
-        <x_pv>$(P):XDATA_CH4</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH4</y_pv>
+        <x_pv>pva://$(P):XDATA_CH4</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH4</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -991,8 +991,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 5</name>
-        <x_pv>$(P):XDATA_CH5</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH5</y_pv>
+        <x_pv>pva://$(P):XDATA_CH5</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH5</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -1008,8 +1008,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 6</name>
-        <x_pv>$(P):XDATA_CH6</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH6</y_pv>
+        <x_pv>pva://$(P):XDATA_CH6</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH6</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -1025,8 +1025,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 7</name>
-        <x_pv>$(P):XDATA_CH7</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH7</y_pv>
+        <x_pv>pva://$(P):XDATA_CH7</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH7</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>
@@ -1042,8 +1042,8 @@ Click ⊞ to open channel display</text>
       </trace>
       <trace>
         <name>Channel 8</name>
-        <x_pv>$(P):XDATA_CH8</x_pv>
-        <y_pv>$(P):MATH_ARRAY_CH8</y_pv>
+        <x_pv>pva://$(P):XDATA_CH8</x_pv>
+        <y_pv>pva://$(P):MATH_ARRAY_CH8</y_pv>
         <err_pv></err_pv>
         <axis>0</axis>
         <trace_type>1</trace_type>

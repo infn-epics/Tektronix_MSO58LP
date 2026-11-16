@@ -11,7 +11,7 @@
   <!-- Enable LED -->
   <widget type="led" version="2.0.0">
     <name>Enable_LED</name>
-    <pv_name>$(P):MEAS$(MEAS):Enable_RBV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Enable_RBV</pv_name>
     <x>5</x>
     <y>4</y>
     <width>22</width>
@@ -30,7 +30,7 @@
   <!-- Device Name -->
   <widget type="textupdate" version="2.0.0">
     <name>Name_Label</name>
-    <pv_name>$(P):MEAS$(MEAS):Name</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Name</pv_name>
     <x>32</x>
     <y>5</y>
     <width>100</width>
@@ -66,7 +66,7 @@
   <!-- Type -->
   <widget type="textupdate" version="2.0.0">
     <name>Type_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):Type_RBV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Type_RBV</pv_name>
     <x>180</x>
     <y>4</y>
     <width>70</width>
@@ -89,7 +89,7 @@
   <!-- Current Value -->
   <widget type="textupdate" version="2.0.0">
     <name>Value_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):VALUE</pv_name>
     <x>260</x>
     <y>2</y>
     <width>120</width>
@@ -110,7 +110,7 @@
   <!-- Mean Value -->
   <widget type="textupdate" version="2.0.0">
     <name>Mean_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):Mean</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):Mean</pv_name>
     <x>390</x>
     <y>4</y>
     <width>75</width>

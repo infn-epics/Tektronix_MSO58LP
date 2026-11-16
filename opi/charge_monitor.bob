@@ -61,7 +61,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Measure_Value</name>
-      <pv_name>$(P):MEAS$(CHANNEL):VALUE</pv_name>
+      <pv_name>pva://$(P):MEAS$(CHANNEL):VALUE</pv_name>
       <x>180</x>
       <y>35</y>
       <width>200</width>
@@ -92,7 +92,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Coeff_Entry</name>
-      <pv_name>$(P):COEFF_CH$(CHANNEL)</pv_name>
+      <pv_name>pva://$(P):COEFF_CH$(CHANNEL)</pv_name>
       <x>650</x>
       <y>35</y>
       <width>150</width>
@@ -122,7 +122,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Charge_Value</name>
-      <pv_name>$(P):CHARGE_CH$(CHANNEL)</pv_name>
+      <pv_name>pva://$(P):CHARGE_CH$(CHANNEL)</pv_name>
       <x>180</x>
       <y>85</y>
       <width>200</width>
@@ -157,7 +157,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Charge_Day_Value</name>
-      <pv_name>$(P):CHARGE_DAY_CH$(CHANNEL)</pv_name>
+      <pv_name>pva://$(P):CHARGE_DAY_CH$(CHANNEL)</pv_name>
       <x>180</x>
       <y>135</y>
       <width>200</width>
@@ -179,7 +179,7 @@
       <actions>
         <action type="write_pv">
           <description>Reset Daily Charge</description>
-          <pv_name>$(P):RESET_CHARGE_DAY_CH$(CHANNEL)</pv_name>
+          <pv_name>pva://$(P):RESET_CHARGE_DAY_CH$(CHANNEL)</pv_name>
           <value>1</value>
         </action>
       </actions>
@@ -212,7 +212,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Date_Value</name>
-      <pv_name>$(P):current_date_$(CHANNEL)_</pv_name>
+      <pv_name>pva://$(P):current_date_$(CHANNEL)_</pv_name>
       <x>820</x>
       <y>140</y>
       <width>120</width>
@@ -269,7 +269,7 @@
       <traces>
         <trace>
           <name>Charge</name>
-          <y_pv>$(P):CHARGE_CH$(CHANNEL)</y_pv>
+          <y_pv>pva://$(P):CHARGE_CH$(CHANNEL)</y_pv>
           <axis>0</axis>
           <trace_type>1</trace_type>
           <color>
@@ -330,7 +330,7 @@
       <traces>
         <trace>
           <name>Daily Total</name>
-          <y_pv>$(P):CHARGE_DAY_CH$(CHANNEL)</y_pv>
+          <y_pv>pva://$(P):CHARGE_DAY_CH$(CHANNEL)</y_pv>
           <axis>0</axis>
           <trace_type>1</trace_type>
           <color>

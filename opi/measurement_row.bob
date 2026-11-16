@@ -26,7 +26,7 @@
   </widget>
   <widget type="led" version="2.0.0">
     <name>State_LED</name>
-    <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):STATE</pv_name>
     <x>95</x>
     <y>30</y>
     <width>30</width>
@@ -39,7 +39,7 @@
   </widget>
   <widget type="combo" version="2.0.0">
     <name>Source_Combo</name>
-    <pv_name>$(P):MEAS$(MEAS):SOURCE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):SOURCE</pv_name>
     <x>150</x>
     <y>30</y>
     <width>70</width>
@@ -73,7 +73,7 @@
   </widget>
   <widget type="textentry" version="3.0.0">
     <name>Type_Entry</name>
-    <pv_name>$(P):MEAS$(MEAS):TYPE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):TYPE</pv_name>
     <x>230</x>
     <y>25</y>
     <width>120</width>
@@ -90,7 +90,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Value_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):VALUE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):VALUE</pv_name>
     <x>360</x>
     <y>25</y>
     <width>150</width>
@@ -109,7 +109,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Mean_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):MEAN</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):MEAN</pv_name>
     <x>520</x>
     <y>25</y>
     <width>120</width>
@@ -128,7 +128,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Min_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):MIN</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):MIN</pv_name>
     <x>650</x>
     <y>25</y>
     <width>120</width>
@@ -147,7 +147,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Max_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):MAX</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):MAX</pv_name>
     <x>780</x>
     <y>25</y>
     <width>120</width>
@@ -166,7 +166,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Stddev_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):STDDEV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):STDDEV</pv_name>
     <x>910</x>
     <y>25</y>
     <width>120</width>
@@ -185,7 +185,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>Units_Display</name>
-    <pv_name>$(P):MEAS$(MEAS):UNITS</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):UNITS</pv_name>
     <x>1040</x>
     <y>25</y>
     <width>80</width>
@@ -205,11 +205,11 @@
     <actions>
       <action type="write_pv">
         <description>Toggle State</description>
-        <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+        <pv_name>pva://$(P):MEAS$(MEAS):STATE</pv_name>
         <value>$(value=!pv_value)</value>
       </action>
     </actions>
-    <pv_name>$(P):MEAS$(MEAS):STATE</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):STATE</pv_name>
     <text>Toggle</text>
     <x>1130</x>
     <y>25</y>
@@ -229,7 +229,7 @@
     <actions>
       <action type="write_pv">
         <description>Reset Statistics</description>
-        <pv_name>$(P):MEAS$(MEAS):RESET_STATS</pv_name>
+        <pv_name>pva://$(P):MEAS$(MEAS):RESET_STATS</pv_name>
         <value>1</value>
       </action>
     </actions>
@@ -252,7 +252,7 @@
     <actions>
       <action type="write_pv">
         <description>Configure</description>
-        <pv_name>$(P):MEAS$(MEAS):CONFIGURE</pv_name>
+        <pv_name>pva://$(P):MEAS$(MEAS):CONFIGURE</pv_name>
         <value>1</value>
       </action>
     </actions>
@@ -272,7 +272,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>State_Text</name>
-    <pv_name>$(P):MEAS$(MEAS):STATE_RBV</pv_name>
+    <pv_name>pva://$(P):MEAS$(MEAS):STATE_RBV</pv_name>
     <x>80</x>
     <y>5</y>
     <width>60</width>

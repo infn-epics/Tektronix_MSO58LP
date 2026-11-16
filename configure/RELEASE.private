@@ -13,3 +13,4 @@ CALC = $(SUPPORT)/calc
 AUTOSAVE = $(SUPPORT)/autosave
 SSCAN = $(SUPPORT)/sscan
 SNCSEQ = $(SUPPORT)/sequencer
+PVXS = $(SUPPORT)/pvxs

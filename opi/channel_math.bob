@@ -17,7 +17,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_5</name>
-      <pv_name>$(P):START_MATH_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):START_MATH_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>2</y>
       <width>49</width>
@@ -34,7 +34,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_6</name>
-      <pv_name>$(P):END_MATH_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):END_MATH_CH$(CHAN)</pv_name>
       <x>159</x>
       <y>2</y>
       <width>53</width>
@@ -57,7 +57,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_7</name>
-      <pv_name>$(P):NORM_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):NORM_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>42</y>
       <width>49</width>
@@ -78,7 +78,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_8</name>
-      <pv_name>$(P):INTEGRAL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):INTEGRAL_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>64</y>
       <width>110</width>
@@ -102,7 +102,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_9</name>
-      <pv_name>$(P):MEAN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MEAN_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>113</y>
       <width>49</width>
@@ -123,7 +123,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_10</name>
-      <pv_name>$(P):MIN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MIN_CH$(CHAN)</pv_name>
       <x>162</x>
       <y>113</y>
       <width>49</width>
@@ -144,7 +144,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_11</name>
-      <pv_name>$(P):MAX_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MAX_CH$(CHAN)</pv_name>
       <x>232</x>
       <y>113</y>
       <width>49</width>
@@ -165,7 +165,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_14</name>
-      <pv_name>$(P):SAMPLES_MATH_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):SAMPLES_MATH_CH$(CHAN)</pv_name>
       <x>232</x>
       <y>2</y>
       <width>49</width>
@@ -193,7 +193,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):AcquireMath_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):AcquireMath_$(CHAN)</pv_name>
       <text>Set</text>
       <x>2</x>
       <y>24</y>
@@ -203,7 +203,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_15</name>
-      <pv_name>$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>24</y>
       <width>50</width>
@@ -219,7 +219,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_16</name>
-      <pv_name>$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
       <x>162</x>
       <y>24</y>
       <width>50</width>
@@ -242,7 +242,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_17</name>
-      <pv_name>$(P):RMS_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):RMS_CH$(CHAN)</pv_name>
       <x>102</x>
       <y>85</y>
       <width>110</width>

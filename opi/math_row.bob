@@ -33,7 +33,7 @@
     </rules>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_7</name>
-      <pv_name>$(P):SENSIBILITY_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):SENSIBILITY_CH$(CHAN)</pv_name>
       <x>542</x>
       <y>12</y>
       <width>80</width>
@@ -48,7 +48,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_10</name>
-      <pv_name>$(P):$(WIN)MIN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):$(WIN)MIN_CH$(CHAN)</pv_name>
       <x>458</x>
       <y>12</y>
       <width>80</width>
@@ -65,7 +65,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_11</name>
-      <pv_name>$(P):MAX_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MAX_CH$(CHAN)</pv_name>
       <x>377</x>
       <y>12</y>
       <width>80</width>
@@ -82,7 +82,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_9</name>
-      <pv_name>$(P):$(WIN)MEAN_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):$(WIN)MEAN_CH$(CHAN)</pv_name>
       <x>296</x>
       <y>12</y>
       <width>80</width>
@@ -99,7 +99,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_17</name>
-      <pv_name>$(P):$(WIN)RMS_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):$(WIN)RMS_CH$(CHAN)</pv_name>
       <x>215</x>
       <y>12</y>
       <width>80</width>
@@ -117,7 +117,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_8</name>
-      <pv_name>$(P):$(WIN)INTEGRAL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):$(WIN)INTEGRAL_CH$(CHAN)</pv_name>
       <x>134</x>
       <y>12</y>
       <width>80</width>
@@ -135,7 +135,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_12</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>53</x>
       <y>12</y>
       <width>80</width>

@@ -107,6 +107,12 @@ $(APPNAME)iocSupport_SRCS += tekStoreWaveform.c
 # ASYN driver for high-speed acquisition
 $(APPNAME)iocSupport_SRCS += drvTekMSO58LP.cpp
 
+# PV Access server (PVXS QSRV) so the OPIs can use pva://
+ifdef PVXS
+$(APPNAME)_DBD += pvxsIoc.dbd
+$(APPNAME)_LIBS += pvxsIoc pvxs
+endif
+
 $(APPNAME)_LIBS += $(EPICS_BASE_IOC_LIBS)
 $(APPNAME)_SYS_LIBS_Linux += tirpc
 

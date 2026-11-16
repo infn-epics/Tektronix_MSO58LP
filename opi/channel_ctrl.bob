@@ -16,7 +16,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_3</name>
-      <pv_name>$(P):LABEL_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):LABEL_CH$(CHAN)</pv_name>
       <x>92</x>
       <y>12</y>
       <width>49</width>
@@ -37,7 +37,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_4</name>
-      <pv_name>$(P):MAXSAMPLES_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MAXSAMPLES_CH$(CHAN)</pv_name>
       <x>92</x>
       <y>32</y>
       <width>49</width>
@@ -58,7 +58,7 @@
     </widget>
     <widget type="combo" version="2.0.0">
       <name>Y_Scale_CH8_3</name>
-      <pv_name>$(P):ReadbackPoll_$(CHAN).SCAN</pv_name>
+      <pv_name>pva://$(P):ReadbackPoll_$(CHAN).SCAN</pv_name>
       <x>92</x>
       <y>83</y>
       <width>89</width>
@@ -85,7 +85,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_5</name>
-      <pv_name>$(P):START_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):START_SAMPLE_CH$(CHAN)</pv_name>
       <x>92</x>
       <y>52</y>
       <width>50</width>
@@ -100,7 +100,7 @@
     </widget>
     <widget type="textentry" version="3.0.0">
       <name>Y_Scale_CH7_6</name>
-      <pv_name>$(P):END_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):END_SAMPLE_CH$(CHAN)</pv_name>
       <x>152</x>
       <y>52</y>
       <width>50</width>
@@ -115,7 +115,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_7</name>
-      <pv_name>$(P):SAMPLES_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):SAMPLES_CH$(CHAN)</pv_name>
       <x>152</x>
       <y>32</y>
       <width>49</width>
@@ -143,7 +143,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):AcquireWindow_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):AcquireWindow_$(CHAN)</pv_name>
       <x>152</x>
       <y>2</y>
       <width>50</width>
@@ -162,7 +162,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_10</name>
-      <pv_name>$(P):XUNIT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):XUNIT_CH$(CHAN)</pv_name>
       <x>132</x>
       <y>108</y>
       <width>49</width>
@@ -183,7 +183,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_11</name>
-      <pv_name>$(P):XINC_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):XINC_CH$(CHAN)</pv_name>
       <x>62</x>
       <y>108</y>
       <width>59</width>
@@ -212,7 +212,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_12</name>
-      <pv_name>$(P):YMULT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):YMULT_CH$(CHAN)</pv_name>
       <x>62</x>
       <y>128</y>
       <width>59</width>
@@ -234,7 +234,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_13</name>
-      <pv_name>$(P):YUNIT_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):YUNIT_CH$(CHAN)</pv_name>
       <x>132</x>
       <y>128</y>
       <width>49</width>
@@ -255,7 +255,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_9</name>
-      <pv_name>$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_END_SAMPLE_CH$(CHAN)</pv_name>
       <x>132</x>
       <y>150</y>
       <width>50</width>
@@ -276,7 +276,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_8</name>
-      <pv_name>$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_START_SAMPLE_CH$(CHAN)</pv_name>
       <x>62</x>
       <y>148</y>
       <width>50</width>
@@ -311,7 +311,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_14</name>
-      <pv_name>$(P):MARKER_START_VALUE_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_START_VALUE_$(CHAN)</pv_name>
       <x>62</x>
       <y>173</y>
       <width>65</width>
@@ -335,7 +335,7 @@
     </widget>
     <widget type="textupdate" version="2.0.0">
       <name>Y_Scale_CH7_15</name>
-      <pv_name>$(P):MARKER_END_VALUE_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):MARKER_END_VALUE_$(CHAN)</pv_name>
       <x>132</x>
       <y>173</y>
       <width>65</width>
@@ -366,7 +366,7 @@
           <value>1</value>
         </action>
       </actions>
-      <pv_name>$(P):ResetAcquire_$(CHAN)</pv_name>
+      <pv_name>pva://$(P):ResetAcquire_$(CHAN)</pv_name>
       <x>212</x>
       <y>2</y>
       <width>60</width>
