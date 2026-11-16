@@ -58,9 +58,9 @@ static long wavestats(aSubRecord *prec) {
     double norm = *((double *)prec->b);
     double *y = (double *)prec->c;
     
-    long n = *(long*)prec->d;
-    long start = *(long*)prec->e;
-    long end = *(long*)prec->f;
+    long n = *(epicsInt32*)prec->d;      /* FTx=LONG is 32-bit */
+    long start = *(epicsInt32*)prec->e;
+    long end = *(epicsInt32*)prec->f;
     
     /* Get actual number of elements in input C */
     long nec = prec->nec;  /* Max elements for input C */

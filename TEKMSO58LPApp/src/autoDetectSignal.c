@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <registryFunction.h>
+#include <epicsTypes.h>
 #include <aSubRecord.h>
 #include <epicsExport.h>
 
@@ -24,13 +25,13 @@ static long autoDetectSignal(aSubRecord *prec)
     double threshold = *(double *)prec->a;
     double xinc = *(double *)prec->b;
     double *waveform = (double *)prec->c;
-    long nsamples = *(long *)prec->d;
+    long nsamples = *(epicsInt32 *)prec->d;   /* FTD=LONG is 32-bit */
     
     double *start_time = (double *)prec->vala;
     double *end_time = (double *)prec->valb;
-    long *found = (long *)prec->valc;
-    long *start_idx_out = (prec->novd > 0 && prec->vald) ? (long *)prec->vald : NULL;
-    long *end_idx_out   = (prec->nove > 0 && prec->vale) ? (long *)prec->vale : NULL;
+    epicsInt32 *found = (epicsInt32 *)prec->valc;
+    epicsInt32 *start_idx_out = (prec->novd > 0 && prec->vald) ? (epicsInt32 *)prec->vald : NULL;
+    epicsInt32 *end_idx_out   = (prec->nove > 0 && prec->vale) ? (epicsInt32 *)prec->vale : NULL;
 
     long i;
     long start_idx = -1;
@@ -104,8 +105,8 @@ static long autoDetectSignal(aSubRecord *prec)
         *start_time = start_idx * xinc;
         *end_time = end_idx * xinc;
         *found = 1;
-        if (start_idx_out) *start_idx_out = start_idx;
-        if (end_idx_out)   *end_idx_out   = end_idx;
+        if (start_idx_out) *start_idx_out = (epicsInt32)start_idx;
+        if (end_idx_out)   *end_idx_out   = (epicsInt32)end_idx;
         
         printf("autoDetectSignal: Signal found from sample %ld to %ld (%.6e s to %.6e s)\n",
                start_idx, end_idx, *start_time, *end_time);

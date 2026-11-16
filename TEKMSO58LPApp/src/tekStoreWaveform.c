@@ -42,6 +42,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include <epicsTypes.h>
 #include <aSubRecord.h>
 #include <epicsExport.h>
 #include <epicsString.h>
@@ -95,24 +96,25 @@ static long tekStoreWaveform(aSubRecord *prec)
     tekStoreState *st = (tekStoreState *) prec->dpvt;
     if (!st) return -1;
 
-    long   ctrl   = *(long   *) prec->a;
+    /* FTx=LONG fields are epicsInt32 (4 bytes), not C long (8 bytes on 64-bit). */
+    long   ctrl   = *(epicsInt32 *) prec->a;
     const char   *pathArr = (const char   *) prec->b;
     const char   *baseArr = (const char   *) prec->c;
     const char   *nameArr = (const char   *) prec->d;
-    long   numAcq = *(long   *) prec->e;
+    long   numAcq = *(epicsInt32 *) prec->e;
     double xinc   = *(double *) prec->f;
     double ymult  = *(double *) prec->g;
     double yzero  = *(double *) prec->h;
     double yoff   = *(double *) prec->i;
     double *wf    =  (double *) prec->j;
-    long   npt    = *(long   *) prec->k;
-    long   dstart = *(long   *) prec->l;
+    long   npt    = *(epicsInt32 *) prec->k;
+    long   dstart = *(epicsInt32 *) prec->l;
 
     (void)ymult; /* retained as input for compatibility with existing DB wiring */
 
-    long  *status = (long *) prec->vala;
+    epicsInt32 *status = (epicsInt32 *) prec->vala;
     char  *fnOut  = (char *) prec->valb;
-    long  *cnt    = (long *) prec->valc;
+    epicsInt32 *cnt    = (epicsInt32 *) prec->valc;
 
     char path[512], base[128], chname[128];
     copyCharArray(path,   sizeof(path),   pathArr, prec->nob);
